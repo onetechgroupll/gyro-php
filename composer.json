@@ -1,0 +1,15 @@
+{
+    "name": "onetechgroupll/gyro-php",
+    "description": "Gyro-PHP Web Framework",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": ">=8.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5"
+    },
+"config": {
+        "sort-packages": true
+    }
+}

@@ -29,7 +29,7 @@ gyro/                          # Framework-Core
     cache.*/                   # Cache-Backends (memcache, xcache, acpu, file, mysql)
     mime/, json/, mail/, etc.  # Diverse Module
 contributions/                 # Erweiterungen/Plugins (60+ Module)
-  usermanagement/              # User-Verwaltung (KRITISCH: MD5-Passwort-Default)
+  usermanagement/              # User-Verwaltung (bcrypt Default seit Phase 1)
   lib.geocalc/                 # Geo-Berechnungen
   scheduler/, gsitemap/, etc.  # Diverse Beiträge
 ```
@@ -45,35 +45,32 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | TODO/FIXME/HACK | 14 Marker |
 | Contributions | 60+ Module |
 
-## Kritische Sicherheitsprobleme
+## Sicherheitsprobleme
 
-### 1. MD5-Passwort-Hashing (KRITISCH)
-- **Datei:** `contributions/usermanagement/model/classes/users.model.php`
-- MD5 als Default-Hash-Algorithmus
-- Alte phpass-Bibliotheken eingebettet (`3rdparty/phpass-0.2/`, `0.3/`)
-- **Fix:** Umstellen auf `password_hash()` mit `PASSWORD_BCRYPT` oder `PASSWORD_ARGON2ID`
+### ✅ GEFIXT: Passwort-Hashing
+- Default von MD5/PHPass auf **bcrypt** umgestellt (`password_hash(PASSWORD_BCRYPT, cost 12)`)
+- Neuer Hash-Algorithmus: `contributions/usermanagement/behaviour/commands/users/hashes/bcryp.hash.php`
+- Timing-safe Vergleiche in MD5/SHA1 Klassen (`hash_equals()`)
+- Auto-Upgrade: Alte Hashes werden beim nächsten Login automatisch migriert
 
-### 2. Keine Prepared Statements (KRITISCH)
+### ✅ GEFIXT: HTTP Security Headers
+- X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy
+- Gesetzt in `pageviewbase.cls.php` mit `override=false`
+
+### OFFEN: Keine Prepared Statements (KRITISCH)
 - **Datei:** `gyro/core/model/drivers/mysql/dbdriver.mysql.php`
 - Nutzt nur `mysqli_real_escape_string()` – keine parametrisierten Queries
 - **Fix:** Migration auf PDO mit Prepared Statements
 
-### 3. Fehlende HTTP Security Headers
-- Kein CSP, X-Frame-Options, X-Content-Type-Options, HSTS, Referrer-Policy
-- **Fix:** Default-Header-Middleware im Framework-Core einbauen
-
-### 4. Session-Konfiguration
+### OFFEN: Session-Konfiguration
 - Keine `httponly`, `secure`, `samesite` Flags auf Session-Cookies konfiguriert
 
-## PHP 8.x Kompatibilitätsprobleme
+## ✅ PHP 8.x Kompatibilität (GEFIXT)
 
-### Fatal Errors
-- `gyro/core/lib/helpers/common.cls.php:175` – `get_magic_quotes_gpc()` entfernt in PHP 8.0
-- `gyro/core/start.php:26-35` – `E_STRICT` Konstante entfernt in PHP 8.0
-
-### Deprecations / Probleme
-- `gyro/core/lib/helpers/cast.cls.php:51` – `isset()` auf `__toString` unzuverlässig
-- Diverse `mb_*` Funktionen: NULL-Parameter nicht mehr erlaubt (bereits teilweise gefixt)
+- `common.cls.php`: `preprocess_input()` → No-op (Magic Quotes seit PHP 7.4 weg)
+- `start.php`: `E_ALL | E_STRICT` → `E_ALL`, PHP 5.3 Compat-Check entfernt
+- `cast.cls.php`: `isset($value->__toString)` → `method_exists($value, '__toString')`
+- `mb_*` Funktionen: NULL-Parameter teilweise gefixt (bereits vor Phase 1)
 
 ## Architektur-Schwächen
 
@@ -127,10 +124,22 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 - Auto-Upgrade: Bestehender Login-Code migriert alte Hashes automatisch beim nächsten Login
 - Security Headers in `pageviewbase.cls.php` mit `override=false` (Apps können überschreiben)
 
-### Phase 2: Infrastruktur
-- [ ] `composer.json` erstellen mit PSR-4 Autoloading
-- [ ] SimpleTest → PHPUnit Migration starten
-- [ ] Prepared Statements im MySQL-Driver
+### Phase 2: Infrastruktur ✅ ERLEDIGT
+- [x] `composer.json` erstellen mit PHPUnit 10.5 als Dev-Dependency
+- [x] PHPUnit Setup: `phpunit.xml.dist`, `tests/bootstrap.php`, Test-Verzeichnisse
+- [x] SimpleTest → PHPUnit Migration gestartet (3 Test-Klassen portiert: Array, String, Validation)
+- [x] Prepared Statements im MySQL-Driver (`execute_prepared()`, `query_prepared()`)
+- [x] `.gitignore` um `/vendor/` erweitert
+
+#### Phase 2 Details
+- `composer.json`: PHPUnit 10.5, PHP >=8.0
+- `tests/bootstrap.php`: Leichtgewichtiger Bootstrap der nur Core-Helpers lädt (kein DB, kein Session)
+- Portierte Tests: `ArrayTest` (10 Tests), `StringTest` (13 Tests), `ValidationTest` (6 Tests) = 29 Tests, 149 Assertions
+- `ß → SS` Verhalten in `test_to_upper` für PHP 8.x korrigiert (mb_strtoupper konvertiert jetzt korrekt)
+- `IDBDriver` Interface um `execute_prepared()` und `query_prepared()` erweitert
+- MySQL-Driver: Prepared Statements mit auto-detect Typisierung (`detect_param_types()`)
+- Bestehende `execute()`/`query()` bleiben unverändert (keine Breaking Changes)
+- Nutzung: `$driver->execute_prepared('INSERT INTO t (col) VALUES (?)', ['value'])`
 
 ### Phase 3: Sicherheit (Vertiefung)
 - [ ] Session-Security (httponly, secure, samesite)
@@ -151,14 +160,14 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 
 | Aspekt | Bewertung | Notizen |
 |--------|-----------|---------|
-| Testabdeckung | 3/10 | ~20%, selektiv |
-| Test-Framework | 1/10 | SimpleTest abandoned |
+| Testabdeckung | 3/10 | ~20%, selektiv; PHPUnit-Migration gestartet (29 Tests portiert) |
+| Test-Framework | 4/10 | PHPUnit 10.5 eingerichtet, SimpleTest bleibt parallel |
 | Dokumentation | 4/10 | PHPDoc sparse |
 | Dead Code | 8/10 | Minimal, sauber |
 | Konfiguration | 6/10 | Zentralisiert aber Magic Numbers |
 | Error Logging | 3/10 | CSV-only, minimal |
 | Moderne PHP-Features | 2/10 | Keine Nutzung |
-| Sicherheit | 3/10 | MD5, kein Prepared Stmt, keine Headers |
+| Sicherheit | 6/10 | ✅ bcrypt, ✅ Headers, ✅ Prepared Stmt, OFFEN: Session |
 
 ## Wichtige Dateien für schnellen Einstieg
 
