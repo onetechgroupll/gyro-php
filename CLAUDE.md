@@ -11,7 +11,7 @@
 - **CLI-Tool:** `bin/gyro` (Phase 8) — model:list, model:show, db:sync
 - **Middleware:** MiddlewareStack + IMiddleware Interface (Phase 13)
 - **DI-Container:** Container-Klasse mit Singleton/Factory/Bind (Phase 13)
-- **Statische Analyse:** PHPStan Level 3 mit Baseline (510 bekannte Fehler, 0 neue)
+- **Statische Analyse:** PHPStan Level 3 mit Baseline (69 bekannte Fehler, 0 neue)
 - **Environment:** `.env` Support (Phase 7), rückwärtskompatibel mit `APP_*` Konstanten
 
 ## Verzeichnisstruktur
