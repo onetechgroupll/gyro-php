@@ -1,13 +1,13 @@
 # Gyro-PHP Framework – Projektanalyse & Memory
 
-> Letzte Aktualisierung: 2026-03-05 (Phase 8 abgeschlossen)
+> Letzte Aktualisierung: 2026-03-05 (Phase 9 abgeschlossen)
 
 ## Projektübersicht
 
 - **Framework:** Gyro-PHP, eigenes PHP-Webframework (seit 2004, PHP 4 → PHP 5 Rewrite 2005)
 - **Aktueller Stand:** Läuft auf PHP 8.x mit Safeguards, Code-Stil ist PHP 5.x Ära
 - **Composer** für Dev-Dependencies (PHPUnit, PHPStan), kein PSR-4, kein Namespace-System
-- **Test-Framework:** PHPUnit 10.5 (primär, 287 Tests) + SimpleTest 1.1.0 (Legacy, abandoned)
+- **Test-Framework:** PHPUnit 10.5 (primär, 307 Tests) + SimpleTest 1.1.0 (Legacy, abandoned)
 - **CLI-Tool:** `bin/gyro` (Phase 8) — model:list, model:show, db:sync
 - **Statische Analyse:** PHPStan Level 2 mit Baseline (1262 bekannte Fehler getracked)
 - **Environment:** `.env` Support (Phase 7), rückwärtskompatibel mit `APP_*` Konstanten
@@ -30,6 +30,7 @@ gyro/                          # Framework-Core
     lib/interfaces/            # Interface-Definitionen
     view/base/                 # View-Layer
   modules/                     # Framework-Module
+    api/                       # Auto-REST-API (Phase 9)
     simpletest/                # Test-Framework + Tests
     cache.*/                   # Cache-Backends (memcache, xcache, acpu, file, mysql)
     mime/, json/, mail/, etc.  # Diverse Module
@@ -44,7 +45,8 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | Metrik | Wert |
 |--------|------|
 | Core-Klassen | 239 (.cls.php, .model.php, .facade.php) |
-| PHPUnit-Tests | 287 Tests, 1066 Assertions (65 Test-Dateien) |
+| PHPUnit-Tests | 307 Tests, 1138 Assertions (67 Test-Dateien) |
+| REST-API-Modul | 3 Dateien (Controller, Helper, Start) |
 | SimpleTest (Legacy) | 57 Dateien (größtenteils nach PHPUnit portiert) |
 | Testabdeckung | ~50%+ (Phase 7: massive Erweiterung) |
 | PHPDoc-Abdeckung | ~15-20% |
@@ -302,11 +304,51 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 - Warnt bei DB-Spalten, die nicht im Model existieren (kein Auto-DROP — zu gefährlich)
 - `--dry-run` (Default) zeigt SQL, `--execute` führt aus
 
+### Phase 9: Auto-REST-API ✅ ERLEDIGT
+- [x] REST-API-Modul (`gyro/modules/api/`) mit Auto-Discovery aller DAO-Modelle
+- [x] CRUD-Endpoints: GET (list/show), POST (create), PUT (update), DELETE
+- [x] Schema-Endpoint: GET /api/{table}/schema (Felder, Typen, Relations als JSON)
+- [x] API-Index: GET /api (alle verfügbaren Endpoints auflisten)
+- [x] Paging, Filtering, Sorting über Query-Parameter
+- [x] JsonResponse Helper mit Typ-gerechter Serialisierung
+- [x] INTERNAL-Felder automatisch ausgeblendet
+- [x] X-HTTP-Method-Override Support
+- [x] Composite Primary Key Support (Pipe-separiert)
+- [x] 20 neue Tests (JsonResponse + RestApiController)
+- [x] phpunit.xml.dist Fix (fehlende contributions-Verzeichnis)
+- **Ergebnis:** 307 Tests, 1138 Assertions (alle grün)
+
+#### Phase 9 Details: Architektur
+- **Modul:** `gyro/modules/api/` — aktivierbar via `Load::enable_module('api')`
+- **Controller:** `RestApiController` extends `ControllerBase` — registriert `/api/` Routes
+- **JSON Helper:** `JsonResponse` — Typ-Mapping (INT→integer, BOOL→boolean, FLOAT→number)
+- **Auto-Discovery:** Nutzt `ModelListCommand::discover_models()` aus Phase 8
+- **Konfiguration:** `RestApiController::register_model()` / `::exclude_table()`
+
+#### Phase 9 Details: Endpoints
+| Methode | URL | Beschreibung |
+|---------|-----|--------------|
+| `GET` | `/api` | Alle Endpoints auflisten |
+| `GET` | `/api/{table}` | Records auflisten (Paging: `?page=2&per_page=10`) |
+| `GET` | `/api/{table}/{id}` | Einzelnen Record abrufen |
+| `POST` | `/api/{table}` | Record erstellen (JSON Body) |
+| `PUT` | `/api/{table}/{id}` | Record aktualisieren (JSON Body) |
+| `DELETE` | `/api/{table}/{id}` | Record löschen |
+| `GET` | `/api/{table}/schema` | Schema als JSON |
+
+#### Phase 9 Details: Features
+- **Filtering:** `?filter[field]=value` — nur auf nicht-INTERNAL Feldern
+- **Sorting:** `?sort=field&order=asc|desc`
+- **Paging:** `?page=1&per_page=25` (max 200 pro Seite)
+- **Validierung:** Nutzt `DataObjectBase::validate()` mit Feld-Level Validation
+- **Error Responses:** Einheitliches JSON-Format mit HTTP Status Codes (400, 404, 405, 422, 500)
+- **Composite Keys:** `/api/table/key1|key2` für Multi-Column Primary Keys
+
 ## Scorecard
 
 | Aspekt | Bewertung | Notizen |
 |--------|-----------|---------|
-| Testabdeckung | 7/10 | ~55%+, 287 Tests / 1066 Assertions (PHPUnit 10.5) |
+| Testabdeckung | 7/10 | ~55%+, 307 Tests / 1138 Assertions (PHPUnit 10.5) |
 | Test-Framework | 7/10 | PHPUnit 10.5 primär, Mock-Infrastruktur, SimpleTest Legacy |
 | Dokumentation | 4/10 | PHPDoc sparse |
 | Dead Code | 8/10 | Minimal, sauber |
@@ -315,6 +357,7 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | Moderne PHP-Features | 5/10 | ✅ Type Declarations, ✅ Typed Properties, ✅ Union Types |
 | Sicherheit | 7/10 | ✅ bcrypt, ✅ Headers, ✅ Prepared Stmt, ✅ Session, ✅ CSRF |
 | CLI-Tooling | 6/10 | ✅ `bin/gyro` mit model:list, model:show, db:sync |
+| REST-API | 7/10 | ✅ Auto-REST-API aus DAO-Modellen, CRUD + Schema + Paging |
 | Statische Analyse | 5/10 | ✅ PHPStan Level 2 mit Baseline, 1262 Fehler getracked |
 
 ## Moderne PHP-Features Analyse
@@ -363,7 +406,7 @@ Framework ist **selektiv modernisiert**: Return Types + Union Types in Core-Inte
 - Middleware-Pattern einführen
 - Einfacher DI-Container für bessere Testbarkeit
 - ~~CLI-Tool für Code-Generierung (ähnlich Artisan)~~ ✅ Phase 8: `bin/gyro`
-- Auto-REST-API aus DAO-Modellen generieren
+- ~~Auto-REST-API aus DAO-Modellen generieren~~ ✅ Phase 9: `gyro/modules/api/`
 - Auto-Admin-Interface aus ISelfDescribing + IActionSource
 
 ## Wichtige Dateien für schnellen Einstieg
@@ -378,6 +421,9 @@ Framework ist **selektiv modernisiert**: Return Types + Union Types in Core-Inte
 | CLI Kernel | `gyro/core/cli/clikernel.cls.php` |
 | CLI Bootstrap | `gyro/core/cli/bootstrap.cli.php` |
 | CLI Commands | `gyro/core/cli/commands/` |
+| REST-API Controller | `gyro/modules/api/controller/restapi.controller.php` |
+| JSON Response Helper | `gyro/modules/api/lib/helpers/jsonresponse.cls.php` |
+| API Module Init | `gyro/modules/api/start.inc.php` |
 | DB-Driver | `gyro/core/model/drivers/mysql/dbdriver.mysql.php` |
 | Logger | `gyro/core/lib/components/logger.cls.php` |
 | User-Model | `contributions/usermanagement/model/classes/users.model.php` |

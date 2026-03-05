@@ -228,7 +228,58 @@ Logger::set_min_level(Logger::WARNING); // Nur WARNING und höher loggen
 **Log-Dateien:** Pro Level eine separate JSON-Datei (z.B. `error-2026-03-05.log`).
 Der alte `Logger::log()` bleibt kompatibel und schreibt weiterhin im CSV-Format.
 
-### 4.4 CLI-Tool (`bin/gyro`)
+### 4.4 Auto-REST-API
+
+Das neue API-Modul generiert automatisch REST-Endpoints für alle DAO-Modelle:
+
+```php
+// In Ihrer modules.php — Modul aktivieren
+Load::enable_module('api');
+```
+
+**Sofort verfügbare Endpoints (kein Code nötig!):**
+
+| Methode | URL | Beschreibung |
+|---------|-----|--------------|
+| `GET` | `/api` | Alle verfügbaren Endpoints |
+| `GET` | `/api/users` | Alle Users (mit Paging) |
+| `GET` | `/api/users/42` | User mit ID 42 |
+| `POST` | `/api/users` | Neuen User anlegen |
+| `PUT` | `/api/users/42` | User aktualisieren |
+| `DELETE` | `/api/users/42` | User löschen |
+| `GET` | `/api/users/schema` | Schema des Users-Modells |
+
+**Paging, Filtering, Sorting:**
+```bash
+# Seite 2, 10 pro Seite
+GET /api/users?page=2&per_page=10
+
+# Filtern nach Feld
+GET /api/users?filter[status]=active
+
+# Sortieren
+GET /api/users?sort=name&order=asc
+```
+
+**Konfiguration (optional):**
+```php
+// Tabellen von der API ausschließen
+RestApiController::exclude_table('sessions');
+RestApiController::exclude_table('cacheentries');
+
+// Oder explizit nur bestimmte Modelle registrieren
+RestApiController::register_model('users', 'DAOUsers');
+```
+
+**Sicherheit:**
+- INTERNAL-Felder werden automatisch ausgeblendet
+- Validierung über das bestehende `DataObjectBase::validate()`
+- X-HTTP-Method-Override für Clients ohne PUT/DELETE
+- Composite Primary Keys via Pipe-Trennung: `/api/table/key1|key2`
+
+**Kein Handlungsbedarf** — das Modul ist optional und muss explizit aktiviert werden.
+
+### 4.5 CLI-Tool (`bin/gyro`)
 
 Ein neues Kommandozeilen-Werkzeug ermöglicht die Verwaltung des Frameworks ohne Browser:
 

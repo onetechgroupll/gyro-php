@@ -2,6 +2,40 @@
 
 Alle wesentlichen Änderungen am Gyro-PHP Framework, chronologisch nach Phasen geordnet.
 
+## [Phase 9] – 2026-03-05
+
+### Hinzugefügt
+- **Auto-REST-API Modul** (`gyro/modules/api/`): Automatisch generierte REST-Endpoints
+  für alle DAO-Modelle — keine manuelle Konfiguration nötig:
+  - `GET /api` — Alle verfügbaren Endpoints auflisten
+  - `GET /api/{table}` — Records auflisten (mit Paging, Filtering, Sorting)
+  - `GET /api/{table}/{id}` — Einzelnen Record abrufen
+  - `POST /api/{table}` — Neuen Record erstellen (JSON Body)
+  - `PUT /api/{table}/{id}` — Record aktualisieren (JSON Body)
+  - `DELETE /api/{table}/{id}` — Record löschen
+  - `GET /api/{table}/schema` — Tabellenschema als JSON (Felder, Typen, Relations)
+- **JsonResponse** Helper (`gyro/modules/api/lib/helpers/jsonresponse.cls.php`):
+  - Typ-gerechte JSON-Serialisierung (INT→integer, BOOL→boolean, FLOAT→number)
+  - Automatisches Ausfiltern von INTERNAL-Feldern
+  - Einheitliche Error-Response-Struktur mit HTTP Status Codes
+- **RestApiController** (`gyro/modules/api/controller/restapi.controller.php`):
+  - Auto-Discovery: Findet alle DAO-Modelle automatisch über `ModelListCommand`
+  - Manuelle Konfiguration: `RestApiController::register_model()` / `::exclude_table()`
+  - X-HTTP-Method-Override Support (für Clients ohne PUT/DELETE)
+  - Composite Primary Key Support (Pipe-separiert: `val1|val2`)
+  - Validierung über das bestehende `DataObjectBase::validate()`
+  - Access-Control-ready (INTERNAL-Felder werden nie exponiert)
+- **20 neue Tests** für REST-API-Komponenten (JsonResponse + RestApiController)
+
+### Geändert
+- **`phpunit.xml.dist`:** Contribution-Testsuite auskommentiert (Verzeichnis existierte nicht,
+  verursachte Fehler bei `vendor/bin/phpunit` ohne `--testsuite`)
+
+### Ergebnis
+- 307 Tests, 1138 Assertions (alle grün)
+
+---
+
 ## [Phase 8] – 2026-03-05
 
 ### Hinzugefügt
