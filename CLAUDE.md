@@ -112,10 +112,20 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 
 ## Modernisierungsplan (Phasen)
 
-### Phase 1: Sicherheit & Lauffähigkeit (KRITISCH)
-- [ ] PHP 8.x Fatal Errors fixen (`get_magic_quotes_gpc`, `E_STRICT`)
-- [ ] Passwort-Hashing: MD5 → `password_hash()`
-- [ ] HTTP Security Headers einführen
+### Phase 1: Sicherheit & Lauffähigkeit (KRITISCH) ✅ ERLEDIGT
+- [x] PHP 8.x Fatal Errors fixen (`get_magic_quotes_gpc`, `E_STRICT`, `isset(__toString)`)
+- [x] Passwort-Hashing: MD5 → `password_hash()` mit bcrypt (neuer `bcryp` Hash-Algorithmus)
+- [x] HTTP Security Headers einführen (X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy)
+- [x] Timing-safe Vergleiche in MD5/SHA1 Hash-Klassen (`hash_equals()`)
+
+#### Phase 1 Details
+- `common.cls.php`: `preprocess_input()` → No-op, `transcribe()` entfernt (Magic Quotes seit PHP 7.4 weg)
+- `start.php`: `E_ALL | E_STRICT` → `E_ALL`, `defined('E_DEPRECATED')` Check entfernt (PHP 5.3 Compat)
+- `cast.cls.php`: `isset($value->__toString)` → `method_exists($value, '__toString')`
+- Neuer Hash-Algorithmus: `contributions/usermanagement/behaviour/commands/users/hashes/bcryp.hash.php`
+- Default Hash-Type: `'pas3p'` → `'bcryp'` in `start.inc.php` und `users.model.php`
+- Auto-Upgrade: Bestehender Login-Code migriert alte Hashes automatisch beim nächsten Login
+- Security Headers in `pageviewbase.cls.php` mit `override=false` (Apps können überschreiben)
 
 ### Phase 2: Infrastruktur
 - [ ] `composer.json` erstellen mit PSR-4 Autoloading
