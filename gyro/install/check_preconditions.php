@@ -12,7 +12,7 @@ function core_check_preconditions() {
 	foreach($subdirs as $subdir) {
 		$dir = rtrim($tempdir . $subdir, '/');
 		if (!file_exists($dir)) {
-			if (!@mkdir($dir, 0777, true)) {
+			if (!@mkdir($dir, 0755, true)) {
 				$ret->append('Could not create temporary directory ' . $dir);
 			}
 		}
