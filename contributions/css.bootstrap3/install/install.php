@@ -18,6 +18,7 @@ function css_bootstrap3_install() {
 	
 	if ($do_copy) {
 		$root = Load::get_module_dir('css.bootstrap3') . 'data/' . Config::get_value(ConfigBootstrap3::VERSION) . '/';
+		/** @phpstan-ignore class.notFound, class.notFound */
 		$ret->merge(SystemUpdateInstaller::copy_to_app('view/templates/default/', $root . 'template/', array('page.tpl.php'), SystemUpdateInstaller::COPY_OVERWRITE));
 	}
 	return $ret;

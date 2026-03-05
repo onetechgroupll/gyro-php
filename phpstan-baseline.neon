@@ -76,101 +76,6 @@ parameters:
 			path: contributions/confirmations/behaviour/base/confirmationhandler.base.php
 
 		-
-			message: "#^Access to constant COPY_NO_REPLACE on an unknown class SystemUpdateInstaller\\.$#"
-			count: 1
-			path: contributions/css.bootstrap3/install/check_preconditions.php
-
-		-
-			message: "#^Access to constant COPY_OVERWRITE on an unknown class SystemUpdateInstaller\\.$#"
-			count: 2
-			path: contributions/css.bootstrap3/install/check_preconditions.php
-
-		-
-			message: "#^Access to constant COPY_OVERWRITE on an unknown class SystemUpdateInstaller\\.$#"
-			count: 1
-			path: contributions/css.bootstrap3/install/install.php
-
-		-
-			message: "#^Call to static method copy_to_app\\(\\) on an unknown class SystemUpdateInstaller\\.$#"
-			count: 1
-			path: contributions/css.bootstrap3/install/install.php
-
-		-
-			message: "#^Access to constant COPY_OVERWRITE on an unknown class SystemUpdateInstaller\\.$#"
-			count: 1
-			path: contributions/css.defaultstyles/install/check_preconditions.php
-
-		-
-			message: "#^Access to constant COPY_NO_REPLACE on an unknown class SystemUpdateInstaller\\.$#"
-			count: 1
-			path: contributions/css.yaml/install/check_preconditions.php
-
-		-
-			message: "#^Access to constant COPY_OVERWRITE on an unknown class SystemUpdateInstaller\\.$#"
-			count: 1
-			path: contributions/css.yaml/install/check_preconditions.php
-
-		-
-			message: "#^Access to constant COPY_OVERWRITE on an unknown class SystemUpdateInstaller\\.$#"
-			count: 1
-			path: contributions/css.yaml/install/install.php
-
-		-
-			message: "#^Call to static method copy_to_app\\(\\) on an unknown class SystemUpdateInstaller\\.$#"
-			count: 1
-			path: contributions/css.yaml/install/install.php
-
-		-
-			message: "#^Access to constant COPY_NO_REPLACE on an unknown class SystemUpdateInstaller\\.$#"
-			count: 1
-			path: contributions/css.yaml4/install/check_preconditions.php
-
-		-
-			message: "#^Access to constant COPY_OVERWRITE on an unknown class SystemUpdateInstaller\\.$#"
-			count: 1
-			path: contributions/css.yaml4/install/check_preconditions.php
-
-		-
-			message: "#^Access to constant COPY_OVERWRITE on an unknown class SystemUpdateInstaller\\.$#"
-			count: 1
-			path: contributions/css.yaml4/install/install.php
-
-		-
-			message: "#^Call to static method copy_to_app\\(\\) on an unknown class SystemUpdateInstaller\\.$#"
-			count: 1
-			path: contributions/css.yaml4/install/install.php
-
-		-
-			message: "#^Access to constant COPY_OVERWRITE on an unknown class SystemUpdateInstaller\\.$#"
-			count: 1
-			path: contributions/javascript.ckeditor/install/check_preconditions.php
-
-		-
-			message: "#^Access to constant COPY_OVERWRITE on an unknown class SystemUpdateInstaller\\.$#"
-			count: 1
-			path: contributions/javascript.jquery/install/check_preconditions.php
-
-		-
-			message: "#^Access to constant COPY_NO_REPLACE on an unknown class SystemUpdateInstaller\\.$#"
-			count: 1
-			path: contributions/javascript.jqueryui/install/check_preconditions.php
-
-		-
-			message: "#^Access to constant COPY_OVERWRITE on an unknown class SystemUpdateInstaller\\.$#"
-			count: 1
-			path: contributions/javascript.jqueryui/install/check_preconditions.php
-
-		-
-			message: "#^Access to constant HTACCESS_OPTIONS on an unknown class SystemUpdateInstaller\\.$#"
-			count: 1
-			path: contributions/jcssmanager/lib/helpers/jcssmanager.cls.php
-
-		-
-			message: "#^Access to constant HTACCESS_REWRITE on an unknown class SystemUpdateInstaller\\.$#"
-			count: 1
-			path: contributions/jcssmanager/lib/helpers/jcssmanager.cls.php
-
-		-
 			message: "#^Instantiated class ConsolePageView not found\\.$#"
 			count: 1
 			path: contributions/jcssmanager/view/base/jcssmanagerviewfactory.cls.php
@@ -191,29 +96,9 @@ parameters:
 			path: contributions/models.contact/install/check_postconditions.php
 
 		-
-			message: "#^Call to static method copy_to_app\\(\\) on an unknown class SystemUpdateInstaller\\.$#"
-			count: 1
-			path: contributions/models.contact/install/check_postconditions.php
-
-		-
 			message: "#^Access to constant COPY_NO_REPLACE on an unknown class SystemUpdateInstaller\\.$#"
 			count: 1
 			path: contributions/models.searchindex/install/check_postconditions.php
-
-		-
-			message: "#^Call to static method copy_to_app\\(\\) on an unknown class SystemUpdateInstaller\\.$#"
-			count: 1
-			path: contributions/models.searchindex/install/check_postconditions.php
-
-		-
-			message: "#^Access to constant COPY_OVERWRITE on an unknown class SystemUpdateInstaller\\.$#"
-			count: 1
-			path: contributions/socialbookmarking/install/check_postconditions.php
-
-		-
-			message: "#^Call to static method copy_to_webroot\\(\\) on an unknown class SystemUpdateInstaller\\.$#"
-			count: 1
-			path: contributions/socialbookmarking/install/check_postconditions.php
 
 		-
 			message: "#^Call to an undefined method IView\\:\\:is_cached\\(\\)\\.$#"
