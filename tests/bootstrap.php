@@ -38,6 +38,7 @@ GyroLocale::set_locale('en', 'UTF-8');
 // Load interfaces and helpers
 Load::directories('lib/interfaces');
 Load::directories('lib/helpers');
+Load::directories('lib/helpers/converters');
 
 // Load model base and DB driver classes for DB-related tests
 Load::directories('model/base');
