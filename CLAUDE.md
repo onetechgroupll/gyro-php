@@ -40,7 +40,7 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | Metrik | Wert |
 |--------|------|
 | Core-Klassen | 239 (.cls.php, .model.php, .facade.php) |
-| PHPUnit-Tests | 254 Tests, 985 Assertions (53 Test-Dateien) |
+| PHPUnit-Tests | 254 Tests, 985 Assertions (62 Test-Dateien) |
 | SimpleTest (Legacy) | 57 Dateien (größtenteils nach PHPUnit portiert) |
 | Testabdeckung | ~50%+ (Phase 7: massive Erweiterung) |
 | PHPDoc-Abdeckung | ~15-20% |
@@ -266,7 +266,7 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 
 #### Phase 7 Details: Bekannte Test-Limitierungen
 - 2 SimpleTest-Dateien nicht portierbar ohne echte DB (Cache, UpdateCommand)
-- 3 PHP 8.4 Deprecation Warnings (dynamische Properties in DAOStudentsTest, Url)
+- ~~3 PHP 8.4 Deprecation Warnings~~ → alle gefixt (dynamische Properties deklariert)
 - Mock-Driver nutzt `GyroString::escape()` (HTML-Entities) statt `mysqli_real_escape_string`
 
 ## Scorecard
@@ -347,6 +347,8 @@ Framework ist **selektiv modernisiert**: Return Types + Union Types in Core-Inte
 | SimpleTest (Legacy) | `gyro/modules/simpletest/simpletests/` |
 | Routing | `gyro/core/controller/base/routes/` |
 | PHPStan Config | `phpstan.neon.dist` + `phpstan-baseline.neon` |
+| Changelog | `CHANGELOG.md` |
+| Upgrade-Leitfaden | `UPGRADING.md` |
 
 ## Git-Branch
 
