@@ -6,8 +6,8 @@
  * @ingroup Lib
  */
 class ConverterChain implements IConverter {
-	protected $converters = array();
-	protected $params = array();
+	protected array $converters = array();
+	protected array $params = array();
 	
 	public function encode(mixed $value, mixed $params = false): mixed {
 		reset($this->params);

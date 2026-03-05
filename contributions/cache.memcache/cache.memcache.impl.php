@@ -11,7 +11,7 @@ class MemcacheCacheItem implements ICacheItem {
 	 * 
 	 * @var Associative array 
 	 */
-	private $item_data;
+	private array $item_data;
 	
 	/**
 	 * Constructor

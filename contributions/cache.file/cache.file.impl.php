@@ -6,10 +6,10 @@
  * @ingroup FileCache
  */
 class CacheFileImpl implements ICachePersister {
-	private $cache_dir;
+	private string $cache_dir;
 
-	private $ext = '.cache';
-	private $divider = '__';
+	private string $ext = '.cache';
+	private string $divider = '__';
 
 	public function __construct() {
 		$app_dir = GyroString::plain_ascii(Config::get_url(Config::URL_DOMAIN));
@@ -187,7 +187,7 @@ class FileCacheItem implements ICacheItem {
 	 *
 	 * @var array Cache entry + meta data
 	 */
-	protected $item_data;
+	protected array $item_data;
 
 	/**
 	 * Constructor

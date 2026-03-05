@@ -6,7 +6,7 @@
  * @ingroup Model
  */
 class CacheDBImpl implements ICachePersister {
-	private $cache_item = null;
+	private mixed $cache_item = null;
 
 	/**
 	 * Returns true, if item is chaced 

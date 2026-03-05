@@ -7,9 +7,20 @@
         "php": ">=8.0"
     },
     "require-dev": {
+        "phpstan/phpstan": "^1.12",
         "phpunit/phpunit": "^10.5"
     },
-"config": {
+    "autoload": {
+        "classmap": [
+            "gyro/core/",
+            "contributions/"
+        ],
+        "exclude-from-classmap": [
+            "**/3rdparty/**",
+            "**/simpletests/**"
+        ]
+    },
+    "config": {
         "sort-packages": true
     }
 }

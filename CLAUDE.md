@@ -6,7 +6,7 @@
 
 - **Framework:** Gyro-PHP, eigenes PHP-Webframework (seit 2004, PHP 4 → PHP 5 Rewrite 2005)
 - **Aktueller Stand:** Läuft auf PHP 8.x mit Safeguards, Code-Stil ist PHP 5.x Ära
-- **Kein Composer**, kein PSR-4, kein Namespace-System
+- **Composer** mit classmap-Autoload (Phase 6), kein PSR-4, kein Namespace-System
 - **Test-Framework:** SimpleTest 1.1.0 (abandoned seit 2012)
 - **Kein modernes Dependency Management**
 
@@ -57,10 +57,11 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 - X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy
 - Gesetzt in `pageviewbase.cls.php` mit `override=false`
 
-### OFFEN: Keine Prepared Statements (KRITISCH)
-- **Datei:** `gyro/core/model/drivers/mysql/dbdriver.mysql.php`
-- Nutzt nur `mysqli_real_escape_string()` – keine parametrisierten Queries
-- **Fix:** Migration auf PDO mit Prepared Statements
+### ✅ GEFIXT: Prepared Statements
+- **Driver:** `execute_prepared()` und `query_prepared()` in `dbdriver.mysql.php` (Phase 2)
+- **DB-Klasse:** `DB::execute_prepared()` und `DB::query_prepared()` Wrapper (Phase 6)
+- Legacy `execute()`/`query()` nutzen weiterhin `mysqli_real_escape_string()` (Rückwärtskompatibilität)
+- **Nächster Schritt:** Schrittweise Migration bestehender Queries auf Prepared Statements
 
 ### ✅ GEFIXT: Session-Konfiguration
 - `httponly`, `secure` (bei HTTPS), `samesite=Lax` auf Session-Cookies konfiguriert
@@ -74,10 +75,10 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 
 ## Architektur-Schwächen
 
-### Typ-System (Phase 4 gestartet)
+### Typ-System (Phase 4 + Phase 6)
 - Interfaces mit Type Declarations versehen (Phase 4)
-- Kein Einsatz von PHP 7.4+ Typed Properties, Enums etc.
-- Noch keine Properties-Typisierung
+- Typed Properties in Interface-Implementierungen (Phase 6)
+- Kein Einsatz von Enums, Attributes, Match, Readonly etc.
 
 ### Kein Namespace-System
 - Alle Klassen im globalen Namespace
@@ -184,6 +185,31 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 - [ ] PHPDoc für alle public APIs
 - [ ] Testabdeckung auf >50% bringen
 
+### Phase 6: Modernisierung II ✅ ERLEDIGT
+- [x] Typed Properties in allen Interface-Implementierungen (12 Klassen, 16 Properties)
+- [x] `DB::execute_prepared()` und `DB::query_prepared()` statische Wrapper
+- [x] Composer classmap Autoload (`gyro/core/`, `contributions/`)
+- [x] PHPStan Level 1 eingerichtet (`phpstan.neon.dist`)
+
+#### Phase 6 Details: Typed Properties
+- **DBResultSet**: `?PDOStatement $pdo_statement`
+- **DBResultSetMysql**: `?mysqli_result $result_set`, `?Status $status`
+- **DBResultSetSphinx**: `?array $result`, `Status $status`
+- **DBResultSetCountSphinx**: `bool $done`
+- **CacheDBImpl**: `mixed $cache_item`
+- **CacheFileImpl**: `string $cache_dir`, `string $ext`, `string $divider`
+- **FileCacheItem**: `array $item_data`
+- **ACPuCacheItem**: `array $item_data`
+- **MemcacheCacheItem**: `array $item_data`
+- **ConverterChain**: `array $converters`, `array $params`
+- **ConverterHtmlTidy**: `array $predefined_params`
+- **ConverterUnidecode**: `static array $groups`
+
+#### Phase 6 Details: Composer & PHPStan
+- `composer.json`: `autoload.classmap` für `gyro/core/` und `contributions/` (3rd-Party ausgeschlossen)
+- `phpstan.neon.dist`: Level 1, analysiert Core + Contributions, excludiert 3rd-Party/Tests
+- PHPStan als `require-dev` Dependency hinzugefügt
+
 ## Scorecard
 
 | Aspekt | Bewertung | Notizen |
@@ -194,8 +220,9 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | Dead Code | 8/10 | Minimal, sauber |
 | Konfiguration | 6/10 | Zentralisiert aber Magic Numbers |
 | Error Logging | 7/10 | ✅ PSR-3 Levels, JSON-Output, Context, Exception-Support |
-| Moderne PHP-Features | 4/10 | ✅ Type Declarations in Interfaces, Union Types |
+| Moderne PHP-Features | 5/10 | ✅ Type Declarations, ✅ Typed Properties, ✅ Union Types |
 | Sicherheit | 7/10 | ✅ bcrypt, ✅ Headers, ✅ Prepared Stmt, ✅ Session, ✅ CSRF |
+| Statische Analyse | 3/10 | PHPStan Level 1 eingerichtet, noch nicht durchgelaufen |
 
 ## Moderne PHP-Features Analyse
 
@@ -204,7 +231,7 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | Feature | Vorhanden? | Details |
 |---------|-----------|---------|
 | Namespaces | NEIN | 0 Deklarationen im Framework (nur 3rd-Party FPDI nutzt sie) |
-| Typed Properties | NEIN | Kein PHP 7.4+ `private string $name;` |
+| Typed Properties | TEILWEISE | ✅ In 12 Interface-Implementierungen (Phase 6), Rest noch untypisiert |
 | Enums | NEIN | Kein PHP 8.1+ `enum` |
 | Named Arguments | NEIN | Nicht genutzt |
 | Match Expressions | NEIN | Nur in 3rd-Party (SimpleTest, Sphinx) |
@@ -212,7 +239,7 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | Fibers/Async | NEIN | Nicht genutzt |
 | Attributes | NEIN | Kein PHP 8.0+ `#[...]` |
 | PSR-Interfaces | MINIMAL | Eigene Event-Interfaces (IEventSink/IEventSource), kein PSR-7/11/14/15/17/18 |
-| Composer Autoload | NEIN | `composer.json` hat KEINEN autoload-Abschnitt; eigene `Load`-Klasse |
+| Composer Autoload | TEILWEISE | ✅ classmap für `gyro/core/` + `contributions/` (Phase 6), eigene `Load`-Klasse bleibt parallel |
 | Environment Vars (.env) | MINIMAL | Nur `getenv()` für Temp-Verzeichnis (TMP/TEMP/TMPDIR); kein dotenv |
 | Return Type Declarations | TEILWEISE | In 5 Core-Interfaces (Phase 4) |
 | Union Types | TEILWEISE | `string\|false`, `array\|false`, `int\|false`, `ICacheItem\|false`, `mixed` |

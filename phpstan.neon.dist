@@ -1,0 +1,11 @@
+parameters:
+    level: 1
+    paths:
+        - gyro/core/
+        - contributions/
+    excludePaths:
+        - */3rdparty/*
+        - */simpletests/*
+        - */simpletest/*
+        - vendor/*
+    reportUnmatchedIgnoredErrors: false

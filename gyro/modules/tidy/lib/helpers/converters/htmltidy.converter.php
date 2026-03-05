@@ -12,7 +12,7 @@
  * @ingroup Tidy
  */
 class ConverterHtmlTidy implements IConverter {
-	private $predefined_params;
+	private array $predefined_params;
 
 	public function __construct($global_params = array()) {
 		$predefined_params = array(

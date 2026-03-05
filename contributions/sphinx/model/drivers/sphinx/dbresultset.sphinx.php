@@ -11,8 +11,8 @@ class DBResultSetSphinx implements IDBResultSet {
 	 *
 	 * @var array|null
 	 */
-	protected $result = null;
-	protected $status;
+	protected ?array $result = null;
+	protected Status $status;
 
 	public function __construct($result, $status) {
 		$this->result = $result;

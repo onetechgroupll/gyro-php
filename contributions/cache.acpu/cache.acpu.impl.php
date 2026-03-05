@@ -11,7 +11,7 @@ class ACPuCacheItem implements ICacheItem {
 	 * 
 	 * @var array Associative array
 	 */
-	protected $item_data;
+	protected array $item_data;
 	
 	/**
 	 * Constructor

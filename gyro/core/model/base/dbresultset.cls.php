@@ -11,7 +11,7 @@ class DBResultSet implements IDBResultSet {
 	 *
 	 * @var PDOStatement
 	 */
-	protected $pdo_statement = null;
+	protected ?PDOStatement $pdo_statement = null;
 
 	public function __construct($pdo) {
 		$this->pdo_statement = $pdo;
