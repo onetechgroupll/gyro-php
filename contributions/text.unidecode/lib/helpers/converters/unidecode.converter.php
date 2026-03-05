@@ -6,7 +6,7 @@
  * @ingroup Unidecode
  */
 class ConverterUnidecode implements IConverter {
-	private static $groups = array();
+	private static array $groups = array();
 	
 	/**
 	 * Convert Unicode chars to ASCII transliterals

@@ -11,13 +11,13 @@ class DBResultSetMysql implements IDBResultSet {
 	 *
 	 * @var mysqli_result|null
 	 */
-	protected $result_set = null;
+	protected ?mysqli_result $result_set = null;
 	/**
 	 * Status for query
 	 *
 	 * @var Status
 	 */
-	protected $status = null;
+	protected ?Status $status = null;
 
 	public function __construct($result_set, $status) {
 		$this->result_set = $result_set;
