@@ -1,84 +1,9 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Access to constant MIME on an unknown class ViewFactoryMime\\.$#"
-			count: 1
-			path: contributions/binaries/controller/base/binaries.basecontroller.php
-
-		-
-			message: "#^Access to constant MIMETYPE on an unknown class MimeView\\.$#"
-			count: 1
-			path: contributions/binaries/controller/base/binaries.basecontroller.php
-
-		-
 			message: "#^Variable \\$binary in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: contributions/binaries/controller/base/binaries.basecontroller.php
-
-		-
-			message: "#^Default value of the parameter \\#1 \\$duration \\(false\\) of method BinariesCacheManager\\:\\:__construct\\(\\) is incompatible with type int\\.$#"
-			count: 1
-			path: contributions/binaries/controller/base/cachemanager/binaries.cachemanager.php
-
-		-
-			message: "#^Default value of the parameter \\#2 \\$header_manager \\(false\\) of method BinariesCacheManager\\:\\:__construct\\(\\) is incompatible with type ICacheHeaderManager\\.$#"
-			count: 1
-			path: contributions/binaries/controller/base/cachemanager/binaries.cachemanager.php
-
-		-
-			message: "#^Variable \\$header_manager in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 1
-			path: contributions/binaries/controller/base/cachemanager/binaries.cachemanager.php
-
-		-
-			message: "#^Access to constant COPY_NO_REPLACE on an unknown class SystemUpdateInstaller\\.$#"
-			count: 1
-			path: contributions/binaries/install/install.php
-
-		-
-			message: "#^Call to static method copy_file_to_app\\(\\) on an unknown class SystemUpdateInstaller\\.$#"
-			count: 1
-			path: contributions/binaries/install/install.php
-
-		-
-			message: "#^Access to property \\$expirationdate on an unknown class DAOConfirmation\\.$#"
-			count: 1
-			path: contributions/confirmations/behaviour/base/confirmationhandler.base.php
-
-		-
-			message: "#^Call to method delete\\(\\) on an unknown class DAOConfirmation\\.$#"
-			count: 1
-			path: contributions/confirmations/behaviour/base/confirmationhandler.base.php
-
-		-
-			message: "#^Cloning object of an unknown class DAOConfirmation\\.$#"
-			count: 1
-			path: contributions/confirmations/behaviour/base/confirmationhandler.base.php
-
-		-
-			message: "#^Parameter \\$confirmation of method ConfirmationHandlerBase\\:\\:__construct\\(\\) has invalid type DAOConfirmation\\.$#"
-			count: 1
-			path: contributions/confirmations/behaviour/base/confirmationhandler.base.php
-
-		-
-			message: "#^Parameter \\$confirmation of method ConfirmationHandlerBase\\:\\:do_confirm\\(\\) has invalid type DAOConfirmation\\.$#"
-			count: 1
-			path: contributions/confirmations/behaviour/base/confirmationhandler.base.php
-
-		-
-			message: "#^Parameter \\$confirmation of method ConfirmationHandlerBase\\:\\:do_created\\(\\) has invalid type DAOConfirmation\\.$#"
-			count: 1
-			path: contributions/confirmations/behaviour/base/confirmationhandler.base.php
-
-		-
-			message: "#^Property ConfirmationHandlerBase\\:\\:\\$confirmation has unknown class DAOConfirmation as its type\\.$#"
-			count: 1
-			path: contributions/confirmations/behaviour/base/confirmationhandler.base.php
-
-		-
-			message: "#^Instantiated class ConsolePageView not found\\.$#"
-			count: 1
-			path: contributions/jcssmanager/view/base/jcssmanagerviewfactory.cls.php
 
 		-
 			message: "#^Access to an undefined property IImageInformation\\:\\:\\$handle\\.$#"
@@ -99,33 +24,3 @@ parameters:
 			message: "#^Access to constant COPY_NO_REPLACE on an unknown class SystemUpdateInstaller\\.$#"
 			count: 1
 			path: contributions/models.searchindex/install/check_postconditions.php
-
-		-
-			message: "#^Call to an undefined method IView\\:\\:is_cached\\(\\)\\.$#"
-			count: 1
-			path: gyro/core/controller/base/renderdecorators/dispatcherinvokerenderdecorator.cls.php
-
-		-
-			message: "#^Default value of the parameter \\#3 \\$items_per_page \\(false\\) of method Pager\\:\\:__construct\\(\\) is incompatible with type int\\.$#"
-			count: 1
-			path: gyro/core/controller/tools/pager.cls.php
-
-		-
-			message: "#^Default value of the parameter \\#4 \\$adapter \\(false\\) of method Pager\\:\\:__construct\\(\\) is incompatible with type IPagerAdapter\\.$#"
-			count: 1
-			path: gyro/core/controller/tools/pager.cls.php
-
-		-
-			message: "#^Constant APP_DB_NAME not found\\.$#"
-			count: 1
-			path: gyro/core/model/base/db.cls.php
-
-		-
-			message: "#^Constant APP_DB_PWD not found\\.$#"
-			count: 1
-			path: gyro/core/model/base/db.cls.php
-
-		-
-			message: "#^Constant APP_DB_USER not found\\.$#"
-			count: 1
-			path: gyro/core/model/base/db.cls.php

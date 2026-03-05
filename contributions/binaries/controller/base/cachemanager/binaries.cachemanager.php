@@ -6,8 +6,8 @@ class BinariesCacheManager extends NoCacheCacheManager {
 	/**
 	 * Constructor
 	 *
-	 * @param int $duration Cache duration , defaults to value set in ConfigBinaries::CLIENT_CACHE_DURATION
-	 * @param ICacheHeaderManager $header_manager Defaults to class et in ConfigBinaries::CACHEHEADER_CLASS
+	 * @param int|false $duration Cache duration , defaults to value set in ConfigBinaries::CLIENT_CACHE_DURATION
+	 * @param ICacheHeaderManager|false $header_manager Defaults to class set in ConfigBinaries::CACHEHEADER_CLASS
 	 */
 	public function __construct($duration = false, $header_manager = false) {
 		if (empty($duration)) {

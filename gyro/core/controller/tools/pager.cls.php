@@ -30,8 +30,8 @@ class Pager implements IDBQueryModifier {
 	 * @param int|ISearchAdapter $items_total
 	 *   Total numbers of items or instance of ISearchadapter. 
 	 *   In later case, count() is invoked on search adapter
-	 * @param int $items_per_page Number of items per page
-	 * @param IPagerAdapter $adapter Adapter. For compatability reasons, this is also interpreted as a policy, if you pass an integer
+	 * @param int|false $items_per_page Number of items per page
+	 * @param IPagerAdapter|false $adapter Adapter. For compatability reasons, this is also interpreted as a policy, if you pass an integer
 	 */
 	public function __construct($page_data, $items_total, $items_per_page = false, $adapter = false) {
 		$this->adapter = ($adapter instanceof IPagerAdapter) ? $adapter : new PagerDefaultAdapter($page_data, 'page');

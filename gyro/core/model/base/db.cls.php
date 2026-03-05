@@ -165,6 +165,7 @@ class DB {
 	 */
 	public static function initialize() {
 		//define database configuration values
+		/** @phpstan-ignore constant.notFound, constant.notFound, constant.notFound */
 		self::$db = self::create_connection(self::DEFAULT_CONNECTION, APP_DB_TYPE, APP_DB_NAME, APP_DB_USER, APP_DB_PWD, APP_DB_HOST);
 	}
 

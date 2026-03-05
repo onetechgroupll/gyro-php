@@ -44,6 +44,7 @@ class DispatcherInvokeRenderDecorator extends RenderDecoratorBase {
 	 */
 	public function render_page($page_data, $content_render_decorator, $policy = IView::NONE) {
 		$view = ViewFactory::create_view(IViewFactory::PAGE, $page_data->page_template, $page_data);
+		/** @phpstan-ignore method.notFound */
 		if ($view->is_cached() == false) {
 			$page_data->router->preprocess($page_data);
 			$content_render_decorator->render_content($page_data);
