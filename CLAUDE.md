@@ -1,23 +1,27 @@
 # Gyro-PHP Framework – Projektanalyse & Memory
 
-> Letzte Aktualisierung: 2026-03-05 (Phase 7 abgeschlossen)
+> Letzte Aktualisierung: 2026-03-05 (Phase 8 abgeschlossen)
 
 ## Projektübersicht
 
 - **Framework:** Gyro-PHP, eigenes PHP-Webframework (seit 2004, PHP 4 → PHP 5 Rewrite 2005)
 - **Aktueller Stand:** Läuft auf PHP 8.x mit Safeguards, Code-Stil ist PHP 5.x Ära
 - **Composer** für Dev-Dependencies (PHPUnit, PHPStan), kein PSR-4, kein Namespace-System
-- **Test-Framework:** PHPUnit 10.5 (primär, 254 Tests) + SimpleTest 1.1.0 (Legacy, abandoned)
+- **Test-Framework:** PHPUnit 10.5 (primär, 287 Tests) + SimpleTest 1.1.0 (Legacy, abandoned)
+- **CLI-Tool:** `bin/gyro` (Phase 8) — model:list, model:show, db:sync
 - **Statische Analyse:** PHPStan Level 2 mit Baseline (1262 bekannte Fehler getracked)
 - **Environment:** `.env` Support (Phase 7), rückwärtskompatibel mit `APP_*` Konstanten
 
 ## Verzeichnisstruktur
 
 ```
+bin/                             # CLI-Werkzeuge
+  gyro                           # CLI Entry Point (Phase 8)
 gyro/                          # Framework-Core
   core/
     config.cls.php             # Zentrale Config (281 Zeilen, 100+ Konstanten)
     start.php                  # Bootstrap/Entry Point
+    cli/                       # CLI-Kernel, Commands, Helpers (Phase 8)
     controller/base/           # Basis-Controller & Routing
     model/base/                # DB-Abstraktionsschicht
     model/drivers/mysql/       # MySQL-Driver (nur mysqli_real_escape_string)
@@ -40,7 +44,7 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | Metrik | Wert |
 |--------|------|
 | Core-Klassen | 239 (.cls.php, .model.php, .facade.php) |
-| PHPUnit-Tests | 254 Tests, 985 Assertions (62 Test-Dateien) |
+| PHPUnit-Tests | 287 Tests, 1066 Assertions (65 Test-Dateien) |
 | SimpleTest (Legacy) | 57 Dateien (größtenteils nach PHPUnit portiert) |
 | Testabdeckung | ~50%+ (Phase 7: massive Erweiterung) |
 | PHPDoc-Abdeckung | ~15-20% |
@@ -269,11 +273,40 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 - ~~3 PHP 8.4 Deprecation Warnings~~ → alle gefixt (dynamische Properties deklariert)
 - Mock-Driver nutzt `GyroString::escape()` (HTML-Entities) statt `mysqli_real_escape_string`
 
+### Phase 8: CLI-Tool ✅ ERLEDIGT
+- [x] CLI Entry Point (`bin/gyro`) mit Bootstrap ohne HTTP-Kontext
+- [x] CLI-Kernel mit Command-Routing, Argument-Parsing, farbiger Ausgabe
+- [x] `model:list` — Alle DAO-Modelle auflisten (mit Model-Discovery)
+- [x] `model:show <table>` — Detailliertes Schema, CREATE TABLE SQL
+- [x] `db:sync` — Schema-Diff mit ALTER TABLE Generation (Dry-Run + Execute)
+- [x] CLITable ASCII-Tabellenrenderer
+- [x] 33 neue Tests (CLITable, CLIKernel, ModelShowCommand)
+- **Ergebnis:** 287 Tests, 1066 Assertions (alle grün)
+
+#### Phase 8 Details: CLI-Architektur
+- **Entry Point:** `bin/gyro` (executable PHP-Script)
+- **Bootstrap:** `gyro/core/cli/bootstrap.cli.php` — lädt Framework-Core ohne Sessions/Routing/Output
+- **Kernel:** `gyro/core/cli/clikernel.cls.php` — registriert Commands, parsed Args, delegiert
+- **Commands:** `gyro/core/cli/commands/` — je ein Kommando pro Datei
+- **Erweiterbar:** Eigene Commands durch Ableitung von `CLICommand`
+
+#### Phase 8 Details: Model-Discovery
+- Scannt `GYRO_CORE_DIR/model/classes/` und alle geladenen Module-Verzeichnisse
+- Instanziiert DAOs und liest Schema via `get_table_fields()`, `get_table_keys()`, `get_table_relations()`
+- Fallback: Wenn Klassennamen-Ableitung nicht passt, erkennt neue `DAO*` Klassen via `get_declared_classes()`
+- Generiert CREATE TABLE SQL aus DBField-Introspection
+
+#### Phase 8 Details: db:sync
+- Vergleicht Model-Schema mit INFORMATION_SCHEMA (SHOW COLUMNS)
+- Erkennt: fehlende Tabellen (CREATE), fehlende Spalten (ADD COLUMN), geänderte Typen (MODIFY COLUMN)
+- Warnt bei DB-Spalten, die nicht im Model existieren (kein Auto-DROP — zu gefährlich)
+- `--dry-run` (Default) zeigt SQL, `--execute` führt aus
+
 ## Scorecard
 
 | Aspekt | Bewertung | Notizen |
 |--------|-----------|---------|
-| Testabdeckung | 6/10 | ~50%+, 254 Tests / 985 Assertions (PHPUnit 10.5) |
+| Testabdeckung | 7/10 | ~55%+, 287 Tests / 1066 Assertions (PHPUnit 10.5) |
 | Test-Framework | 7/10 | PHPUnit 10.5 primär, Mock-Infrastruktur, SimpleTest Legacy |
 | Dokumentation | 4/10 | PHPDoc sparse |
 | Dead Code | 8/10 | Minimal, sauber |
@@ -281,6 +314,7 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | Error Logging | 7/10 | ✅ PSR-3 Levels, JSON-Output, Context, Exception-Support |
 | Moderne PHP-Features | 5/10 | ✅ Type Declarations, ✅ Typed Properties, ✅ Union Types |
 | Sicherheit | 7/10 | ✅ bcrypt, ✅ Headers, ✅ Prepared Stmt, ✅ Session, ✅ CSRF |
+| CLI-Tooling | 6/10 | ✅ `bin/gyro` mit model:list, model:show, db:sync |
 | Statische Analyse | 5/10 | ✅ PHPStan Level 2 mit Baseline, 1262 Fehler getracked |
 
 ## Moderne PHP-Features Analyse
@@ -328,7 +362,9 @@ Framework ist **selektiv modernisiert**: Return Types + Union Types in Core-Inte
 - PHPDoc für public APIs ergänzen
 - Middleware-Pattern einführen
 - Einfacher DI-Container für bessere Testbarkeit
-- CLI-Tool für Code-Generierung (ähnlich Artisan)
+- ~~CLI-Tool für Code-Generierung (ähnlich Artisan)~~ ✅ Phase 8: `bin/gyro`
+- Auto-REST-API aus DAO-Modellen generieren
+- Auto-Admin-Interface aus ISelfDescribing + IActionSource
 
 ## Wichtige Dateien für schnellen Einstieg
 
@@ -338,11 +374,15 @@ Framework ist **selektiv modernisiert**: Return Types + Union Types in Core-Inte
 | Config | `gyro/core/config.cls.php` |
 | Env-Loader | `gyro/core/lib/helpers/env.cls.php` |
 | .env Beispiel | `.env.example` |
+| CLI Entry Point | `bin/gyro` |
+| CLI Kernel | `gyro/core/cli/clikernel.cls.php` |
+| CLI Bootstrap | `gyro/core/cli/bootstrap.cli.php` |
+| CLI Commands | `gyro/core/cli/commands/` |
 | DB-Driver | `gyro/core/model/drivers/mysql/dbdriver.mysql.php` |
 | Logger | `gyro/core/lib/components/logger.cls.php` |
 | User-Model | `contributions/usermanagement/model/classes/users.model.php` |
 | String-Helpers | `gyro/core/lib/helpers/string.cls.php` |
-| PHPUnit-Tests | `tests/core/` (53 Dateien) |
+| PHPUnit-Tests | `tests/core/` (56 Dateien) |
 | Test-Bootstrap | `tests/bootstrap.php` |
 | SimpleTest (Legacy) | `gyro/modules/simpletest/simpletests/` |
 | Routing | `gyro/core/controller/base/routes/` |

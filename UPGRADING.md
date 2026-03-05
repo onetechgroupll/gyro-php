@@ -228,6 +228,43 @@ Logger::set_min_level(Logger::WARNING); // Nur WARNING und höher loggen
 **Log-Dateien:** Pro Level eine separate JSON-Datei (z.B. `error-2026-03-05.log`).
 Der alte `Logger::log()` bleibt kompatibel und schreibt weiterhin im CSV-Format.
 
+### 4.4 CLI-Tool (`bin/gyro`)
+
+Ein neues Kommandozeilen-Werkzeug ermöglicht die Verwaltung des Frameworks ohne Browser:
+
+```bash
+# Alle verfügbaren Kommandos anzeigen
+./bin/gyro help
+
+# Alle DAO-Modelle auflisten
+./bin/gyro model:list
+./bin/gyro model:list --verbose    # Mit Feldzahl, Relations, Quellmodul
+
+# Detailliertes Schema eines Modells anzeigen
+./bin/gyro model:show users        # Felder, Typen, Defaults, Relations, CREATE TABLE SQL
+
+# Datenbank mit Model-Schema vergleichen
+./bin/gyro db:sync                 # Zeigt ALTER TABLE SQL (Dry Run)
+./bin/gyro db:sync --execute       # Führt die Änderungen aus
+./bin/gyro db:sync --table=users   # Nur eine Tabelle prüfen
+```
+
+**Kein Handlungsbedarf** — das CLI-Tool ist ein reiner Neuzugang ohne Auswirkung auf
+bestehenden Code. Es nutzt die vorhandene Model-Introspection (`create_table_object()`)
+und generiert SQL aus den bestehenden DAO-Definitionen.
+
+**Eigene Kommandos schreiben:**
+```php
+class MyCommand extends CLICommand {
+    public function get_name(): string { return 'my:task'; }
+    public function get_description(): string { return 'Mein Kommando'; }
+    public function execute(array $args): int {
+        $this->success('Fertig!');
+        return 0;
+    }
+}
+```
+
 ---
 
 ## 5. Breaking Changes

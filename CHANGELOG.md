@@ -2,6 +2,27 @@
 
 Alle wesentlichen Änderungen am Gyro-PHP Framework, chronologisch nach Phasen geordnet.
 
+## [Phase 8] – 2026-03-05
+
+### Hinzugefügt
+- **CLI-Tool (`bin/gyro`):** Neues Kommandozeilen-Werkzeug für Gyro-PHP:
+  - `gyro help` — Verfügbare Kommandos anzeigen
+  - `gyro model:list` — Alle DAO-Modelle mit Tabellennamen, Feldern und Primary Keys auflisten
+  - `gyro model:show <table>` — Detailliertes Schema eines Modells anzeigen (Felder, Typen, Defaults, Relations, CREATE TABLE SQL)
+  - `gyro db:sync` — Model-Schema mit der Datenbank vergleichen und ALTER TABLE SQL generieren
+- **CLI-Kernel** (`gyro/core/cli/clikernel.cls.php`): Command-Routing, Argument-Parsing, farbige Ausgabe
+- **CLICommand** Basisklasse für eigene Kommandos
+- **CLITable** ASCII-Tabellenrenderer für formatierte CLI-Ausgabe
+- **CLI-Bootstrap** (`gyro/core/cli/bootstrap.cli.php`): Framework-Initialisierung ohne HTTP-Kontext
+- **Model-Discovery:** Automatische Erkennung aller DAO-Klassen in Core, Modules und Contributions
+- **Schema-Introspection:** Liest `create_table_object()` und generiert CREATE TABLE / ALTER TABLE SQL
+- **33 neue Tests** für CLI-Komponenten (CLITable, CLIKernel, ModelShowCommand)
+
+### Ergebnis
+- 287 Tests, 1066 Assertions (alle grün, 0 Deprecations)
+
+---
+
 ## [Phase 7] – 2026-03-05
 
 ### Hinzugefügt
