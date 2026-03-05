@@ -401,7 +401,7 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
   - Error-Responses: 400, 404, 405, 422 mit einheitlichem Schema
 
 ### Phase 13: Middleware, DI-Container, PHPStan Baseline Abbau ✅ ERLEDIGT
-- [x] PHPStan Baseline: 539 → 36 Fehler (93% Reduktion, 503 Fehler behoben)
+- [x] PHPStan Baseline: 539 → 13 Fehler (98% Reduktion, 526 Fehler behoben)
 - [x] PHPDoc-Korrekturen in 120+ Dateien (fehlende `$variable`-Namen, Typ-Fixes)
 - [x] Middleware-Pattern: `IMiddleware` Interface + `MiddlewareStack` + `MiddlewareRenderDecorator`
 - [x] DI-Container: `Container`-Klasse mit Singleton/Factory/Bind
@@ -490,14 +490,14 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 Framework ist **umfassend modernisiert**: Return Types + Union Types in Core-Interfaces, Typed Properties in Implementierungen, `.env` Support, PHPStan Level 3, Middleware-Pattern, DI-Container. Keine Nutzung von Namespaces, Enums, Attributes, Match, Readonly. Code-Stil bleibt PHP 5.x Ära mit PHP 8.x Kompatibilität und moderner Tooling-Infrastruktur.
 
 ### Nächste Schritte (Empfehlung)
-- ~~PHPStan Baseline schrittweise abbauen~~ ✅ Phase 13: 1262 → 36 Fehler (97% Reduktion)
+- ~~PHPStan Baseline schrittweise abbauen~~ ✅ Phase 13: 1262 → 13 Fehler (99% Reduktion)
 - ~~PHPDoc für public APIs ergänzen~~ ✅ Phase 12+13: ~45-50% Coverage
 - ~~Middleware-Pattern einführen~~ ✅ Phase 13: `IMiddleware` + `MiddlewareStack`
 - ~~Einfacher DI-Container für bessere Testbarkeit~~ ✅ Phase 13: `Container`-Klasse
 - ~~CLI-Tool für Code-Generierung (ähnlich Artisan)~~ ✅ Phase 8: `bin/gyro`
 - ~~Auto-REST-API aus DAO-Modellen generieren~~ ✅ Phase 9: `gyro/modules/api/`
 - ~~Auto-Admin-Interface aus ISelfDescribing + IActionSource~~ ✅ Phase 11: `gyro/modules/admin/`
-- PHPStan Baseline verbleibende 36 Fehler abbauen (meist Type-Mismatches, externe Klassen)
+- PHPStan Baseline verbleibende 13 Fehler (12x IImageInformation @property, 1x empty() false positive)
 - Namespaces/PSR-4 einführen (großer Breaking Change)
 
 ## Wichtige Dateien für schnellen Einstieg
