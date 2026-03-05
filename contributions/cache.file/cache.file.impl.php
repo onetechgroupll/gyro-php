@@ -206,16 +206,16 @@ class FileCacheItem implements ICacheItem {
 	 *
 	 * @return datetime
 	 */
-	public function get_creationdate() {
+	public function get_creationdate(): mixed {
 		return $this->item_data['creationdate'];
 	}
 
 	/**
 	 * Return expiration date
 	 *
-	 * @return datetime
+	 * @return mixed
 	 */
-	public function get_expirationdate() {
+	public function get_expirationdate(): mixed {
 		return $this->item_data['expirationdate'];
 	}
 
@@ -224,7 +224,7 @@ class FileCacheItem implements ICacheItem {
 	 *
 	 * @return mixed
 	 */
-	public function get_data() {
+	public function get_data(): mixed {
 		return $this->item_data['data'];
 	}
 
@@ -233,7 +233,7 @@ class FileCacheItem implements ICacheItem {
 	 *
 	 * @return string
 	 */
-	public function get_content_plain() {
+	public function get_content_plain(): string {
 		$ret = $this->get_content_compressed();
 		if ($ret && function_exists('gzinflate')) {
 			$ret = gzinflate($ret);
@@ -246,7 +246,7 @@ class FileCacheItem implements ICacheItem {
 	 *
 	 * @return string
 	 */
-	public function get_content_compressed() {
+	public function get_content_compressed(): string {
 		$content = $this->item_data['content'];
 		//$content = base64_decode($content);
 		return $content;
