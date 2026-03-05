@@ -38,3 +38,50 @@ GyroLocale::set_locale('en', 'UTF-8');
 // Load interfaces and helpers
 Load::directories('lib/interfaces');
 Load::directories('lib/helpers');
+
+// Load model base and DB driver classes for DB-related tests
+Load::directories('model/base');
+Load::directories('model/base/fields');
+Load::directories('model/base/queries');
+Load::directories('model/base/sqlbuilder');
+Load::directories('model/base/constraints');
+Load::directories('model/drivers/mysql');
+
+// Load model facade/classes (Cache, etc.)
+Load::directories('model/classes');
+
+// Load behaviour/commands
+Load::directories('behaviour/base');
+
+// Load controller/routing classes
+Load::directories('controller/base');
+Load::directories('controller/base/routes');
+Load::directories('controller/base/routes/parameterizedroutehandlers');
+Load::directories('controller/base/cachemanager');
+
+// Load view base for widget tests
+Load::directories('view/widgets');
+
+// Load referer and translator components
+Load::components('referer');
+Load::components('translator');
+
+// Load simpletest mock classes for DB tests
+require_once GYRO_ROOT_DIR . 'modules/simpletest/simpletests/mocks/dbdriver.sql.mock.cls.php';
+require_once GYRO_ROOT_DIR . 'modules/simpletest/model/base/dbtable.mock.cls.php';
+
+// Register mock driver as default DB connection (avoids "Connection default not found")
+DB::create_connection(DB::DEFAULT_CONNECTION, 'mysql', 'db', 'user', 'password', 'host');
+// Replace the real driver with our mock that doesn't connect
+$mock_driver = new DBDriverMySqlMock();
+$reflector = new ReflectionClass(DB::class);
+$prop = $reflector->getProperty('connections');
+$prop->setAccessible(true);
+$connections = $prop->getValue();
+$connections[DB::DEFAULT_CONNECTION] = $mock_driver;
+$prop->setValue(null, $connections);
+
+// Load test DAO model classes
+foreach (glob(GYRO_ROOT_DIR . 'modules/simpletest/model/classes/*.model.php') as $model_file) {
+	require_once $model_file;
+}

@@ -39,7 +39,7 @@ class ConverterHtmlEx extends ConverterHtml {
 	 *   @li br: Text after a <br> tag. Default is "\n"
 	 *   @li a: Format to decode <a> tags. Supports $title$ and $url$ placeholders. Default is "$title$: $url$"
 	 */
-	public function decode($value, $params = false) {
+	public function decode(mixed $value, mixed $params = false): mixed {
 		// If there is no HTML, decoding would do more harm than good
 		if (!preg_match('@<\w+.*?>@', $value)) {
 			return $value;
