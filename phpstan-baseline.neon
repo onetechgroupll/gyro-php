@@ -86,11 +86,6 @@ parameters:
 			path: contributions/css.bootstrap3/install/check_preconditions.php
 
 		-
-			message: "#^Call to static method copy_to_webroot\\(\\) on an unknown class SystemUpdateInstaller\\.$#"
-			count: 3
-			path: contributions/css.bootstrap3/install/check_preconditions.php
-
-		-
 			message: "#^Access to constant COPY_OVERWRITE on an unknown class SystemUpdateInstaller\\.$#"
 			count: 1
 			path: contributions/css.bootstrap3/install/install.php
@@ -116,11 +111,6 @@ parameters:
 			path: contributions/css.yaml/install/check_preconditions.php
 
 		-
-			message: "#^Call to static method copy_to_webroot\\(\\) on an unknown class SystemUpdateInstaller\\.$#"
-			count: 2
-			path: contributions/css.yaml/install/check_preconditions.php
-
-		-
 			message: "#^Access to constant COPY_OVERWRITE on an unknown class SystemUpdateInstaller\\.$#"
 			count: 1
 			path: contributions/css.yaml/install/install.php
@@ -138,11 +128,6 @@ parameters:
 		-
 			message: "#^Access to constant COPY_OVERWRITE on an unknown class SystemUpdateInstaller\\.$#"
 			count: 1
-			path: contributions/css.yaml4/install/check_preconditions.php
-
-		-
-			message: "#^Call to static method copy_to_webroot\\(\\) on an unknown class SystemUpdateInstaller\\.$#"
-			count: 2
 			path: contributions/css.yaml4/install/check_preconditions.php
 
 		-
@@ -176,11 +161,6 @@ parameters:
 			path: contributions/javascript.jqueryui/install/check_preconditions.php
 
 		-
-			message: "#^Call to static method copy_to_webroot\\(\\) on an unknown class SystemUpdateInstaller\\.$#"
-			count: 2
-			path: contributions/javascript.jqueryui/install/check_preconditions.php
-
-		-
 			message: "#^Access to constant HTACCESS_OPTIONS on an unknown class SystemUpdateInstaller\\.$#"
 			count: 1
 			path: contributions/jcssmanager/lib/helpers/jcssmanager.cls.php
@@ -189,6 +169,11 @@ parameters:
 			message: "#^Access to constant HTACCESS_REWRITE on an unknown class SystemUpdateInstaller\\.$#"
 			count: 1
 			path: contributions/jcssmanager/lib/helpers/jcssmanager.cls.php
+
+		-
+			message: "#^Instantiated class ConsolePageView not found\\.$#"
+			count: 1
+			path: contributions/jcssmanager/view/base/jcssmanagerviewfactory.cls.php
 
 		-
 			message: "#^Access to an undefined property IImageInformation\\:\\:\\$handle\\.$#"
