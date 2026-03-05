@@ -499,6 +499,85 @@ Framework ist **umfassend modernisiert**: Return Types + Union Types in Core-Int
 - ~~Auto-Admin-Interface aus ISelfDescribing + IActionSource~~ ✅ Phase 11: `gyro/modules/admin/`
 - PHPStan Baseline verbleibende 13 Fehler (12x IImageInformation @property, 1x empty() false positive)
 - Namespaces/PSR-4 einführen (großer Breaking Change)
+- **Migrations-Assistent** (Phase 14) — siehe Plan unten
+
+### Phase 14: Migrations-Assistent (GEPLANT)
+
+Ziel: CLI-Commands `migrate:check` und `migrate:apply`, die bestehende Gyro-PHP-Installationen analysieren und beim Upgrade auf die aktuelle Version unterstützen.
+
+#### Phase 14a: `migrate:check` — Diagnose-Command
+- [x] Neuer CLI-Command `bin/gyro migrate:check`
+- [ ] Scanner-Architektur: `IMigrationCheck` Interface mit `scan()` → Array von Findings
+- [ ] Findings mit Severity-Levels: CRITICAL, WARNING, INFO
+- [ ] Konsolenausgabe: Farbiger Report gruppiert nach Severity
+- [ ] Checks implementieren:
+  - **CRITICAL: PHP 8.x Kompatibilität**
+    - `get_magic_quotes_gpc()` Aufrufe erkennen
+    - `E_STRICT` / `defined('E_DEPRECATED')` Patterns
+    - `isset($value->__toString)` statt `method_exists()`
+  - **CRITICAL: Sicherheit**
+    - Veraltete Passwort-Hashes (MD5/SHA1 Default statt bcrypt)
+    - `execute()` mit String-Interpolation statt `execute_prepared()`
+    - Fehlende Security-Headers
+    - `==` statt `===` in sicherheitskritischen Vergleichen
+  - **WARNING: Veraltete Module**
+    - `cache.xcache` (tot seit PHP 7)
+    - `javascript.cleditor`, `javascript.wymeditor` (abandoned)
+  - **WARNING: Konfiguration**
+    - Fehlende `.env`-Datei (APP_* Konstanten direkt in Code)
+    - Hardcoded Credentials in Config-Dateien
+  - **INFO: Modernisierung**
+    - Fehlende Type Declarations in Interfaces
+    - Fehlende PHPDoc `$variable`-Namen
+    - Middleware/DI-Container nicht genutzt
+- [ ] Exit-Code: 0 = alles OK, 1 = Warnings, 2 = Critical Findings
+
+#### Phase 14b: `migrate:apply` — Automatische Fixes
+- [ ] `bin/gyro migrate:apply [--phase=N] [--dry-run] [--execute]`
+- [ ] Dry-Run als Default (wie `db:sync`)
+- [ ] Automatisch fixbare Checks:
+  - `get_magic_quotes_gpc()` → No-op ersetzen
+  - `E_ALL | E_STRICT` → `E_ALL`
+  - `isset($value->__toString)` → `method_exists($value, '__toString')`
+  - `.env.example` generieren aus gefundenen `APP_*` Konstanten
+  - Tote Module-Verzeichnisse auflisten (manuelles Löschen empfehlen)
+- [ ] Nicht-automatisch (nur Hinweis):
+  - Passwort-Hash-Migration (braucht DB-Zugriff + User-Login)
+  - `execute()` → `execute_prepared()` (Query-Kontext nötig)
+  - Middleware/DI-Container Integration (architektonisch)
+- [ ] Backup-Hinweis vor Ausführung
+- [ ] Zusammenfassung: X Dateien geändert, Y Stellen gefixt
+
+#### Phase 14c: Tests
+- [ ] MigrationCheck-Interface Tests
+- [ ] Jeder Scanner einzeln getestet mit Fixture-Dateien
+- [ ] `migrate:check` Integration-Test (Command-Output prüfen)
+- [ ] `migrate:apply --dry-run` Test (keine Dateien verändert)
+
+#### Phase 14 Architektur
+```
+gyro/core/cli/commands/
+  migratecheck.cmd.php          # migrate:check Command
+  migrateapply.cmd.php          # migrate:apply Command
+gyro/core/cli/migration/
+  imigrationcheck.cls.php       # Interface für Scanner
+  migrationfinding.cls.php      # Finding-Datenklasse (file, line, severity, message, fix)
+  migrationrunner.cls.php       # Orchestriert alle Checks
+  checks/
+    php8compat.check.php        # PHP 8.x Kompatibilitäts-Checks
+    security.check.php          # Sicherheits-Checks
+    deadmodules.check.php       # Tote Module erkennen
+    config.check.php            # Konfigurations-Checks
+    modernization.check.php     # Modernisierungs-Empfehlungen
+tests/core/
+  MigrationCheckTest.php        # Scanner-Tests
+  MigrateCommandTest.php        # Command-Tests
+```
+
+#### Phase 14 Abhängigkeiten
+- Nutzt bestehendes CLI-Framework (Phase 8): `CLICommand`, `CLIKernel`, `CLIOutput`
+- Nutzt `Glob`/Datei-Scanning aus `Load`-Klasse
+- Kein neues Composer-Package nötig
 
 ## Wichtige Dateien für schnellen Einstieg
 
