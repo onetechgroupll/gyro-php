@@ -343,6 +343,44 @@ Die Spezifikation wird dynamisch aus den registrierten DAO-Modellen generiert:
 
 **Kein Handlungsbedarf** — der Endpoint ist automatisch verfügbar wenn das API-Modul aktiv ist.
 
+### 4.7 Auto-Admin (Django-Admin-Style)
+
+Ein automatisch generiertes Admin-Interface für alle DAO-Modelle:
+
+```php
+// In Ihrer modules.php — Admin-Modul aktivieren
+Load::enable_module('admin');
+```
+
+**Sofort verfügbare Admin-Seiten:**
+
+| URL | Beschreibung |
+|-----|--------------|
+| `/admin/` | Dashboard mit Modell-Übersicht |
+| `/admin/users/` | Datensätze auflisten (mit Paging) |
+| `/admin/users/create` | Neuen Datensatz anlegen |
+| `/admin/users/42/` | Datensatz-Detail |
+| `/admin/users/42/edit` | Datensatz bearbeiten |
+| `/admin/users/42/delete` | Datensatz löschen (mit Bestätigung) |
+
+**Features:**
+- Formulare werden automatisch aus dem Model-Schema generiert
+- Enum-Felder → Select-Box, Bool → Checkbox, Blob → Textarea
+- INTERNAL-Felder werden nie angezeigt
+- Validierung über das bestehende `DataObjectBase::validate()`
+- Self-Contained HTML mit eingebettetem CSS (kein CDN nötig)
+
+**Konfiguration (optional):**
+```php
+// Sensitive Tabellen ausschließen
+AdminController::exclude_table('sessions');
+
+// Oder nur bestimmte Modelle freigeben
+AdminController::register_model('users', 'DAOUsers');
+```
+
+**Kein Handlungsbedarf** — das Modul ist optional und muss explizit aktiviert werden.
+
 ---
 
 ## 5. Breaking Changes

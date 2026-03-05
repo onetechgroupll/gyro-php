@@ -2,6 +2,32 @@
 
 Alle wesentlichen Änderungen am Gyro-PHP Framework, chronologisch nach Phasen geordnet.
 
+## [Phase 11] – 2026-03-05
+
+### Hinzugefügt
+- **Auto-Admin Modul** (`gyro/modules/admin/`): Django-Admin-Style CRUD-Interface,
+  automatisch generiert aus DAO-Model-Schemas — keine Templates nötig:
+  - `GET /admin/` — Dashboard mit Modell-Übersicht
+  - `GET /admin/{table}/` — Datensätze auflisten (Paging, Sorting)
+  - `GET /admin/{table}/create` — Neuen Datensatz anlegen (Formular)
+  - `GET /admin/{table}/{id}/` — Einzelnen Datensatz anzeigen
+  - `GET /admin/{table}/{id}/edit` — Datensatz bearbeiten (Formular)
+  - `GET /admin/{table}/{id}/delete` — Datensatz löschen (mit Bestätigung)
+- **AdminHtml** Helper (`gyro/modules/admin/lib/helpers/adminhtml.cls.php`):
+  - Self-Contained HTML mit eingebettetem CSS (kein CDN nötig)
+  - Automatisches Form-Mapping: DBField → HTML-Input-Typ
+  - Responsive Design, Breadcrumb-Navigation, Flash-Messages
+- **AdminController** (`gyro/modules/admin/controller/admin.controller.php`):
+  - Auto-Discovery aller DAO-Modelle
+  - Validierung über `DataObjectBase::validate()`
+  - INTERNAL-Felder automatisch ausgeblendet
+- **34 neue Tests** für Auto-Admin (AdminHtml + AdminController)
+
+### Ergebnis
+- 361 Tests, 1290 Assertions (alle grün)
+
+---
+
 ## [Phase 10] – 2026-03-05
 
 ### Hinzugefügt

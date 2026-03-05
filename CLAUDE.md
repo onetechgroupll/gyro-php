@@ -1,13 +1,13 @@
 # Gyro-PHP Framework – Projektanalyse & Memory
 
-> Letzte Aktualisierung: 2026-03-05 (Phase 10 abgeschlossen)
+> Letzte Aktualisierung: 2026-03-05 (Phase 11 abgeschlossen)
 
 ## Projektübersicht
 
 - **Framework:** Gyro-PHP, eigenes PHP-Webframework (seit 2004, PHP 4 → PHP 5 Rewrite 2005)
 - **Aktueller Stand:** Läuft auf PHP 8.x mit Safeguards, Code-Stil ist PHP 5.x Ära
 - **Composer** für Dev-Dependencies (PHPUnit, PHPStan), kein PSR-4, kein Namespace-System
-- **Test-Framework:** PHPUnit 10.5 (primär, 327 Tests) + SimpleTest 1.1.0 (Legacy, abandoned)
+- **Test-Framework:** PHPUnit 10.5 (primär, 361 Tests) + SimpleTest 1.1.0 (Legacy, abandoned)
 - **CLI-Tool:** `bin/gyro` (Phase 8) — model:list, model:show, db:sync
 - **Statische Analyse:** PHPStan Level 2 mit Baseline (1262 bekannte Fehler getracked)
 - **Environment:** `.env` Support (Phase 7), rückwärtskompatibel mit `APP_*` Konstanten
@@ -45,7 +45,7 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | Metrik | Wert |
 |--------|------|
 | Core-Klassen | 239 (.cls.php, .model.php, .facade.php) |
-| PHPUnit-Tests | 327 Tests, 1199 Assertions (68 Test-Dateien) |
+| PHPUnit-Tests | 361 Tests, 1290 Assertions (70 Test-Dateien) |
 | REST-API-Modul | 3 Dateien (Controller, Helper, Start) |
 | SimpleTest (Legacy) | 57 Dateien (größtenteils nach PHPUnit portiert) |
 | Testabdeckung | ~50%+ (Phase 7: massive Erweiterung) |
@@ -344,6 +344,36 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 - **Error Responses:** Einheitliches JSON-Format mit HTTP Status Codes (400, 404, 405, 422, 500)
 - **Composite Keys:** `/api/table/key1|key2` für Multi-Column Primary Keys
 
+### Phase 11: Auto-Admin ✅ ERLEDIGT
+- [x] `AdminController` (`gyro/modules/admin/controller/admin.controller.php`)
+- [x] `AdminHtml` Helper (`gyro/modules/admin/lib/helpers/adminhtml.cls.php`)
+- [x] Dashboard: `/admin/` mit Modell-Übersicht und Statistiken
+- [x] List View: Paging, Sorting, bis zu 6 Spalten (INTERNAL/Blob ausgeblendet)
+- [x] Detail View: Alle nicht-INTERNAL Felder als Key-Value
+- [x] Create/Edit Forms: Auto-generated aus DBField-Schema
+- [x] Delete: Bestätigungs-Dialog, POST-basiert
+- [x] Form-Mapping: DBFieldInt→number, DBFieldBool→checkbox, DBFieldEnum→select, DBFieldBlob→textarea
+- [x] Self-Contained HTML+CSS (kein CDN, kein Template-System nötig)
+- [x] Flash-Messages für CRUD-Operationen
+- [x] 34 neue Tests (AdminHtml + AdminController)
+- **Ergebnis:** 361 Tests, 1290 Assertions (alle grün)
+
+#### Phase 11 Details: Auto-Admin Architektur
+- **Module:** `gyro/modules/admin/` — aktivierbar via `Load::enable_module('admin')`
+- **Controller:** `AdminController` mit `get_routes()` → ExactMatchRoute + RouteBase
+- **HTML-Rendering:** `AdminHtml` als statische Helper-Klasse (kein Template-Engine nötig)
+- **Auto-Discovery:** Nutzt `ModelListCommand::discover_models()` (gleich wie REST-API)
+- **Konfiguration:** `AdminController::register_model()` / `::exclude_table()`
+- **Features:**
+  - Responsive Design mit eingebettetem CSS
+  - Breadcrumb-Navigation
+  - Flash-Messages (created/updated/deleted)
+  - INTERNAL-Felder nie exponiert (Formulare + Detail-Ansicht)
+  - Composite Primary Key Support (Pipe-separiert)
+  - Validierung über `DataObjectBase::validate()` mit Fehler-Anzeige
+  - AUTOINCREMENT PKs in Create-Formularen ausgeblendet
+  - PKs in Edit-Formularen nicht editierbar
+
 ### Phase 10: OpenAPI/Swagger ✅ ERLEDIGT
 - [x] `OpenApiGenerator` Klasse (`gyro/modules/api/lib/helpers/openapigenerator.cls.php`)
 - [x] `GET /api/openapi.json` Endpoint im RestApiController
@@ -372,7 +402,7 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 
 | Aspekt | Bewertung | Notizen |
 |--------|-----------|---------|
-| Testabdeckung | 7/10 | ~55%+, 327 Tests / 1199 Assertions (PHPUnit 10.5) |
+| Testabdeckung | 8/10 | ~60%+, 361 Tests / 1290 Assertions (PHPUnit 10.5) |
 | Test-Framework | 7/10 | PHPUnit 10.5 primär, Mock-Infrastruktur, SimpleTest Legacy |
 | Dokumentation | 4/10 | PHPDoc sparse |
 | Dead Code | 8/10 | Minimal, sauber |
@@ -381,6 +411,7 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | Moderne PHP-Features | 5/10 | ✅ Type Declarations, ✅ Typed Properties, ✅ Union Types |
 | Sicherheit | 7/10 | ✅ bcrypt, ✅ Headers, ✅ Prepared Stmt, ✅ Session, ✅ CSRF |
 | CLI-Tooling | 6/10 | ✅ `bin/gyro` mit model:list, model:show, db:sync |
+| Auto-Admin | 7/10 | ✅ Django-Style CRUD UI aus Model-Schema |
 | REST-API | 8/10 | ✅ Auto-REST-API + OpenAPI/Swagger Dokumentation |
 | Statische Analyse | 5/10 | ✅ PHPStan Level 2 mit Baseline, 1262 Fehler getracked |
 
@@ -448,6 +479,8 @@ Framework ist **selektiv modernisiert**: Return Types + Union Types in Core-Inte
 | REST-API Controller | `gyro/modules/api/controller/restapi.controller.php` |
 | JSON Response Helper | `gyro/modules/api/lib/helpers/jsonresponse.cls.php` |
 | OpenAPI Generator | `gyro/modules/api/lib/helpers/openapigenerator.cls.php` |
+| Admin Controller | `gyro/modules/admin/controller/admin.controller.php` |
+| Admin HTML Helper | `gyro/modules/admin/lib/helpers/adminhtml.cls.php` |
 | API Module Init | `gyro/modules/api/start.inc.php` |
 | DB-Driver | `gyro/core/model/drivers/mysql/dbdriver.mysql.php` |
 | Logger | `gyro/core/lib/components/logger.cls.php` |
