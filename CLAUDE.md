@@ -197,6 +197,46 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | Moderne PHP-Features | 4/10 | ✅ Type Declarations in Interfaces, Union Types |
 | Sicherheit | 7/10 | ✅ bcrypt, ✅ Headers, ✅ Prepared Stmt, ✅ Session, ✅ CSRF |
 
+## Moderne PHP-Features Analyse
+
+### Bestandsaufnahme (Stand 2026-03-05)
+
+| Feature | Vorhanden? | Details |
+|---------|-----------|---------|
+| Namespaces | NEIN | 0 Deklarationen im Framework (nur 3rd-Party FPDI nutzt sie) |
+| Typed Properties | NEIN | Kein PHP 7.4+ `private string $name;` |
+| Enums | NEIN | Kein PHP 8.1+ `enum` |
+| Named Arguments | NEIN | Nicht genutzt |
+| Match Expressions | NEIN | Nur in 3rd-Party (SimpleTest, Sphinx) |
+| Readonly Properties | NEIN | Nicht genutzt |
+| Fibers/Async | NEIN | Nicht genutzt |
+| Attributes | NEIN | Kein PHP 8.0+ `#[...]` |
+| PSR-Interfaces | MINIMAL | Eigene Event-Interfaces (IEventSink/IEventSource), kein PSR-7/11/14/15/17/18 |
+| Composer Autoload | NEIN | `composer.json` hat KEINEN autoload-Abschnitt; eigene `Load`-Klasse |
+| Environment Vars (.env) | MINIMAL | Nur `getenv()` für Temp-Verzeichnis (TMP/TEMP/TMPDIR); kein dotenv |
+| Return Type Declarations | TEILWEISE | In 5 Core-Interfaces (Phase 4) |
+| Union Types | TEILWEISE | `string\|false`, `array\|false`, `int\|false`, `ICacheItem\|false`, `mixed` |
+
+### Interfaces mit Type Declarations (Phase 4)
+
+| Interface | Datei | Implementierungen |
+|-----------|-------|-------------------|
+| IDBResultSet | `gyro/core/lib/interfaces/idbresultset.cls.php` | DBResultSet, DBResultSetMysql, DBResultSetSphinx |
+| ISessionHandler | `gyro/core/lib/interfaces/isessionhandler.cls.php` | DBSession, ACPuSession, MemcacheSession, XCacheSession |
+| ICachePersister | `gyro/core/lib/interfaces/icachepersister.cls.php` | CacheDBImpl, CacheFileImpl, CacheXCacheImpl, CacheACPuImpl, CacheMemcacheImpl |
+| IConverter | `gyro/core/lib/interfaces/iconverter.cls.php` | 12+ Implementierungen (callback, chain, html, json, punycode, etc.) |
+| IHashAlgorithm | `contributions/usermanagement/lib/interfaces/ihash.cls.php` | bcryp, bcrypt, md5, sha1, pas2p, pas3p |
+
+### Autoloading
+
+- **Eigene Klasse:** `gyro/core/load.cls.php` (`Load::add_module_base_dir()`)
+- Kein PSR-4, kein Composer-Autoload
+- Modul-Discovery über Framework-eigenes System
+
+### Fazit
+
+Framework ist **selektiv modernisiert**: Return Types + Union Types in Core-Interfaces, aber keinerlei Nutzung von Namespaces, Typed Properties, Enums, Attributes, Match, Readonly oder anderen PHP 8.x Features. Code-Stil bleibt PHP 5.x Ära mit PHP 8.x Kompatibilität.
+
 ## Wichtige Dateien für schnellen Einstieg
 
 | Zweck | Pfad |
