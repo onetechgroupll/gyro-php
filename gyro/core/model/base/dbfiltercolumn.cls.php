@@ -48,9 +48,10 @@ class DBFilterColumn extends DBFilter {
 	/**
 	 * contructor
 	 * 
-	 * @param string column
-	 * @param string title
-	 * @param enum type of column
+	 * @param string $column
+	 * @param mixed $value
+	 * @param string $title
+	 * @param string $operator type of column
 	 */
 	public function __construct($column, $value, $title, $operator = '=') {
 		$this->column = $column;

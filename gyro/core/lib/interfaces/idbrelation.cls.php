@@ -45,7 +45,7 @@ interface IDBRelation extends IPolicyHolder {
 	 * - See if source field conditions are met (e.g. NOT NULL)
 	 * - Check if there is a least one record on target table 
 	 *
-	 * @param array Associative array of form fieldname => fieldvalue
+	 * @param array $arr_fields Associative array of form fieldname => fieldvalue
 	 * @return Status
 	 */
 	public function validate($arr_fields);

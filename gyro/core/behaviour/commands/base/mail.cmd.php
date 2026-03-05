@@ -59,10 +59,10 @@ class MailBaseCommand extends CommandBase {
 	/**
 	 * Constructor
 	 *
-	 * @param String Subject of Mail
-	 * @param String Mail address
-	 * @param String Template name
-	 * @param Array Associative array of template arguments
+	 * @param string $subject Subject of Mail
+	 * @param string $email Mail address
+	 * @param string $template Template name
+	 * @param array $template_args Associative array of template arguments
 	 */
 	public function __construct($subject, $email, $template, $template_args = array()) {
 		$this->template = $template;

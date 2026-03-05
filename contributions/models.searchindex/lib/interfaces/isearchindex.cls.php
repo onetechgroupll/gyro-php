@@ -24,15 +24,15 @@ interface ISearchIndex extends ISearchAdapter {
 	
 	/**
 	 * Exclude models from search
-	 * 
-	 * @param string|array Name of model or array of names of models
+	 *
+	 * @param string|array $models Name of model or array of names of models
 	 */
 	public function exclude_models($models);
 	
 	/**
 	 * Include only given models in search
-	 * 
-	 * @param string|array Name of model or array of names of models
+	 *
+	 * @param string|array $models Name of model or array of names of models
 	 */
 	public function limit_to_models($models);
 	

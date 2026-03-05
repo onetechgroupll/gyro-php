@@ -19,9 +19,6 @@ class DBWhereGroup implements IDBWhere, IDBWhereHolder {
 	 * Constructor
 	 * 
 	 * @param IDBTable $table Table that contains column
-	 * @param string $column Column to query upon, or a full sql where statement
-	 * @param string $operator Operator to execute
-	 * @param mixed $value Value(s) to use
 	 * @param string $logical_operator Either IDBWhere::LOGIC_AND or IDBWhere::LOGIC_OR
 	 */
 	public function __construct(IDBTable $table, $logical_operator = IDBWhere::LOGIC_AND) {
@@ -113,18 +110,18 @@ class DBWhereGroup implements IDBWhere, IDBWhereHolder {
 	}
 	
 	/**
-	 * Returns column. May also be null. 
-	 * 
-	 * @return string 
+	 * Returns column. May also be null.
+	 *
+	 * @return string|null
 	 */
 	public function get_column() {
-		
+		return null;
 	}
 	
 	/**
 	 * Returns the operator (=, >=, LIKe etc.) May also be NULL
-	 * 
-	 * @return string 
+	 *
+	 * @return string|null
 	 */
 	public function get_operator() {
 		return null;

@@ -15,7 +15,7 @@ class WidgetItemMenu implements IWidget {
 	public $aro;
 	public $args;
 	
-	public static function output($item, $context = 'view', $params = false, $args = array(), $policy = self::NONE) {
+	public static function output($item, $context = 'view', $params = false, $args = array(), $policy = 0) {
 		$w = new WidgetItemMenu($item, $context, $params, $args);
 		return $w->render($policy);
 	}
@@ -28,7 +28,7 @@ class WidgetItemMenu implements IWidget {
 		$this->args = $args; 
 	}
 	
-	public function render($policy = self::NONE) {
+	public function render($policy = 0) {
 		$ret = '';
 		$sources = $this->retrieve_actions($this->item);
 		$commands = array();

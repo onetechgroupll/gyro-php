@@ -30,8 +30,8 @@ class CacheDBImpl implements ICachePersister {
 	/**
 	 * Read from cache
 	 * 
-	 * @param Mixed A set of key params, may be an array or a string
-	 * @return ICacheItem The cache as array with members "content" and "data", false if cache is not found
+	 * @param mixed $cache_keys A set of key params, may be an array or a string
+	 * @return ICacheItem|false The cache as array with members "content" and "data", false if cache is not found
 	 */
 	public function read(mixed $cache_keys): ICacheItem|false {
 		$dao = new DAOCache();
@@ -50,8 +50,8 @@ class CacheDBImpl implements ICachePersister {
 	/**
 	 * Store content in cache
 	 * 
-	 * @param Mixed A set of key params, may be an array or a string
-	 * @param string The cache
+	 * @param mixed $cache_keys A set of key params, may be an array or a string
+	 * @param string $content The cache
 	 */
 	public function store(mixed $cache_keys, string $content, int $cache_life_time, mixed $data = '', bool $is_compressed = false): void {
 		try {
@@ -85,7 +85,7 @@ class CacheDBImpl implements ICachePersister {
 	/**
 	 * Clear the cache
 	 * 
-	 * @param Mixed A set of key params, may be an array or a string. If NULL, all is cleared
+	 * @param mixed $cache_keys A set of key params, may be an array or a string. If NULL, all is cleared
 	 */
 	public function clear(mixed $cache_keys = NULL): void {
 		$dao = new DAOCache();
@@ -99,7 +99,7 @@ class CacheDBImpl implements ICachePersister {
 	/**
 	 * Transform the given param into an array of keys
 	 * 
-	 * @param Mixed A set of key params, may be an array or a string
+	 * @param mixed $cache_keys A set of key params, may be an array or a string
 	 */
 	private function extract_keys($cache_keys) {
 		if (is_array($cache_keys)) {

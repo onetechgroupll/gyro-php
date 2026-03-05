@@ -1,11 +1,14 @@
 <?php
 /**
  * Interface for image informations
- * 
+ *
  * Contains information like size, mime-type, extension etc.
- * 
+ *
  * @author Gerd Riesselmann
  * @ingroup ImageTools
+ *
+ * @property mixed $handle Image resource handle
+ * @property int $type Image type constant (IMAGETYPE_*)
  */
 interface IImageInformation {
 	/**
@@ -37,7 +40,7 @@ interface IImageInformation {
 	public function get_mime_type();
 	/**
 	 * Returns image file extension
-	 * @return int
+	 * @return string
 	 */
 	public function get_extension();
 }

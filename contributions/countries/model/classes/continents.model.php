@@ -81,7 +81,7 @@ class DAOContinents extends DataObjectBase implements ISelfDescribing, IHierarch
 	/**
 	 * Get parent for this item 
 	 * 
-	 * @return IHierarchic Parent item or null
+	 * @return IHierarchic|false Parent item or false
 	 */
 	public function get_parent() {
 		return false;

@@ -18,10 +18,13 @@ class FilterText implements IDBQueryModifier {
 	protected $page_data;
 	
 	/**
-	 * Contructor
-	 * 
-	 * @param PathStack 
-	 * @param Array Array with filter names as keys and descriptions to display as values 
+	 * Constructor
+	 *
+	 * @param PageData $page_data
+	 * @param string $filtercolumn
+	 * @param string $filtername
+	 * @param string $operator
+	 * @param IFilterTextAdapter|false $adapter
 	 */
 	public function __construct($page_data, $filtercolumn, $filtername, $operator, $adapter = false) {
 		$this->adapter = ($adapter instanceof IFilterTextAdapter) ? $adapter : new FilterTextDefaultAdapter($page_data, GyroString::plain_ascii($filtername));
@@ -45,8 +48,8 @@ class FilterText implements IDBQueryModifier {
 	
 	/**
 	 * Return title of filter
-	 * 
-	 * @return unknown_type
+	 *
+	 * @return string
 	 */
 	public function get_filter_title() {
 		return $this->filter_object->get_title();
@@ -128,12 +131,13 @@ class FilterTextDefaultAdapter implements IFilterTextAdapter {
 
 	/**
 	 * Prepare URL so filter gets applied
-	 * 
-	 * @param Url Instance of URL class. This instance is changed.
-	 * @param string Filter to append
-	 * 
+	 *
+	 * @param Url $url Instance of URL class. This instance is changed.
+	 * @param string $value Filter to append
+	 * @param string $parameter
+	 *
 	 * @return void
-	 * 
+	 *
 	 * @deprecated Used function on FilterAdapter instead
 	 */
 	public static function apply_to_url($url, $value, $parameter) {

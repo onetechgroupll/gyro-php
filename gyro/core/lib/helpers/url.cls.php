@@ -286,8 +286,8 @@ class Url {
 	/**
 	 * Replaces or adds parameter to query string. Returns this
 	 *
-	 * @param String Parameter name
-	 * @param String Paremeter value
+	 * @param string $name Parameter name
+	 * @param string $value Parameter value
 	 * @return Url Reference to self
 	 */
 	public function replace_query_parameter($name, $value) {
@@ -327,7 +327,7 @@ class Url {
 	/**
 	 * Set the path for this url
 	 * 
-	 * @param string The new path
+	 * @param string $path The new path
 	 * @return Url Reference to self  
 	 */
 	public function set_path($path) {
@@ -732,7 +732,7 @@ class Url {
 	/**
 	 * Remove all non-ASCII chars from the path (not the query!)
 	 * 
-	 * @return url Reference to this 
+	 * @return Url Reference to this
 	 */
 	function clean() {
 		$ret = Arr::get_item($this->data, 'path', '');
@@ -743,7 +743,7 @@ class Url {
 	/**
 	 * Redirect to this Url
 	 *
-	 * @param bool If true, a permanent, else a temporary redirect is done
+	 * @param bool $permanent If true, a permanent, else a temporary redirect is done
 	 * @throws Exception
 	 */
 	public function redirect($permanent = self::TEMPORARY) {

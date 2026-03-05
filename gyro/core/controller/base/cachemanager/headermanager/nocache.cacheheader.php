@@ -7,8 +7,8 @@ class NoCacheCacheHeaderManager implements ICacheHeaderManager {
 	 * Send cache headers
 	 * 
 	 * @param string $content
-	 * @param timestamp $expirationdate
-	 * @param timestamp $lastmodifieddate
+	 * @param int $expirationdate
+	 * @param int $lastmodifieddate
 	 */
 	public function send_headers(&$content, $expirationdate, $lastmodifieddate)	{
 		GyroHeaders::set('Pragma', 'no-cache', false);

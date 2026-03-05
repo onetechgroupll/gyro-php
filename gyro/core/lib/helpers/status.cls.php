@@ -46,7 +46,7 @@ class Status {
 	/**
 	 * Constructor
 	 *
-	 * @param Mixed If String: The error message, else if left blank : No error
+	 * @param mixed $message If String: The error message, else if left blank : No error
 	 */
 	public function __construct($message = false) {
 		if (!empty($message)) {
@@ -112,7 +112,7 @@ class Status {
 	/**
 	 * Append $text to the error message and turns this status into an error
 	 *
-	 * @param String
+	 * @param string $text
 	 * @return void
 	 */
 	public function append($text) {
@@ -128,7 +128,7 @@ class Status {
 	 * Messages are added and this status becomes an error if either this or 
 	 * the merged status are errors
 	 *
-	 * @param Status|Exception|PEAR_Error|string $other Either Status, Exception, PEAR_Error or a string
+	 * @param Status|Exception|object|string $other Either Status, Exception, PEAR_Error or a string
 	 */
 	public function merge($other) {
 		if (empty($other)) {
@@ -140,7 +140,8 @@ class Status {
 				$this->append($m);
 			}
 		}
-		else if ($other instanceof PEAR_Error) {
+		else if (is_object($other) && method_exists($other, 'getMessage') && !($other instanceof Exception)) {
+			// Handles PEAR_Error and similar objects with getMessage()
 			$this->append($other->getMessage());
 		}
 		else if ($other instanceof Exception) {

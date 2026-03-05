@@ -8,6 +8,7 @@
 class DAOCountries2countriesgroups extends DataObjectBase {
     public $id_country;
     public $id_group;
+    public $name;
 
     /**
      * Create table definition

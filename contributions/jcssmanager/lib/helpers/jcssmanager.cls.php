@@ -161,7 +161,9 @@ class JCSSManager {
 			);
 		}
 		Load::components('systemupdateinstaller');
+		/** @phpstan-ignore class.notFound */
 		$err->merge(SystemUpdateInstaller::modify_htaccess('jcssmanager', SystemUpdateInstaller::HTACCESS_OPTIONS, $htc_option));
+		/** @phpstan-ignore class.notFound */
 		$err->merge(SystemUpdateInstaller::modify_htaccess('jcssmanager', SystemUpdateInstaller::HTACCESS_REWRITE, $htc_rewrite));
 		return $err;		
 	}

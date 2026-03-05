@@ -25,7 +25,7 @@ class TemplatedSimpleBlock extends TemplatedFullBlock {
 	 * 
 	 * @param string $template The template to render
 	 * @param integer $index The block's index. A block with lowest index will be displayed first
-	 * @param enum $position Where the block is to be displayed. 
+	 * @param string $position Where the block is to be displayed.
 	 */
 	public function __construct($template, $index = 1000, $position = self::LEFT) {
 		parent::__construct($template, array(), $index, $position);

@@ -62,8 +62,8 @@ class History {
 	/**
 	 * Retrieve page from history
 	 * 
-	 * @param Integer Index of page to retrieve, 0-based. Index counts back in time, so 0 is last, 1 is page before last etc
-	 * @param Mixed Either Url or String: Default page to return if history is empty
+	 * @param int $index Index of page to retrieve, 0-based. Index counts back in time, so 0 is last, 1 is page before last etc
+	 * @param mixed $defaultpage Either Url or String: Default page to return if history is empty
 	 * @return Url  
 	 */
 	public static function get($index, $defaultpage = false) {
@@ -81,9 +81,9 @@ class History {
 	 * 
 	 * If history is empty, $defaultpage is invoked (or current page, if empty)
 	 * 
-	 * @param Integer Index of page to go to, 0-based. Index counts back in time, so 0 is last, 1 is page before last etc
-	 * @param Status|String Optional message to display on page redirected to
-	 * @param Mixed Either Url or String: Default page to go to if history is empty 
+	 * @param int $index Index of page to go to, 0-based. Index counts back in time, so 0 is last, 1 is page before last etc
+	 * @param Status|string $message Optional message to display on page redirected to
+	 * @param mixed $defaultpage Either Url or String: Default page to go to if history is empty
 	 */ 
 	public static function go_to($index, $message = '', $defaultpage = false) {
 		$url = self::get($index, $defaultpage);

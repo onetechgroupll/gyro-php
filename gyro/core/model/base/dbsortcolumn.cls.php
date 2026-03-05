@@ -41,9 +41,9 @@ class DBSortColumn implements IDBQueryModifier {
 	/**
 	 * contructor
 	 * 
-	 * @param string column
-	 * @param string title
-	 * @param enum type of column
+	 * @param string $column column
+	 * @param string $title title
+	 * @param string $type type of column
 	 */
 	public function __construct($column, $title, $type, $direction = self::ORDER_FORWARD, $single_direction = false) {
 		$this->column = $column;
@@ -60,7 +60,7 @@ class DBSortColumn implements IDBQueryModifier {
 	/**
 	 * Returns name of column in DB
 	 *
-	 * @return unknown
+	 * @return string
 	 */
 	protected function get_db_column() {
 		return $this->get_column();
@@ -77,7 +77,7 @@ class DBSortColumn implements IDBQueryModifier {
 	/**
 	 * Returns true if this column should be sorted in a single direction only
 	 *
-	 * @return true
+	 * @return bool
 	 */
 	public function get_is_single_direction() {
 		return $this->single_direction;

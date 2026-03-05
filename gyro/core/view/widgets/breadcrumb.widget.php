@@ -44,6 +44,10 @@ class WidgetBreadcrumb implements IWidget {
 		$this->source = $source;
 	}
 	
+	/**
+	 * @param int|false $policy
+	 * @return string
+	 */
 	public function render($policy = self::NONE) {
 		$src = $this->to_array($this->source);
 		$crumb = array();
@@ -67,7 +71,8 @@ class WidgetBreadcrumb implements IWidget {
 	/**
 	 * Transform given source into an array. The array has the last item in breadcrumb as first element
 	 *
-	 * @param mixed $source
+	 * @param mixed $item
+	 * @param mixed $key
 	 * @return array
 	 */
 	protected function to_array($item, $key = false) {

@@ -151,8 +151,8 @@ class Arr {
 	 * 
 	 * Values from $source processed with strip_tags 
 	 *
-	 * @param Array The clean array
-	 * @param Array The array to read from
+	 * @param array $clean The clean array
+	 * @param array $source The array to read from
 	 */
 	public static function clean(&$clean, $source) {
 		foreach($source as $key => $value) 	{
@@ -164,9 +164,9 @@ class Arr {
 	/**
 	 * Implode associate array
 	 * 
-	 * @param string String to put between elements of array
-	 * @param array The array to implode
-	 * @param string String to put between array key and value. If empty, function will fall back to normal implode
+	 * @param string $glue String to put between elements of array
+	 * @param array $pieces The array to implode
+	 * @param string $assign String to put between array key and value. If empty, function will fall back to normal implode
 	 * 
 	 * @return string Imploded array as string
 	 */	

@@ -23,7 +23,7 @@ if (!defined('APP_LOG_HTML_ERROR_STATUS')) define('APP_LOG_HTML_ERROR_STATUS', A
 /**
  * Added to each email subject line
  */
-if (!defined('APP_MAIL_SUBJECT')) define('APP_MAIL_SUBJECT', '[' . APP_TITLE . '] ');
+if (!defined('APP_MAIL_SUBJECT')) define('APP_MAIL_SUBJECT', '[' . (defined('APP_TITLE') ? APP_TITLE : '') . '] ');
 
 /**
  * Mailer type. Switch Mailer type to 'smtp' to use SMTP. 
@@ -65,8 +65,6 @@ if (!defined('APP_URL_ABSPATH')) define('APP_URL_ABSPATH', APP_INCLUDE_ABSPATH .
 
 /**
  * The default URL for users not logged in
- *
- * @var String
  */
 if (!defined('APP_DEFAULT_PAGE')) define('APP_DEFAULT_PAGE', APP_URL_BASEURL);
 

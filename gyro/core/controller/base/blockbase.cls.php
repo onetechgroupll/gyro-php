@@ -46,11 +46,11 @@ class BlockBase implements IBlock  {
 	/**
 	 * Constructor
 	 * 
-	 * @param string The name of this block. Used as class, too
-	 * @param string The title of the block. Displayed as heading, e.g.
-	 * @param string The block's content
-	 * @param integer The block's index. A block with lowest index will be displayed first
-	 * @param enum Where the block is to be dispalyed. 
+	 * @param string $name The name of this block. Used as class, too
+	 * @param string $title The title of the block. Displayed as heading, e.g.
+	 * @param string $content The block's content
+	 * @param integer $index The block's index. A block with lowest index will be displayed first
+	 * @param string $position Where the block is to be displayed.
 	 */
 	public function __construct($name, $title, $content, $index = 1000, $position = self::LEFT) {
 		$this->set_title($title);
@@ -72,7 +72,7 @@ class BlockBase implements IBlock  {
 	/**
 	 * Set title of block (heading)
 	 *
-	 * @param string
+	 * @param string $title
 	 */
 	public function set_title($title) {
 		$this->title = trim($title);
@@ -90,7 +90,7 @@ class BlockBase implements IBlock  {
 	/**
 	 * Set content of block (HTML)
 	 *
-	 * @param string
+	 * @param string $content
 	 */
 	public function set_content($content) {
 		$this->content = trim($content);
@@ -108,7 +108,7 @@ class BlockBase implements IBlock  {
 	/**
 	 * Set index to sort blocks
 	 *
-	 * @param integer
+	 * @param integer $index
 	 */
 	public function set_index($index) {
 		$this->index = $index;
@@ -126,7 +126,7 @@ class BlockBase implements IBlock  {
 	/**
 	 * Sets Name (used as CSS class)
 	 *
-	 * @param string
+	 * @param string $name
 	 */
 	public function set_name($name) {
 		$this->name = $name;
@@ -144,7 +144,7 @@ class BlockBase implements IBlock  {
 	/**
 	 * Set position
 	 *
-	 * @param string
+	 * @param string $position
 	 */
 	public function set_position($position) {
 		$this->position = $position;
@@ -177,7 +177,7 @@ class BlockBase implements IBlock  {
 	/**
 	 * Renders what should be rendered
 	 *
-	 * @param int $policy Defines how to render, meaning depends on implementation
+	 * @param int|false $policy Defines how to render, meaning depends on implementation
 	 * @return string The rendered content
 	 */
 	public function render($policy = self::NONE) {

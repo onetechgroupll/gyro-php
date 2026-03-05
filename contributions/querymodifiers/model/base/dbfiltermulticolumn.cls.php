@@ -89,8 +89,8 @@ class DBFilterMultiColumn extends DBFilter {
 	/**
 	 * contructor
 	 * 
-	 * @param array items
-	 * @param string title
+	 * @param array $items
+	 * @param string $title
 	 */
 	public function __construct($items, $title) {
 		$this->items = $items;
@@ -112,6 +112,7 @@ class DBFilterMultiColumn extends DBFilter {
 			}
 			$where->add_where($column, $item->operator, $this->preprocess_value($item->value, $item->operator), $item->logical);
 		}
+		/** @phpstan-ignore method.notFound */
 		$query->add_where_object($where);
 	}
 	

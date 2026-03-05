@@ -9,7 +9,7 @@ interface IDBQueryModifier {
 	/**
 	 * Do what should be done
 	 * 
-	 * @param DataObjectBase The current query to  be modified
+	 * @param DataObjectBase $query The current query to be modified
 	 */
 	public function apply($query);	 
 }

@@ -21,7 +21,7 @@ class DBDriverMysql implements IDBDriver {
 	 */
 	protected $type;
 	/**
-	 * @var mysqli
+	 * @var mysqli|false
 	 */
 	protected $conn = false;
 	protected static $transaction_count = 0;
@@ -64,7 +64,7 @@ class DBDriverMysql implements IDBDriver {
 	 *    Associative array allowing the following keys:
 	 *      - type: Connection type
 	 */
-	public function initialize($dbname, $user = '', $password = '', $host = 'localhost', $params = false) {
+	public function initialize($dbname, $user = '', $password = '', $host = 'localhost', $params = array()) {
 		$this->connect_params = array(
 			'host' => $host,
 			'user' => $user,
@@ -290,7 +290,7 @@ class DBDriverMysql implements IDBDriver {
 	/**
 	 * Returns true, if a given feature is supported
 	 * 
-	 * @param string feature
+	 * @param string $feature
 	 * @return bool 
 	 */
 	public function has_feature($feature) {

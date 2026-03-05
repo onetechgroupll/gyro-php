@@ -6,7 +6,7 @@ class PrivateNoRevalidateCacheHeaderManager extends BaseCacheHeaderManager {
 	/**
 	 * Returns cache control header's content
 	 * 
-	 * @param timestamp $expirationdate
+	 * @param int $expirationdate
 	 */
 	protected function get_cache_control($expirationdate, $max_age) {
 		return "private, max-age=$max_age";

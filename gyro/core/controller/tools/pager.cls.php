@@ -30,8 +30,8 @@ class Pager implements IDBQueryModifier {
 	 * @param int|ISearchAdapter $items_total
 	 *   Total numbers of items or instance of ISearchadapter. 
 	 *   In later case, count() is invoked on search adapter
-	 * @param int Number of items per page 
-	 * @param IPagerAdapter Adapter. For compatability reasons, this is also interpreted as a policy, if you pass an integer 
+	 * @param int $items_per_page Number of items per page
+	 * @param IPagerAdapter $adapter Adapter. For compatability reasons, this is also interpreted as a policy, if you pass an integer
 	 */
 	public function __construct($page_data, $items_total, $items_per_page = false, $adapter = false) {
 		$this->adapter = ($adapter instanceof IPagerAdapter) ? $adapter : new PagerDefaultAdapter($page_data, 'page');
@@ -153,11 +153,11 @@ class Pager implements IDBQueryModifier {
 	/**
 	 * Prepare URL so filter gets applied
 	 * 
-	 * @param Url Instance of URL class. This instance is changed.
-	 * @param string Filter to append
+	 * @param Url $url Instance of URL class. This instance is changed.
+	 * @param string $page Filter to append
 	 *
 	 * @return void
-	 * 
+	 *
 	 * @deprecated Use PagerDefaultAdapter::apply_to_url() instead
 	 */
 	public static function apply_to_url($url, $page) {
@@ -184,8 +184,7 @@ class PagerDefaultAdapter implements IPagerAdapter {
 	
 	/**
 	 * Return current page
-	 * 
-	 * @param PageData $page_data
+	 *
 	 * @return int
 	 */
 	public function get_current_page() {
@@ -206,9 +205,9 @@ class PagerDefaultAdapter implements IPagerAdapter {
 	/**
 	 * Prepare URL so filter gets applied
 	 * 
-	 * @param Url Instance of URL class. This instance is changed.
-	 * @param string Filter to append
-	 * 
+	 * @param Url $url Instance of URL class. This instance is changed.
+	 * @param string $page Filter to append
+	 *
 	 * @return void
 	 */
 	public static function apply_to_url($url, $page, $parameter = 'page') {

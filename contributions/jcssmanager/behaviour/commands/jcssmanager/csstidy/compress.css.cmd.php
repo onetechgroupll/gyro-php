@@ -41,18 +41,19 @@ class JCSSManagerCompressCSSCsstidyCommand extends JCSSManagerCompressBaseComman
 	
 	/**
 	 * Invoke CSS Tidy
-	 * 
-	 * @param strnig $css
+	 *
+	 * @param string $css
 	 * @param string $out_file
-	 * @return Status 
+	 * @return Status
 	 */
 	protected function run_csstidy($css, $out_file) {
 		$ret = new Status();
-		
+
 		$old_lang = GyroLocale::set_locale('C');
 		$module_dir = Load::get_module_dir('jcssmanager');
 		require_once $module_dir . '3rdparty/csstidy/class.csstidy.php';
 
+		/** @var csstidy $tidy */
 		$tidy = new csstidy();
 		$tidy->set_cfg('remove_last_;',TRUE);
 		//$tidy->set_cfg('merge_selectors', 0);

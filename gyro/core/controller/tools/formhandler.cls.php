@@ -48,7 +48,7 @@ class FormHandler {
 	 * 
 	 * @param string $name Name of form
 	 * @param string $path (optional) Path of form , if != current path
-	 * @param bool   $create_token True to create a unique token to identify Form
+	 * @param int    $token_policy Token policy, one of TOKEN_POLICY_* constants
 	 */	
  	public function __construct($name, $path = '', $token_policy = self::TOKEN_POLICY_UNIQUE) {
  		// Compatability

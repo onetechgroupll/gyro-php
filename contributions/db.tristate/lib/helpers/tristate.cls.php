@@ -31,7 +31,7 @@ class Tristate {
 	 * @param string $tristate Tristate value
 	 * @param mixed $yes Value to return if $tristate is Tristate::YES
 	 * @param mixed $no Value to return if $tristate is Tristate::NO
-	 * @param mixed $unknown Value to return if $tristate is Tristate::UNKOWN
+	 * @param mixed $unkown Value to return if $tristate is Tristate::UNKOWN
 	 * @return mixed
 	 */
 	public static function resolve($tristate, $yes, $no, $unkown) {

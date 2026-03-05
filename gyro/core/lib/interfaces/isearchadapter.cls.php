@@ -43,8 +43,8 @@ interface ISearchAdapter {
 	 * 
 	 * Pass self::CLEAR to clear current sort
 	 * 
-	 * @param String column name
-	 * @param Enum 'asc' or 'desc'
+	 * @param string $column column name
+	 * @param string $order 'asc' or 'desc'
 	 */ 
 	public function sort($column, $order = self::ASC);
 	
@@ -56,7 +56,7 @@ interface ISearchAdapter {
 	/**
 	 * Apply a modifier
 	 * 
-	 * @param IDBQueryModifier The modifier to be applied
+	 * @param IDBQueryModifier $modifier The modifier to be applied
 	 */
 	public function apply_modifier($modifier);
 }

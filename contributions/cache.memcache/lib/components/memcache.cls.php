@@ -8,8 +8,8 @@
 class GyroMemcache  {
 	/**
 	 * Memcache(d) instance
-	 * 
-	 * @var Memcached
+	 *
+	 * @var Memcached|Memcache
 	 */
 	private static $delegate;
 
@@ -33,11 +33,7 @@ class GyroMemcache  {
 	 * 
 	 * @param string $host Server name or IP address
 	 * @param int $port Port
-	 * @param int $weight 
-	 *   The weight of the server relative to the total weight of all the servers in the pool. 
-	 *   This controls the probability of the server being selected for operations. This is used 
-	 *   only with consistent distribution option and usually corresponds to the amount of 
-	 *   memory available to memcache on that server. 
+	 * @param int $port Port
 	 */
 	public static function add_server($host = 'localhost', $port = 11211) {
 		if (self::$delegate instanceof Memcache) {

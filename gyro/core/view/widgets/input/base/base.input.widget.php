@@ -36,7 +36,7 @@ class InputWidgetBaseBase implements IWidget {
 	/**
 	 * Render the widget 
 	 */
-	public function render($policy = self::NONE) {
+	public function render($policy = 0) {
 		$ret = '';
 		$item = Arr::get_item($this->params, 'item', false);
 		$php54_strict_requires_a_variable_here = Arr::extract_array_keys($this->name);
@@ -55,7 +55,7 @@ class InputWidgetBaseBase implements IWidget {
 	/**
 	 * Build an edit widget
 	 *
-	 * @param Array of params $params
+	 * @param array $params Array of params
 	 * @param string $name
 	 * @return string
 	 */
@@ -76,7 +76,7 @@ class InputWidgetBaseBase implements IWidget {
  	 * Create default attribute array
 	 */
 	protected function create_default_attributes($params, $name, $policy) {
-		$id = strtr(arr::get_item($params, 'id', $name), '[]', '__');
+		$id = strtr(Arr::get_item($params, 'id', $name), '[]', '__');
 		$attrs = array(
 			'id' => $id
 		);
@@ -110,7 +110,7 @@ class InputWidgetBaseBase implements IWidget {
 		$lbl_class = Arr::get_item($params, 'label:class', '');
 		$label = '';
 		if ($title) {
-			$notes = Cast::int(arr::get_item($params, 'notes', 0));
+			$notes = Cast::int(Arr::get_item($params, 'notes', 0));
 			if ($notes > 0) {
 				$title .= ' '. html::span(str_repeat('*', $notes), 'notes');
 			}

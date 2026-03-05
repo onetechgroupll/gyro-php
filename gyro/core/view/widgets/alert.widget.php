@@ -17,7 +17,7 @@ class WidgetAlert implements IWidget {
 	public $content;
 	public $id;
 
-	public static function output($content, $policy = self::NONE, $id = null) {
+	public static function output($content, $policy = 0, $id = null) {
 		$w = new WidgetAlert($content, $id);
 		return $w->render($policy);
 	}
@@ -27,7 +27,7 @@ class WidgetAlert implements IWidget {
 		$this->id = $id;
 	}
 	
-	public function render($policy = self::NONE) {
+	public function render($policy = 0) {
 		$view = ViewFactory::create_view(IViewFactory::MESSAGE, 'widgets/alert', false);
 		$view->assign('content', $this->content);
 		$view->assign('policy', $policy);

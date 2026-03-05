@@ -9,7 +9,7 @@
 - **Composer** für Dev-Dependencies (PHPUnit, PHPStan), kein PSR-4, kein Namespace-System
 - **Test-Framework:** PHPUnit 10.5 (primär, 361 Tests) + SimpleTest 1.1.0 (Legacy, abandoned)
 - **CLI-Tool:** `bin/gyro` (Phase 8) — model:list, model:show, db:sync
-- **Statische Analyse:** PHPStan Level 3 mit Baseline (584 bekannte Fehler, 0 neue)
+- **Statische Analyse:** PHPStan Level 3 mit Baseline (525 bekannte Fehler, 0 neue)
 - **Environment:** `.env` Support (Phase 7), rückwärtskompatibel mit `APP_*` Konstanten
 
 ## Verzeichnisstruktur
@@ -52,7 +52,7 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | PHPDoc-Abdeckung | ~25-30% |
 | TODO/FIXME/HACK | 14 Marker |
 | Contributions | 57+ Module (3 tote entfernt in Phase 5) |
-| PHPStan | Level 3, Baseline mit 584 bekannten Fehlern (von 1262) |
+| PHPStan | Level 3, Baseline mit 525 bekannten Fehlern (von 1262) |
 
 ## Sicherheitsprobleme
 
@@ -413,7 +413,7 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | CLI-Tooling | 6/10 | ✅ `bin/gyro` mit model:list, model:show, db:sync |
 | Auto-Admin | 7/10 | ✅ Django-Style CRUD UI aus Model-Schema |
 | REST-API | 8/10 | ✅ Auto-REST-API + OpenAPI/Swagger Dokumentation |
-| Statische Analyse | 7/10 | ✅ PHPStan Level 3, Baseline 584 (von 1262), 0 neue Fehler |
+| Statische Analyse | 7/10 | ✅ PHPStan Level 3, Baseline 525 (von 1262), 0 neue Fehler |
 
 ## Moderne PHP-Features Analyse
 

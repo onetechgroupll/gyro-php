@@ -19,9 +19,9 @@ class ConfirmationHandlerBase implements IConfirmationHandler {
 
 	/**
 	 * Constructor
-	 * 
-	 * @param DAOConfirmations 
-	 */	
+	 *
+	 * @param DAOConfirmation $confirmation
+	 */
 	public function __construct($confirmation) {
 		$this->confirmation = $confirmation;
 	}
@@ -47,10 +47,10 @@ class ConfirmationHandlerBase implements IConfirmationHandler {
 	/**
 	 * Template method to be overloaded by subclasses to do what should be done
 	 * on successfull confirmation
-	 * 
-	 * @param DAOConfirmations Data of confirmation, not necessarily up to date, depending on status
-	 * @param enum Indicates success or failure
-	 * @return Status  
+	 *
+	 * @param DAOConfirmation $confirmation Data of confirmation, not necessarily up to date, depending on status
+	 * @param string $success Indicates success or failure
+	 * @return Status
 	 */
 	protected function do_confirm($confirmation, $success) {
 		switch ($success) {
@@ -81,10 +81,9 @@ class ConfirmationHandlerBase implements IConfirmationHandler {
 	/**
 	 * Template method to be overloaded by subclasses to do what should be done
 	 * on creation
-	 * 
-	 * @param DAOConfirmations Data of confirmation
+	 *
+	 * @param DAOConfirmation $confirmation Data of confirmation
 	 * @return Status
-	 *   
 	 */
 	protected function do_created($confirmation) {
 		return new Status();

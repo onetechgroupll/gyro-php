@@ -111,8 +111,8 @@ class ImageToolsGD implements IImageTools {
 	 * Add a Watermark
 	 * 
 	 * @param IImageInformation $src Image to add watermark to
-	 * @param string $text Text of Watermark, if emtpy "© {Application Title}" is taken
-	 * 
+	 * @param string|false $text Text of Watermark, if empty "© {Application Title}" is taken
+	 *
 	 * @return IImageInformation
 	 */
 	public function watermark(IImageInformation $src, $text = false) {
@@ -128,7 +128,7 @@ class ImageToolsGD implements IImageTools {
 		$color = imagecolorallocatealpha($watermark, 0xFF, 0xFF, 0xFF, 0x70);
 		if ($w >= $h) {
 			// Landscape
-			imagettftext($watermark, $size, 0, 3, $h - $sie - 3, $color, $font, $text);
+			imagettftext($watermark, $size, 0, 3, $h - $size - 3, $color, $font, $text);
 		}
 		else {
 			// Portrait
@@ -230,7 +230,7 @@ class ImageInformationGD implements IImageInformation {
 	
 	/**
 	 * Returns image file extension (without dot)
-	 * @return int
+	 * @return string
 	 */
 	public function get_extension() {
 		switch($this->type) {
@@ -240,6 +240,8 @@ class ImageInformationGD implements IImageInformation {
 				return 'png';
 			case IMAGETYPE_GIF:
 				return 'gif';
+			default:
+				return 'bin';
 		}
-	}	
+	}
 }

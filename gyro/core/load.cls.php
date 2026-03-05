@@ -201,7 +201,7 @@ class Load {
 	/**
 	 * Add a new module directory
 	 * 
-	 * @param $dir Absolute path to directory
+	 * @param string $dir Absolute path to directory
 	 */
 	public static function add_module_base_dir($dir) {
 //		if (substr($dir, -1, 1) != '/') {
@@ -284,8 +284,8 @@ class Load {
 	/**
 	 * Include files on all directories 
 	 *
-	 * @param mixed $fiels Either filename array of filenames
-	 * @param $order Either ORDER_OVERLOAD or ORDER_DECORATORS
+	 * @param mixed $files Either filename array of filenames
+	 * @param string $order Either ORDER_OVERLOAD or ORDER_DECORATORS
 	 * @return bool True on success
 	 */
 	public static function files($files, $order = self::ORDER_OVERLOAD) {
@@ -342,8 +342,8 @@ class Load {
 	 * @param mixed $classes Either name of class to load or array of names
 	 * @param string $extension File extension of class files, e.g. 'cls' will include files of name *.cls.php
 	 * 
-	 * @return void
-	 * 
+	 * @return bool
+	 *
 	 * @throws Exception if class is not found
 	 */
 	public static function classes_in_directory($directory, $classes, $extension = 'cls', $required = true) {
@@ -356,7 +356,7 @@ class Load {
 	 * @param string $directory Subdirectory of component
 	 * @param mixed $classes Either name of class to load or array of names
 	 * @param string $extension File extension of class files, e.g. 'cls' will include files of name *.cls.php
-	 * @return void
+	 * @return bool
 	 * @throws Exception if item could not be loaded
 	 */
 	private static function do_load($directory, $classes, $extension = 'cls', $required = true) {

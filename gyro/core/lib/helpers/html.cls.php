@@ -23,11 +23,11 @@ class html
 	 *
 	 * Returns the follwoing: <a [class="$cls"] href="$href" $title="$descr">$text</a>
 	 *
-	 * @param String The Text for the link
-	 * @param String The HREF
-	 * @param String A Desctiption, displayed as tool tip
-	 * @param String Other atrributes
-	 * @returns String The code for an anchor tag
+	 * @param string $text The Text for the link
+	 * @param string $href The HREF
+	 * @param string $descr A Description, displayed as tool tip
+	 * @param array $attrs Other attributes
+	 * @return string The code for an anchor tag
 	 */
 	public static function a($text, $href, $descr, $attrs = array()) {
 		// We need path here, but cannot rely on URL class, since href may be
@@ -57,10 +57,10 @@ class html
 	/**
 	 * Static. Returns code for title tag and related meta tags
 	 *
-	 * @param String The title of the page
-	 * @param String Optional. A wider description of the page
-	 * 
-	 * @return String The HTML code for title and meta tags
+	 * @param string $text The title of the page
+	 * @param string $descr Optional. A wider description of the page
+	 *
+	 * @return string The HTML code for title and meta tags
 	 */
 	public static function title($text, $descr = "") {
 		$arrFilter = array("-", ",", ".", "(", ")", ":", "'", '"', "&");
@@ -96,8 +96,8 @@ class html
 	/**
 	 * Static. Returns $text formatted error.
 	 *
-	 * @param String The Error Message
-	 * @return String The HTML Code for outputting an error
+	 * @param string $text The Error Message
+	 * @return string The HTML Code for outputting an error
 	 *
 	 * @deprecated Use WidgetAlert instead
 	 */
@@ -108,8 +108,8 @@ class html
 	/**
 	 * Static. Returns $text formatted as success message.
 	 *
-	 * @param String The Message
-	 * @return String The HTML Code for outputting a success message
+	 * @param string $text The Message
+	 * @return string The HTML Code for outputting a success message
 	 *
 	 * @deprecated Use WidgetAlert instead
 	 */
@@ -120,8 +120,8 @@ class html
 	/**
 	 * Static. Returns $text formatted as notification message.
 	 *
-	 * @param String The Message
-	 * @return String The HTML Code for outputting a notification message
+	 * @param string $text The Message
+	 * @return string The HTML Code for outputting a notification message
 	 *
 	 * @deprecated Use WidgetAlert instead
 	 */
@@ -132,8 +132,8 @@ class html
 	/**
 	 * Static. Returns $text formatted as warning message.
 	 *
-	 * @param String The Message
-	 * @return String The HTML Code for outputting a warning message
+	 * @param string $text The Message
+	 * @return string The HTML Code for outputting a warning message
 	 *
 	 * @deprecated Use WidgetAlert instead
 	 */
@@ -144,8 +144,8 @@ class html
 	/**
 	 * Static. Returns $text formatted as information message.
 	 *
-	 * @param String The Message
-	 * @return String The HTML Code for outputting an information message
+	 * @param string $text The Message
+	 * @return string The HTML Code for outputting an information message
 	 *
 	 * @deprecated Use WidgetAlert instead
 	 */
@@ -159,7 +159,7 @@ class html
 	 * @param string $text Content within div
 	 * @param string $cls HTML class
 	 * 
-	 * @return string <div class="$cls>$text</div>
+	 * @return string
 	 */
 	public static function div($text, $cls = '') {
 		return html::tag('div', $text, array('class' => $cls));
@@ -171,7 +171,7 @@ class html
 	 * @param string $text Content within tag
 	 * @param string $cls HTML class
 	 * 
-	 * @return string <p class="$cls>$text</p>
+	 * @return string
 	 */
 	public static function p($text, $cls = '') {
 		return html::tag('p', $text, array('class' => $cls));
@@ -183,7 +183,7 @@ class html
 	 * @param string $text Content within tag
 	 * @param string $cls HTML class
 	 * 
-	 * @return string <span class="$cls>$text</span>
+	 * @return string
 	 */
 	public static function span($text, $cls = '') {
 		return html::tag('span', $text, array('class' => $cls));
@@ -196,7 +196,7 @@ class html
 	 * @param string $text Content within tag
 	 * @param string $cls HTML class
 	 * 
-	 * @return string <strong class="$cls>$text</strong>
+	 * @return string
 	 */
 	public static function b($text, $cls = "") {
 		return html::tag('strong', $text, array('class' => $cls));
@@ -208,7 +208,7 @@ class html
 	 * @param string $text Content within tag
 	 * @param string $cls HTML class
 	 * 
-	 * @return string <em class="$cls>$text</em>
+	 * @return string
 	 */
 	public static function em($text, $cls = "") {
 		return html::tag('em', $text, array('class' => $cls));
@@ -221,7 +221,7 @@ class html
 	 * @param int $level The level of heading (1 to 6). 1 creates h1, 2 creates h2 etc... 
 	 * @param string $cls HTML class
 	 * 
-	 * @return string <h$level class="$cls>$text</h$level>
+	 * @return string
 	 */
 	public static function h($text, $level, $cls="") 	{
 		return html::tag('h' . $level, $text, array('class' => $cls));
@@ -234,7 +234,7 @@ class html
 	 * @param string $text Content within tag
 	 * @param array $attrs HTML attributes as associative array of name => value
 	 * 
-	 * @return string <tag attrs>text</tag>
+	 * @return string
 	 */
 	public static function tag($tag, $text, $attrs = array()) {
 		return '<' . $tag . html::attrs($attrs) . ">" . $text . "</" . $tag . ">";
@@ -246,7 +246,7 @@ class html
 	 * @param string $tag Tag name
 	 * @param array $attrs HTML attributes as associative array of name => value
 	 * 
-	 * @return string <tag attrs />
+	 * @return string
 	 */
 	public static function tag_selfclosing($tag, $attrs = array()) {
 		return '<' . $tag . html::attrs($attrs) . " />";
@@ -263,8 +263,8 @@ class html
 	 *
 	 * @param array $items Array of list items
 	 * @param string $cls Possible class name. The class is assigned to both items and container (ul/ol)
-	 * @param Boolean True if list should be ordered, that is coantiner shouldbe ol not ul
-	 * @return String
+	 * @param bool $useOrdered True if list should be ordered, that is container should be ol not ul
+	 * @return string
 	 */
 	public static function li($items, $cls = '', $useOrdered = false) {
 		$c = count($items);
@@ -386,8 +386,8 @@ class html
 	 * Build all options
 	 *
 	 * @param array $options
-	 * @param array $selected_values Selectd values
-	 * @return unknown
+	 * @param array $selected_values Selected values
+	 * @return string
 	 */
 	private static function options($options, $selected_values) {
 		$opts = '';
@@ -479,7 +479,7 @@ class html
 	 * A javascript include
 	 * 
 	 * @param string $path URL of script
-	 * @return string <script type="text/javascript" src="$path"></script>
+	 * @return string
 	 */
 	public static function include_js($path) {
 		return '<script type="text/javascript" src="' . GyroString::clear_html($path) . '"></script>';
@@ -504,7 +504,7 @@ class html
 	 * 
 	 * @param string $path URL of CSS
 	 * @param string $media Media
-	 * @return string <style type="text/css" media="$media">@import url($path);</style>
+	 * @return string
 	 */
 	public static function include_css($path, $media = 'screen') {
 		return '<style type="text/css" media="' . GyroString::clear_html($media) . '">@import url(' . GyroString::clear_html($path) . ');</style>';

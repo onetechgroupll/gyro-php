@@ -12,7 +12,7 @@ class ConverterUnidecode implements IConverter {
 	 * Convert Unicode chars to ASCII transliterals
 	 * 
 	 * @param string $value
-	 * @param string Encoding of $value, if different from current GyroLocale
+	 * @param string|false $params Encoding of $value, if different from current GyroLocale
 	 */
 	public function encode(mixed $value, mixed $params = false): mixed {
 		// We need 
@@ -61,6 +61,7 @@ class ConverterUnidecode implements IConverter {
 			$hex = substr('00' . dechex($high), -2); 
 			$file = dirname(__FILE__) . '/data/x' . $hex . '.php';
 			if (file_exists($file)) {
+				$data = array();
 				include($file);
 				$group = $data;
 			} 

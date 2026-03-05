@@ -31,4 +31,6 @@ parameters:
         - contributions/scheduler/
         # Depends on Users facade class and runtime config
         - contributions/javascript.cookieconsent/
+    scanFiles:
+        - contributions/jcssmanager/3rdparty/csstidy/class.csstidy.php
     reportUnmatchedIgnoredErrors: false

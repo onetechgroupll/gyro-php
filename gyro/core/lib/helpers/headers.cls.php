@@ -21,8 +21,8 @@ class GyroHeaders {
 	 * Set a header
 	 * 
 	 * @param string $name Name of header or complete header (if $value is false)
-	 * @param string $value Value of header
-	 * @param bool If FALSE, header will not be set, if header with same name was already set
+	 * @param string|false $value Value of header
+	 * @param bool $override If FALSE, header will not be set, if header with same name was already set
 	 */
 	public static function set($name, $value = false, $override = true) {
 		if ($value === false) {
@@ -39,7 +39,7 @@ class GyroHeaders {
 	 * Append to a given header or create a new one
 	 *
 	 * @param string $name Name of header or complete header (if $value is false)
-	 * @param string $value Value of header
+	 * @param string|false $value Value of header
 	 */
 	public static function append($name, $value = false) {
 		if ($value === false) {

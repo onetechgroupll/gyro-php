@@ -73,7 +73,7 @@ class WidgetPagerCalculator implements IPolicyHolder {
 	
 	/**
 	 * Returns number of pages
-	 * @var int
+	 * @return int
 	 */
 	public function get_total_pages() {
 		return $this->data['pages_total'];
@@ -219,9 +219,9 @@ class WidgetPagerCalculator implements IPolicyHolder {
 	/**
 	 * Shortens pages to - say - 10 , laeving gaps
 	 *
-	 * @param array $pages_in
 	 * @param int $current_page
-	 * @param int $num_extract,
+	 * @param int $total_pages
+	 * @param int $num_extract
 	 * @param int $policy
 	 * @return array
 	 */
@@ -339,6 +339,10 @@ class WidgetPager implements IWidget {
 		$this->data = $data;
 	}
 	
+	/**
+	 * @param int|false $policy
+	 * @return string
+	 */
 	public function render($policy = self::NONE) {
 		if ($policy == self::NONE) {
 			$policy = Config::get_value(Config::PAGER_DEFAULT_POLICY, self::NONE);

@@ -22,8 +22,8 @@ class GyroString {
 	 * @attention Content is escaped after stripping tags, so you should not call this
 	 *            function just to strip tags. Use it to clean user input.
 	 *
-	 * @param String The text to process
-	 * @return String The cleaned text
+	 * @param string $val The text to process
+	 * @return string The cleaned text
 	 */
 	public static function clear_html($val) {
 		return htmlspecialchars(strip_tags($val), ENT_QUOTES, GyroLocale::get_charset());
@@ -66,8 +66,8 @@ class GyroString {
 	/**
 	 * Static. Preprocesses a string so &gt; and similar get transformed to real characte4re
 	 *
-	 * @param String The text to process
-	 * @return String The cleaned text
+	 * @param string $val The text to process
+	 * @return string The cleaned text
 	 */
 	public static function unescape($val) {
 		return html_entity_decode(trim($val), ENT_QUOTES, GyroLocale::get_charset());
@@ -77,7 +77,7 @@ class GyroString {
 	 * Check if given string matches current encoding
 	 * 
 	 * @param string $value Value to check
-	 * @param string $encoding Encoding to check against. Use FALSE for current encoding
+	 * @param string|false $encoding Encoding to check against. Use FALSE for current encoding
 	 * @return bool
 	 */
 	public static function check_encoding($value, $encoding = false) {
@@ -93,9 +93,9 @@ class GyroString {
 	 *   you may want to check this on Linux by invoking "locale -a" on the command line.
 	 * 
 	 * @param string $value Input to convert
-	 * @param string $from Charset to convert from. If empty, system tries to autodetect it (may fail, though)
-	 * @param string $to Charset to convert to, if empty charset set on GyroLocale is used 
-	 * @return string 
+	 * @param string|false $from Charset to convert from. If empty, system tries to autodetect it (may fail, though)
+	 * @param string|false $to Charset to convert to, if empty charset set on GyroLocale is used
+	 * @return string
 	 */
 	public static function convert($value, $from = false, $to = false) {
 		return self::$impl->convert($value, $from, $to);
@@ -104,9 +104,9 @@ class GyroString {
 	/**
 	 * Static. Convert float value into a currency string according to locale settings
 	 *
-	 * @param float The numeric value
-	 * @param bool True to include unit, false to obey
-	 * @return String The formatted string, e.g. "$10.20"
+	 * @param float $dbl The numeric value
+	 * @param bool $includeUnit True to include unit, false to obey
+	 * @return string The formatted string, e.g. "$10.20"
 	 */
 	public static function currency($dbl, $includeUnit = true) {
 		$locale_info = localeconv();
@@ -115,7 +115,7 @@ class GyroString {
 			$thousands_sep = Arr::get_item($locale_info, 'thousands_sep', ',');
 		}
 		$decimal_point = Arr::get_item($locale_info, 'mon_decimal_point', null);
-		if (empty($decimal_sep)) {
+		if (empty($decimal_point)) {
 			$decimal_point = Arr::get_item($locale_info, 'decimal_point', '.');
 		}
 		$ret = number_format($dbl, 2, $decimal_point, $thousands_sep);
@@ -144,8 +144,8 @@ class GyroString {
 	/**
 	 * Static. Convert integer value into a string according to locale settings
 	 *
-	 * @param int The numeric value
-	 * @return String The formatted string, e.g. "10,200"
+	 * @param int $int The numeric value
+	 * @return string The formatted string, e.g. "10,200"
 	 */
 	public static function int($int) 	{
 		$int = Cast::int($int);
@@ -160,10 +160,10 @@ class GyroString {
 	/**
 	 * Static. Convert numeric value into a string according to locale settings
 	 *
-	 * @param mixed The numeric value
-	 * @param int Number of decimals
-	 * @param boolean If true, C formatting is used
-	 * @return String The formatted string, e.g. "10,200.67"
+	 * @param mixed $number The numeric value
+	 * @param int $decimals Number of decimals
+	 * @param bool $system If true, C formatting is used
+	 * @return string The formatted string, e.g. "10,200.67"
 	 */
 	public static function number($number, $decimals = 2, $system = false) {
    		$locale_info = ($system) ? false : localeconv();
@@ -255,10 +255,10 @@ class GyroString {
 	/**
 	 * Character set aware strtolower()
 	 * 
-	 * @param String Value to convert into lowercase
-	 * @param Integer Number of chars to convert, 0 for all.
-	 * 
-	 * @return String converted string
+	 * @param string $val Value to convert into lowercase
+	 * @param int $count Number of chars to convert, 0 for all.
+	 *
+	 * @return string converted string
 	 */
 	public static function to_lower($val, $count = 0) {
 		if ($count > 0) {
@@ -272,10 +272,10 @@ class GyroString {
 	/**
 	 * Character set aware strtoupper()
 	 * 
-	 * @param String Value to convert into lowercase
-	 * @param Integer Number of chars to convert, 0 for all.
-	 * 
-	 * @return String converted string
+	 * @param string $val Value to convert into uppercase
+	 * @param int $count Number of chars to convert, 0 for all.
+	 *
+	 * @return string converted string
 	 */
 	public static function to_upper($val, $count = 0) {
 		if ($count > 0) {
@@ -351,10 +351,10 @@ class GyroString {
 	 * @param string $replacement The string to replace with
 	 * @param string $subject The text to search
 	 * @param integer $limit The number of replacements to do
-	 * @param integer $count Filled with number of replacements
-	 * @return integer Number of replacements
+	 * @param int $count Filled with number of replacements
+	 * @return string|null Result string or null on error
 	 */
-	public static function preg_replace($pattern, $replacement, $subject, $limit = -1, &$count = false) {
+	public static function preg_replace($pattern, $replacement, $subject, $limit = -1, &$count = 0) {
 		self::apply_u_modifier($pattern);
 		return preg_replace($pattern, $replacement, $subject, $limit, $count);
 	}
@@ -369,7 +369,7 @@ class GyroString {
 	 * @param int|false $count Filled with number of replacements done
 	 * @return string|null The resulting string, or null on error
 	 */
-	public static function preg_replace_callback($pattern, $callback, $subject, $limit = -1, &$count = false) {
+	public static function preg_replace_callback($pattern, $callback, $subject, $limit = -1, &$count = 0) {
 		self::apply_u_modifier($pattern);
 		return preg_replace_callback($pattern, $callback, $subject, $limit, $count);
 	}	
@@ -434,14 +434,16 @@ class GyroString {
 			return;
 		}
 		
-		if (!function_exists('_append_u_modifier')) {
+		/** @var \Closure|null */
+		static $append_u_modifier = null;
+		if ($append_u_modifier === null) {
 			/**
 			 * Function to transform a non-unicode-suitable regex into a utf-8-compatible one
-			 * 
+			 *
 			 * @param string $regex The regex to transform
 			 * @return string
 			 */
-			function _append_u_modifier($regex) {
+			$append_u_modifier = function($regex) {
 				if (GyroLocale::get_charset() == 'UTF-8') {
 					$regex = str_replace('\b{<}', '(?<!\w)', $regex);
 					$regex = str_replace('\b{>}', '(?!\w)', $regex);
@@ -457,18 +459,18 @@ class GyroString {
 				else {
 					$regex = str_replace('\b{<}', '\b', $regex);
 					$regex = str_replace('\b{>}', '\b', $regex);
-					$regex = str_replace('\b{<>}', '\b', $regex);										
+					$regex = str_replace('\b{<>}', '\b', $regex);
 				}
-				
+
 				return $regex;
-			}
+			};
 		}
-		
+
 		if (is_array($pattern)) {
-			$pattern = array_map('_append_u_modifier', $pattern);
+			$pattern = array_map($append_u_modifier, $pattern);
 		}
 		else {
-			$pattern = _append_u_modifier($pattern);
+			$pattern = $append_u_modifier($pattern);
 		}
 	} 
 	

@@ -31,7 +31,7 @@ class DB {
 	/**
 	 * A single dataobject to perform queries, escape values, etc
 	 *
-	 * @var array Array of IDBDriver
+	 * @var IDBDriver|array|null Array of IDBDriver
 	 */
 	private static $db;
 	
@@ -43,8 +43,8 @@ class DB {
 
 	/**
 	 * Returns connection with given name
-	 * 
-	 * @param string|IDBDriver $name
+	 *
+	 * @param string|IDBDriver $name_or_object
 	 * @return IDBDriver
 	 */
 	public static function get_connection($name_or_object = self::DEFAULT_CONNECTION) {
@@ -130,10 +130,11 @@ class DB {
 	
 	/**
 	 * Returns (and caches) instance for given table, with haven given values
-	 * 
+	 *
 	 * @param string $table
-	 * @param array $values Associative array with column => value
-	 * @return IDataObject  False if not found
+	 * @param array $arr_values Associative array with column => value
+	 * @param bool|int $use_cache
+	 * @return IDataObject|false  False if not found
 	 */
 	public static function get_item_multi($table, $arr_values, $use_cache = self::CACHE_READ_WRITE) {
 		$cache_read = $use_cache && $use_cache !== self::CACHE_WRITE_ONLY;
@@ -488,9 +489,9 @@ class DB {
 	 * Log a query
 	 *
 	 * @param string $query
-	 * @param IDBDriver $conn
 	 * @param float $seconds
 	 * @param Status $status
+	 * @param string|IDBDriver $conn
 	 */
 	public static function log_query($query, $seconds, $status, $conn = self::DEFAULT_CONNECTION) {
 		self::$queries_total_time += $seconds;

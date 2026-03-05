@@ -7,7 +7,7 @@ class StringPHP {
 	 * Check if given string matches current encoding
 	 * 
 	 * @param string $value Value to check
-	 * @param string $encoding Encoding to check against. Use FALSE for current encoding
+	 * @param string|false $encoding Encoding to check against. Use FALSE for current encoding
 	 * @return bool
 	 * 
 	 * @attention This will work with MBString onyl!
@@ -35,7 +35,7 @@ class StringPHP {
 	/**
 	 * Character set aware strtolower()
 	 * 
-	 * @param String Value to convert into lowercase
+	 * @param string $val Value to convert into lowercase
 	 * 
 	 * @return String converted string
 	 */
@@ -46,7 +46,7 @@ class StringPHP {
 	/**
 	 * Character set aware strtoupper()
 	 * 
-	 * @param String Value to convert into upper case
+	 * @param string $val Value to convert into upper case
 	 * 
 	 * @return String converted string
 	 */

@@ -15,9 +15,12 @@ if(!defined('PHP_VERSION_ID')) {
     define('PHP_VERSION_ID', (intval($version[0]) * 10000 + intval($version[2]) * 100 + intval($version[4])));
 }
 if(PHP_VERSION_ID < 50207) {
-    define('PHP_MAJOR_VERSION',     $version[0]);
-    define('PHP_MINOR_VERSION',     $version[2]);
-    define('PHP_RELEASE_VERSION',     $version[4]);
+    if (!isset($version)) {
+        $version = PHP_VERSION;
+    }
+    define('PHP_MAJOR_VERSION',     intval($version[0]));
+    define('PHP_MINOR_VERSION',     intval($version[2]));
+    define('PHP_RELEASE_VERSION',     intval($version[4]));
 }
 
 if( !function_exists('memory_get_usage') ) {
@@ -30,7 +33,7 @@ if( !function_exists('memory_get_usage') ) {
 		$output = array();
 		if ( substr( PHP_OS, 0, 3 ) == 'WIN' ) {
 			exec( 'tasklist /FI "PID eq ' . getmypid() . '" /FO LIST', $output );
-			return preg_replace( '/[\D]/', '', $output[5] ) * 1024;
+			return intval(preg_replace( '/[\D]/', '', $output[5] )) * 1024;
 		}
 		else {
 			//We now assume the OS is UNIX
@@ -39,7 +42,7 @@ if( !function_exists('memory_get_usage') ) {
 			$pid = getmypid();
 			exec("ps -o rss -p $pid", $output);
 			//rss is given in 1024 byte units
-			return $output[1] * 1024;
+			return intval($output[1]) * 1024;
 		}
 	}
 }

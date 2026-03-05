@@ -6,10 +6,14 @@ Alle wesentlichen Änderungen am Gyro-PHP Framework, chronologisch nach Phasen g
 
 ### Verbessert
 - **PHPStan Level 2 → 3:** Strengere statische Analyse
-  - Baseline von 1262 → 584 bekannte Fehler (54% Reduktion)
+  - Baseline von 1262 → 525 bekannte Fehler (58% Reduktion)
   - Contribution-Module mit fehlenden Dependencies konsequent excludiert
   - Template-Dateien (`.tpl.php`) von Analyse ausgeschlossen
   - `DBField::$policy` Typ-Annotation korrigiert (`bool` → `int`)
+  - `ConstantCacheManager`: Alle 13 PHPStan-Fehler behoben — `@var/@param/@return timestamp` → `int`, Konstruktor-Default `false` → `null` mit Nullable-Type
+  - `BlockBase`: Alle 11 PHPStan-Fehler behoben — fehlende `$variable`-Namen in `@param` Tags (Konstruktor + Setter), `render()` PHPDoc `int` → `int|false` für `$policy`
+  - Event-System: PHPDoc `@param` in `IEventSink`, `IEventSource`, `EventSource` und 10 EventSink-Implementierungen korrigiert (fehlende `$variable`-Namen); `@return status` → `@return Status` in `IEventSource`
+  - 3 `check_preconditions.php` Dateien: `@phpstan-ignore class.notFound` für dynamisch geladene `SystemUpdateInstaller`-Klasse
 - **PHPDoc-Dokumentation** für öffentliche APIs der wichtigsten Framework-Klassen:
   - `GyroString` (`string.cls.php`): `@param`/`@return` Tags für `starts_with`, `ends_with`, `extract_before`, `extract_after`, `explode_terms`, `substr_word`, `substr_sentence`, `singular_plural`, `plain_ascii`, `localize_number`, `delocalize_number`
   - `Logger` (`logger.cls.php`): PHPDoc für alle 8 PSR-3 Level-Methoden (`emergency` bis `debug`)

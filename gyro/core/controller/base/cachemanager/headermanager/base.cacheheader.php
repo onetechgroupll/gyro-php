@@ -41,7 +41,7 @@ class BaseCacheHeaderManager implements ICacheHeaderManager {
 	/**
 	 * Returns cache control header's content
 	 * 
-	 * @param timestamp $expirationdate
+	 * @param int $expirationdate
 	 * @param int $max_age Expiratin date minus current timestamp, already preprocessed
 	 */
 	protected function get_cache_control($expirationdate, $max_age) {

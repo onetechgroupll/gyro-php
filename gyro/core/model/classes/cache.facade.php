@@ -55,9 +55,9 @@ class Cache {
 	/**
 	 * Read from cache
 	 * 
-	 * @param Mixed A set of key params, may be an array or a string
-	 * @param $ignore_disabled Lookup item, even if cache is disabled
-	 * @return ICacheItem False if cache is not found
+	 * @param mixed $cache_keys A set of key params, may be an array or a string
+	 * @param bool $ignore_disabled Lookup item, even if cache is disabled
+	 * @return ICacheItem|false False if cache is not found
 	 */
 	public static function read($cache_keys, $ignore_disabled = false) {
 		// Allow diableing of cache
@@ -98,7 +98,7 @@ class Cache {
 	/**
 	 * Clear the cache
 	 * 
-	 * @param Mixed A set of key params, may be an array or a string, or an ICachable instance. If NULL, all is cleared
+	 * @param mixed $cache_keys A set of key params, may be an array or a string, or an ICachable instance. If NULL, all is cleared
 	 * @param $ignore_disabled Clear item, even if cache is disabled
 	 */
 	public static function clear($cache_keys = NULL, $ignore_disabled = false) {

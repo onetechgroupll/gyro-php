@@ -58,8 +58,8 @@ interface IImageTools {
 	 * Add a Watermark
 	 * 
 	 * @param IImageInformation $src Image to add watermark to
-	 * @param string $text Text of Watermark, if emtpy "© {Application Title}" is taken
-	 * 
+	 * @param string|false $text Text of Watermark, if empty "© {Application Title}" is taken
+	 *
 	 * @return IImageInformation
 	 */
 	public function watermark(IImageInformation $src, $text = false);

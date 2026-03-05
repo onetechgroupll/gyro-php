@@ -9,7 +9,7 @@ class MemcacheCacheItem implements ICacheItem {
 	/**
 	 * Item data 
 	 * 
-	 * @var Associative array 
+	 * @var array Associative array
 	 */
 	private array $item_data;
 	
@@ -90,8 +90,8 @@ class CacheMemcacheImpl implements ICachePersister {
 	/**
 	 * Read from cache
 	 * 
-	 * @param Mixed A set of key params, may be an array or a string
-	 * @return ICacheItem The cache as array with members "content" and "data", false if cache is not found
+	 * @param mixed $cache_keys A set of key params, may be an array or a string
+	 * @return ICacheItem|false The cache as array with members "content" and "data", false if cache is not found
 	 */
 	public function read(mixed $cache_keys): ICacheItem|false {
 		$key = $this->flatten_keys($cache_keys);
@@ -105,8 +105,8 @@ class CacheMemcacheImpl implements ICachePersister {
 	/**
 	 * Store content in cache
 	 * 
-	 * @param Mixed A set of key params, may be an array or a string
-	 * @param string The cache
+	 * @param mixed $cache_keys A set of key params, may be an array or a string
+	 * @param string $content The cache
 	 */
 	public function store(mixed $cache_keys, string $content, int $cache_life_time, mixed $data = '', bool $is_compressed = false): void {
 		if (!$is_compressed) {
@@ -127,7 +127,7 @@ class CacheMemcacheImpl implements ICachePersister {
 	/**
 	 * Clear the cache
 	 * 
-	 * @param Mixed A set of key params, may be an array or a string, or an ICachable instance. If NULL, all is cleared
+	 * @param mixed $cache_keys A set of key params, may be an array or a string, or an ICachable instance. If NULL, all is cleared
 	 */
 	public function clear(mixed $cache_keys = NULL): void {
 		if (empty($cache_keys)) {
@@ -161,7 +161,7 @@ class CacheMemcacheImpl implements ICachePersister {
 	/**
 	 * Transform the given param into a key string
 	 * 
-	 * @param Mixed A set of key params, may be an array or a string
+	 * @param mixed $cache_keys A set of key params, may be an array or a string
 	 */
 	protected function flatten_keys($cache_keys) {
 		$cache_keys = $this->preprocess_keys($cache_keys);
@@ -180,11 +180,12 @@ class CacheMemcacheImpl implements ICachePersister {
 	 * 
 	 * See http://code.google.com/p/memcached/wiki/FAQ#Deleting%5Fby%5FNamespace
 	 * 
-	 * @param Mixed A set of key params, may be an array or a string
+	 * @param mixed $cache_keys A set of key params, may be an array or a string
 	 * @return array
 	 */
 	protected function get_keys_namespaces($cache_keys) {
 		$ret = array();
+		$ns_key = '';
 		foreach(Arr::force($cache_keys, true) as $key) {
 			$ns_key .= 'g$ns' . $key;
 			$ret[] = $ns_key;

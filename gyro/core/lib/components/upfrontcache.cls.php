@@ -11,7 +11,7 @@ class UpfrontCache {
 	 */
 	public static function serve_from_cache(PageData $page_data) {
 		$view = ViewFactory::create_view(IViewFactory::PAGE, $page_data->page_template, $page_data);
-		if ($view->is_cached()) {
+		if (method_exists($view, 'is_cached') && $view->is_cached()) {
 			$view->render(IView::DISPLAY);
 			exit;
 		}		

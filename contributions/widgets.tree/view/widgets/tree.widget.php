@@ -34,7 +34,7 @@ class WidgetTree implements IWidget {
 		$this->params = $params;
 	}
 	
-	public function render($policy = self::NONE) {
+	public function render($policy = 0) {
 		// First build an array with type/id as key and title, url and childs as members
 		$branch = $this->build_branch_array($this->params, $policy); 
 		$tree = $this->build_tree_array($this->params, $policy, $branch);
@@ -91,6 +91,7 @@ class WidgetTree implements IWidget {
 			$is_branch = ($branch_item) ? $item->is_same_as($branch_item) : false;
 			// True if last element on branch is reached
 			$is_leaf = $is_branch && (count($branch) == 0);
+			$childs = array();
 			if ($is_branch) {
 				// A branch is always expanded up to leaf
 				// But expand leaf itself only if render policy states so
@@ -100,11 +101,8 @@ class WidgetTree implements IWidget {
 				}
 			}
 			else if ($has_next_level) {
-				// Expand next level that is not a branch 
+				// Expand next level that is not a branch
 				$childs = $this->create_level($level + 1, $max_level, $item->get_childs(), $policy, array());
-			}
-			else {	
-				$childs = array();
 			}
 			$ret[] = $this->create_node($item, $childs, $is_branch, $is_leaf);
 		}

@@ -7,10 +7,10 @@ class StringMBString {
 	 * Check if given string matches current encoding
 	 * 
 	 * @param string $value Value to check
-	 * @param string $encoding Encoding to check against. Use FALSE for current encoding
+	 * @param string $encoding Encoding to check against. Use empty string for current encoding
 	 * @return bool
 	 */
-	public function check_encoding($value, $encoding = false) {
+	public function check_encoding($value, $encoding = '') {
 		if (empty($encoding)) { 
 			$encoding = GyroLocale::get_charset(); 
 		}
@@ -21,11 +21,11 @@ class StringMBString {
 	 * Convert input to current charset
 	 * 
 	 * @param string $value Input to convert
-	 * @param string $from Encoding to convert from. Use FALSE for auto-detecting encoding of $value
-	 * @param string $to Encoding to covert to. Use FALSE for current encoding set on GyroLocale
+	 * @param string $from Encoding to convert from. Use empty string for auto-detecting encoding of $value
+	 * @param string $to Encoding to covert to. Use empty string for current encoding set on GyroLocale
 	 * @return string Converted Value
 	 */
-	public function convert($value, $from = false, $to = false) {
+	public function convert($value, $from = '', $to = '') {
 		if (empty($to)) { $to = GyroLocale::get_charset(); }
 		
 		$ret = $value;
@@ -44,8 +44,7 @@ class StringMBString {
 	/**
 	 * Character set aware strtolower()
 	 * 
-	 * @param String Value to convert into lowercase
-	 * @param Integer Number of chars to convert, 0 for all.
+	 * @param string $val Value to convert into lowercase
 	 * 
 	 * @return String converted string
 	 */
@@ -56,7 +55,7 @@ class StringMBString {
 	/**
 	 * Character set aware strtoupper()
 	 * 
-	 * @param String Value to convert into upper case 
+	 * @param string $val Value to convert into upper case
 	 * 
 	 * @return String converted string
 	 */

@@ -8,9 +8,9 @@
 class Cast {
 	/**
 	 * Static. Forces the given param to be integer.
-	 * 
-	 * @param mixes
-	 * @return Integer 
+	 *
+	 * @param mixed $val
+	 * @return int
 	 */
 	public static function int($val) {
 		return (is_numeric($val) ? intval($val) : 0);
@@ -18,10 +18,9 @@ class Cast {
 
 	/**
 	 * Static. Forces the given param to be float.
-	 * 
-	 * @param mixed The value to convert
-	 * @param bool True, if languange specific seperators should be acknowledged
-	 * @return Float 
+	 *
+	 * @param mixed $val The value to convert
+	 * @return float
 	 */
 	public static function float($val) {
 		return (is_numeric($val) ? floatval($val) : 0.0);
@@ -30,8 +29,8 @@ class Cast {
 	/**
 	 * Static. Converts string retrieved from PHP to date
 	 *
-	 * @param String Anything that possible can be interpreted as a date
-	 * @return date
+	 * @param string $string Anything that possible can be interpreted as a date
+	 * @return mixed
 	 */
 	public static function datetime($string) {
 		return GyroDate::datetime($string);

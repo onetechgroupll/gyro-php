@@ -83,7 +83,7 @@ class TemplateEngineCore extends TemplateEngineSimple {
 	protected function resolve_quick_tags($content) {
 		$regex = '@(<\?=)(.*?)(;|\?>)@';
 		$rep = '<?php print GyroString::escape($2)$3';
-		return GyroString::preg_replace($regex, $rep, $content);		
+		return (string)GyroString::preg_replace($regex, $rep, $content);
 	}
 	
 	/**

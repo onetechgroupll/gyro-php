@@ -300,7 +300,7 @@ class HeadData implements IRenderer {
 	/**
 	 * Render Meta Tags
 	 *
-	 * @param array 
+	 * @param array $arr_meta
 	 * @return string
 	 */
 	protected function render_meta($arr_meta) {
@@ -314,7 +314,7 @@ class HeadData implements IRenderer {
 	/**
 	 * Render Meta Http Quiv Tags
 	 *
-	 * @param array 
+	 * @param array $arr_meta
 	 * @return string
 	 */
 	protected function render_meta_http_equiv($arr_meta) {
@@ -328,7 +328,7 @@ class HeadData implements IRenderer {
 	/**
 	 * Render Links
 	 *
-	 * @param array 
+	 * @param array $arr_links
 	 * @return string
 	 */
 	protected function render_links($arr_links) {
@@ -342,7 +342,7 @@ class HeadData implements IRenderer {
 	/**
 	 * Render CSS includes
 	 *
-	 * @param array CSS files
+	 * @param array $css_files CSS files
 	 * @return string
 	 */
 	protected function render_css($css_files) {
@@ -444,9 +444,9 @@ class HeadData implements IRenderer {
 	}
 
 	/**
-	 * Render CSS includes
+	 * Render JS includes
 	 *
-	 * @param array CSS files
+	 * @param array $js_files JS files
 	 * @return string
 	 */
 	protected function render_js($js_files) {

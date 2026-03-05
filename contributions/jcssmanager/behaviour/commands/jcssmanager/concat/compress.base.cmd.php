@@ -9,7 +9,7 @@ class JCSSManagerCompressBaseConcatCommand extends JCSSManagerCompressBaseComman
 	 */
 	protected function compress($in_files, $out_file, &$files_to_unlink) {
 		$ret = new Status();
-		$ret->merge($this->concat($in_files, $out_file, $ret));
+		$ret->merge($this->concat($in_files, $out_file));
 		return $ret;
 	}
 
@@ -17,8 +17,8 @@ class JCSSManagerCompressBaseConcatCommand extends JCSSManagerCompressBaseComman
 	 * Concat the gicen files into one
 	 * 
 	 * @param array $arr_files
-	 * @param Status $err
-	 * @return string Created concatenation file
+	 * @param string $out_file
+	 * @return Status Created concatenation file
 	 */
 	protected function concat($arr_files, $out_file) {
 		$err = new Status();

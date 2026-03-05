@@ -114,7 +114,7 @@ class PageData {
 		//if (empty($this->status)) {
 		//	$this->status = new Status();
 		//}
-		if (empty($cache_manager)) { $cache_manager = new NoCacheCacheManager(); } 
+		if ($cache_manager === null) { $cache_manager = new NoCacheCacheManager(); }
 		$this->set_cache_manager($cache_manager);
 		$this->pathstack = new PathStack();
 		
@@ -168,7 +168,7 @@ class PageData {
 	/**
 	 * Write data from $_FILES into our post array
 	 *
-	 * @param unknown_type $arr
+	 * @param array $arr
 	 */
 	private function merge_uploaded_files($arr) {
 		// We mus transform array of type 
@@ -276,7 +276,7 @@ class PageData {
 	 * @param ICacheManager $cache_manager
 	 */
 	public function set_cache_manager($cache_manager) {
-		if (!empty($cache_manager)) {
+		if ($cache_manager !== null) {
 			$this->cache_manager = $cache_manager;
 			$this->cache_manager->initialize($this);
 		}
@@ -294,7 +294,7 @@ class PageData {
 	/**
 	 * Returns array of render decorators to overload default render behaviour
 	 *
-	 * @param IDispatcher Dispatcher
+	 * @param IDispatcher $route Dispatcher
 	 * @return array Array of IRenderDecorators
 	 */
 	public function get_render_decorators($route) {
@@ -308,7 +308,7 @@ class PageData {
 	/**
 	 * Set current url path
 	 *
-	 * @param strin $path
+	 * @param string $path
 	 */
 	public function set_path($path) {
 		$this->pathstack->set_path($path);
@@ -317,7 +317,7 @@ class PageData {
 	/**
 	 * Returns path stack
 	 *
-	 * @return Pathstack
+	 * @return PathStack
 	 */
 	public function get_pathstack() {
 		return $this->pathstack;
@@ -350,9 +350,9 @@ class PageData {
 	}
 	
 	/**
-	 * Get blocks for given position 
-	 * 
-	 * @param string $position Pass FALSE to retrieve all blocks 
+	 * Get blocks for given position
+	 *
+	 * @param string|false $position Pass FALSE to retrieve all blocks
 	 */
 	public function get_blocks($position = false) {
 		$ret = array();
