@@ -17,6 +17,13 @@ define ('GYRO_CORE_DIR', dirname(__FILE__) . '/');
 define ('GYRO_ROOT_DIR', GYRO_CORE_DIR . '../');
 require_once GYRO_CORE_DIR . 'config.cls.php';
 Config::set_value(Config::VERSION, 0.6);
+
+// Load .env file if present (defines APP_* constants before constants.inc.php reads them)
+require_once GYRO_CORE_DIR . 'lib/helpers/env.cls.php';
+if (defined('APP_INCLUDE_ABSPATH')) {
+	Env::load(APP_INCLUDE_ABSPATH . '.env');
+}
+
 require_once GYRO_CORE_DIR . 'constants.inc.php';
 
 // Set error reporting settings

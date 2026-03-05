@@ -1,14 +1,15 @@
 # Gyro-PHP Framework – Projektanalyse & Memory
 
-> Letzte Aktualisierung: 2026-03-05
+> Letzte Aktualisierung: 2026-03-05 (Phase 7 abgeschlossen)
 
 ## Projektübersicht
 
 - **Framework:** Gyro-PHP, eigenes PHP-Webframework (seit 2004, PHP 4 → PHP 5 Rewrite 2005)
 - **Aktueller Stand:** Läuft auf PHP 8.x mit Safeguards, Code-Stil ist PHP 5.x Ära
-- **Composer** mit classmap-Autoload (Phase 6), kein PSR-4, kein Namespace-System
-- **Test-Framework:** SimpleTest 1.1.0 (abandoned seit 2012)
-- **Kein modernes Dependency Management**
+- **Composer** für Dev-Dependencies (PHPUnit, PHPStan), kein PSR-4, kein Namespace-System
+- **Test-Framework:** PHPUnit 10.5 (primär, 254 Tests) + SimpleTest 1.1.0 (Legacy, abandoned)
+- **Statische Analyse:** PHPStan Level 2 mit Baseline (1262 bekannte Fehler getracked)
+- **Environment:** `.env` Support (Phase 7), rückwärtskompatibel mit `APP_*` Konstanten
 
 ## Verzeichnisstruktur
 
@@ -39,11 +40,13 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | Metrik | Wert |
 |--------|------|
 | Core-Klassen | 239 (.cls.php, .model.php, .facade.php) |
-| Test-Dateien | 57 SimpleTest + 8 PHPUnit (66 Tests, 350 Assertions) |
-| Testabdeckung | ~25% (PHPUnit-Migration fortgeschritten) |
+| PHPUnit-Tests | 254 Tests, 985 Assertions (53 Test-Dateien) |
+| SimpleTest (Legacy) | 57 Dateien (größtenteils nach PHPUnit portiert) |
+| Testabdeckung | ~50%+ (Phase 7: massive Erweiterung) |
 | PHPDoc-Abdeckung | ~15-20% |
 | TODO/FIXME/HACK | 14 Marker |
 | Contributions | 57+ Module (3 tote entfernt in Phase 5) |
+| PHPStan | Level 2, Baseline mit 1262 bekannten Fehlern |
 
 ## Sicherheitsprobleme
 
@@ -93,7 +96,17 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 - Exception-Support mit Stack-Traces
 - Konfigurierbares Minimum-Level via `Logger::set_min_level()`
 
-### Konfigurations-Schwächen
+### ✅ Environment-Konfiguration (Phase 7)
+- **Datei:** `gyro/core/lib/helpers/env.cls.php`
+- `.env` Datei-Loader mit automatischer `APP_*` Konstanten-Definition
+- Rückwärtskompatibel: Ohne `.env` funktioniert alles wie bisher
+- Integration in `start.php`: Lädt `.env` vor `constants.inc.php`
+- `.env.example` mit allen verfügbaren Konfigurationsvariablen
+- Type-Casting: `true`/`false` → bool, Zahlen → int/float
+- Keine externe Dependency (kein vlucas/phpdotenv nötig)
+
+### Konfigurations-Schwächen (teilweise behoben)
+- ✅ `.env` Support für Environment-abhängige Konfiguration (Phase 7)
 - Hardcoded Timeouts: `$timeout_sec = 30` (HTTP), `$max_age = 600` (Cache)
 - Magic Numbers: Port 443 für HTTPS, ASCII-Codes `10`/`13`, Email-Limit `64`
 - String-basierte Konstanten-Lookup (flexibel aber nicht typsicher)
@@ -183,13 +196,13 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 ### Phase 5: Qualität & Cleanup
 - [ ] Veraltete Module entfernen (xcache, acpu, abandoned JS-Libs)
 - [ ] PHPDoc für alle public APIs
-- [ ] Testabdeckung auf >50% bringen
+- [x] Testabdeckung auf >50% bringen ✅ (Phase 7)
 
 ### Phase 6: Modernisierung II ✅ ERLEDIGT
 - [x] Typed Properties in allen Interface-Implementierungen (12 Klassen, 16 Properties)
 - [x] `DB::execute_prepared()` und `DB::query_prepared()` statische Wrapper
-- [x] Composer classmap Autoload (`gyro/core/`, `contributions/`)
-- [x] PHPStan Level 1 eingerichtet (`phpstan.neon.dist`)
+- [x] Composer classmap Autoload → **entfernt** (Phase 7: Konflikt mit `Load::directories()` und `include_once` Pfad-Auflösung)
+- [x] PHPStan Level 1 eingerichtet → **Level 2 mit Baseline** (Phase 7)
 
 #### Phase 6 Details: Typed Properties
 - **DBResultSet**: `?PDOStatement $pdo_statement`
@@ -206,23 +219,69 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 - **ConverterUnidecode**: `static array $groups`
 
 #### Phase 6 Details: Composer & PHPStan
-- `composer.json`: `autoload.classmap` für `gyro/core/` und `contributions/` (3rd-Party ausgeschlossen)
-- `phpstan.neon.dist`: Level 1, analysiert Core + Contributions, excludiert 3rd-Party/Tests
+- `composer.json`: classmap entfernt (Phase 7 — Pfadkonflikte mit `Load::directories()`)
+- `phpstan.neon.dist`: Level 2 mit Baseline (Phase 7), analysiert Core + Contributions
 - PHPStan als `require-dev` Dependency hinzugefügt
+
+### Phase 7: Testabdeckung & Infrastruktur ✅ ERLEDIGT
+- [x] SimpleTest → PHPUnit Migration: 43 von 45 Tests portiert (2 brauchen echte DB)
+- [x] Neue Tests für alle DB-Feldtypen (Bool, Enum, Float, Serialized, Set)
+- [x] Neue Tests für Converter (Callback, Chain, None, Html, HtmlEx, MimeHeader)
+- [x] Neue Tests für Query Builder (Select, Count, Delete, Insert, Update, Joined, Secondary)
+- [x] Neue Tests für Where/Filter/Sort (DBWhere, DBWhereGroup, DBFilter, DBFilterColumn, DBSortColumn, DBCondition)
+- [x] Neue Tests für Routing (ExactMatchRoute, ParameterizedRoute, RouteBase)
+- [x] Neue Tests für Helpers (Cast, Timer, HtmlString, PathStack, Header, RuntimeCache, Locale)
+- [x] Neue Tests für Model (DAO, DataObject, DBExpression, DBNull, DBFieldRelation, DBJoinCondition)
+- [x] Neue Tests für weitere Klassen (TracedArray, RequestInfo, GyroCookieConfig, Referer, WidgetInput)
+- [x] `.env` Environment-Konfiguration (eigener Loader, keine externe Dependency)
+- [x] PHPStan Level 1 → Level 2 mit Baseline (1262 bekannte Fehler)
+- [x] Composer classmap entfernt (Pfadkonflikt mit `include_once`)
+- [x] `ConverterHtmlEx` PHP 8.x Type-Kompatibilität gefixt
+- [x] EnvTest (11 Tests)
+- **Ergebnis:** 254 Tests, 985 Assertions (alle grün)
+
+#### Phase 7 Details: .env Support
+- **Datei:** `gyro/core/lib/helpers/env.cls.php` (Env-Klasse)
+- **Integration:** `start.php` lädt `.env` vor `constants.inc.php`
+- **Mechanismus:** `.env` Werte werden als `APP_*` Konstanten definiert (wenn nicht bereits definiert)
+- Bestehende `set_value_from_constant()` / `set_feature_from_constant()` Aufrufe greifen automatisch
+- `.env.example` dokumentiert alle verfügbaren `APP_*` Variablen
+- `.env` in `.gitignore` aufgenommen
+- Nutzung: `Env::get('DB_HOST', 'localhost')` oder über `APP_DB_HOST` Konstante
+
+#### Phase 7 Details: PHPStan Level 2
+- `phpstan.neon.dist`: Level 2, Baseline (`phpstan-baseline.neon`) mit 1262 bekannten Fehlern
+- Neue Fehler werden sofort gemeldet, bestehende sind getracked
+- 10 Contribution-Dateien excludiert (fehlende externe Klassen/Interfaces)
+- Sphinx-Driver: `execute_prepared()`/`query_prepared()` fehlen weiterhin (bekannt)
+
+#### Phase 7 Details: Testinfrastruktur
+- `tests/bootstrap.php`: Lädt kompletten Framework-Core für Tests
+  - Model-Subdirectories (`fields/`, `queries/`, `sqlbuilder/`, `constraints/`)
+  - Controller/Routing, Behaviour, View/Widgets
+  - Converter-Klassen (`lib/helpers/converters/`)
+  - Mock-DB-Driver via Reflection als Default-Connection registriert
+- `phpunit.xml.dist`: Core + Contributions Test-Suites
+- Mock-Klassen: `DBDriverMySqlMock` (kein DB-Connect), `MockIDBTable` (SQL-Generation testen)
+
+#### Phase 7 Details: Bekannte Test-Limitierungen
+- 2 SimpleTest-Dateien nicht portierbar ohne echte DB (Cache, UpdateCommand)
+- 3 PHP 8.4 Deprecation Warnings (dynamische Properties in DAOStudentsTest, Url)
+- Mock-Driver nutzt `GyroString::escape()` (HTML-Entities) statt `mysqli_real_escape_string`
 
 ## Scorecard
 
 | Aspekt | Bewertung | Notizen |
 |--------|-----------|---------|
-| Testabdeckung | 3/10 | ~20%, selektiv; PHPUnit-Migration gestartet (29 Tests portiert) |
-| Test-Framework | 4/10 | PHPUnit 10.5 eingerichtet, SimpleTest bleibt parallel |
+| Testabdeckung | 6/10 | ~50%+, 254 Tests / 985 Assertions (PHPUnit 10.5) |
+| Test-Framework | 7/10 | PHPUnit 10.5 primär, Mock-Infrastruktur, SimpleTest Legacy |
 | Dokumentation | 4/10 | PHPDoc sparse |
 | Dead Code | 8/10 | Minimal, sauber |
-| Konfiguration | 6/10 | Zentralisiert aber Magic Numbers |
+| Konfiguration | 7/10 | ✅ `.env` Support, zentralisiert, noch Magic Numbers |
 | Error Logging | 7/10 | ✅ PSR-3 Levels, JSON-Output, Context, Exception-Support |
 | Moderne PHP-Features | 5/10 | ✅ Type Declarations, ✅ Typed Properties, ✅ Union Types |
 | Sicherheit | 7/10 | ✅ bcrypt, ✅ Headers, ✅ Prepared Stmt, ✅ Session, ✅ CSRF |
-| Statische Analyse | 3/10 | PHPStan Level 1 eingerichtet, noch nicht durchgelaufen |
+| Statische Analyse | 5/10 | ✅ PHPStan Level 2 mit Baseline, 1262 Fehler getracked |
 
 ## Moderne PHP-Features Analyse
 
@@ -239,8 +298,8 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | Fibers/Async | NEIN | Nicht genutzt |
 | Attributes | NEIN | Kein PHP 8.0+ `#[...]` |
 | PSR-Interfaces | MINIMAL | Eigene Event-Interfaces (IEventSink/IEventSource), kein PSR-7/11/14/15/17/18 |
-| Composer Autoload | TEILWEISE | ✅ classmap für `gyro/core/` + `contributions/` (Phase 6), eigene `Load`-Klasse bleibt parallel |
-| Environment Vars (.env) | MINIMAL | Nur `getenv()` für Temp-Verzeichnis (TMP/TEMP/TMPDIR); kein dotenv |
+| Composer Autoload | NEIN | classmap entfernt (Pfadkonflikt), eigene `Load`-Klasse |
+| Environment Vars (.env) | ✅ JA | Eigener `.env` Loader (`Env`-Klasse), `APP_*` auto-define (Phase 7) |
 | Return Type Declarations | TEILWEISE | In 5 Core-Interfaces (Phase 4) |
 | Union Types | TEILWEISE | `string\|false`, `array\|false`, `int\|false`, `ICacheItem\|false`, `mixed` |
 
@@ -262,7 +321,14 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 
 ### Fazit
 
-Framework ist **selektiv modernisiert**: Return Types + Union Types in Core-Interfaces, aber keinerlei Nutzung von Namespaces, Typed Properties, Enums, Attributes, Match, Readonly oder anderen PHP 8.x Features. Code-Stil bleibt PHP 5.x Ära mit PHP 8.x Kompatibilität.
+Framework ist **selektiv modernisiert**: Return Types + Union Types in Core-Interfaces, Typed Properties in Implementierungen, `.env` Support, PHPStan Level 2. Keine Nutzung von Namespaces, Enums, Attributes, Match, Readonly. Code-Stil bleibt PHP 5.x Ära mit PHP 8.x Kompatibilität und moderner Tooling-Infrastruktur.
+
+### Nächste Schritte (Empfehlung)
+- PHPStan Baseline schrittweise abbauen (1262 → 0 Fehler)
+- PHPDoc für public APIs ergänzen
+- Middleware-Pattern einführen
+- Einfacher DI-Container für bessere Testbarkeit
+- CLI-Tool für Code-Generierung (ähnlich Artisan)
 
 ## Wichtige Dateien für schnellen Einstieg
 
@@ -270,12 +336,17 @@ Framework ist **selektiv modernisiert**: Return Types + Union Types in Core-Inte
 |-------|------|
 | Bootstrap | `gyro/core/start.php` |
 | Config | `gyro/core/config.cls.php` |
+| Env-Loader | `gyro/core/lib/helpers/env.cls.php` |
+| .env Beispiel | `.env.example` |
 | DB-Driver | `gyro/core/model/drivers/mysql/dbdriver.mysql.php` |
 | Logger | `gyro/core/lib/components/logger.cls.php` |
 | User-Model | `contributions/usermanagement/model/classes/users.model.php` |
 | String-Helpers | `gyro/core/lib/helpers/string.cls.php` |
-| Tests | `gyro/modules/simpletest/simpletests/` |
+| PHPUnit-Tests | `tests/core/` (53 Dateien) |
+| Test-Bootstrap | `tests/bootstrap.php` |
+| SimpleTest (Legacy) | `gyro/modules/simpletest/simpletests/` |
 | Routing | `gyro/core/controller/base/routes/` |
+| PHPStan Config | `phpstan.neon.dist` + `phpstan-baseline.neon` |
 
 ## Git-Branch
 

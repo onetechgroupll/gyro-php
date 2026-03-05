@@ -11,14 +11,6 @@
         "phpunit/phpunit": "^10.5"
     },
     "autoload": {
-        "classmap": [
-            "gyro/core/",
-            "contributions/"
-        ],
-        "exclude-from-classmap": [
-            "**/3rdparty/**",
-            "**/simpletests/**"
-        ]
     },
     "config": {
         "sort-packages": true
