@@ -124,10 +124,22 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 - Auto-Upgrade: Bestehender Login-Code migriert alte Hashes automatisch beim nächsten Login
 - Security Headers in `pageviewbase.cls.php` mit `override=false` (Apps können überschreiben)
 
-### Phase 2: Infrastruktur
-- [ ] `composer.json` erstellen mit PSR-4 Autoloading
-- [ ] SimpleTest → PHPUnit Migration starten
-- [ ] Prepared Statements im MySQL-Driver
+### Phase 2: Infrastruktur ✅ ERLEDIGT
+- [x] `composer.json` erstellen mit PHPUnit 10.5 als Dev-Dependency
+- [x] PHPUnit Setup: `phpunit.xml.dist`, `tests/bootstrap.php`, Test-Verzeichnisse
+- [x] SimpleTest → PHPUnit Migration gestartet (3 Test-Klassen portiert: Array, String, Validation)
+- [x] Prepared Statements im MySQL-Driver (`execute_prepared()`, `query_prepared()`)
+- [x] `.gitignore` um `/vendor/` erweitert
+
+#### Phase 2 Details
+- `composer.json`: PHPUnit 10.5, PHP >=8.0
+- `tests/bootstrap.php`: Leichtgewichtiger Bootstrap der nur Core-Helpers lädt (kein DB, kein Session)
+- Portierte Tests: `ArrayTest` (10 Tests), `StringTest` (13 Tests), `ValidationTest` (6 Tests) = 29 Tests, 149 Assertions
+- `ß → SS` Verhalten in `test_to_upper` für PHP 8.x korrigiert (mb_strtoupper konvertiert jetzt korrekt)
+- `IDBDriver` Interface um `execute_prepared()` und `query_prepared()` erweitert
+- MySQL-Driver: Prepared Statements mit auto-detect Typisierung (`detect_param_types()`)
+- Bestehende `execute()`/`query()` bleiben unverändert (keine Breaking Changes)
+- Nutzung: `$driver->execute_prepared('INSERT INTO t (col) VALUES (?)', ['value'])`
 
 ### Phase 3: Sicherheit (Vertiefung)
 - [ ] Session-Security (httponly, secure, samesite)
@@ -148,14 +160,14 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 
 | Aspekt | Bewertung | Notizen |
 |--------|-----------|---------|
-| Testabdeckung | 3/10 | ~20%, selektiv |
-| Test-Framework | 1/10 | SimpleTest abandoned |
+| Testabdeckung | 3/10 | ~20%, selektiv; PHPUnit-Migration gestartet (29 Tests portiert) |
+| Test-Framework | 4/10 | PHPUnit 10.5 eingerichtet, SimpleTest bleibt parallel |
 | Dokumentation | 4/10 | PHPDoc sparse |
 | Dead Code | 8/10 | Minimal, sauber |
 | Konfiguration | 6/10 | Zentralisiert aber Magic Numbers |
 | Error Logging | 3/10 | CSV-only, minimal |
 | Moderne PHP-Features | 2/10 | Keine Nutzung |
-| Sicherheit | 5/10 | ✅ bcrypt, ✅ Headers, OFFEN: Prepared Stmt, Session |
+| Sicherheit | 6/10 | ✅ bcrypt, ✅ Headers, ✅ Prepared Stmt, OFFEN: Session |
 
 ## Wichtige Dateien für schnellen Einstieg
 
