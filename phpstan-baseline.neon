@@ -191,11 +191,6 @@ parameters:
 			path: contributions/jcssmanager/lib/helpers/jcssmanager.cls.php
 
 		-
-			message: "#^Instantiated class ConsolePageView not found\\.$#"
-			count: 1
-			path: contributions/jcssmanager/view/base/jcssmanagerviewfactory.cls.php
-
-		-
 			message: "#^Access to an undefined property IImageInformation\\:\\:\\$handle\\.$#"
 			count: 6
 			path: contributions/lib.imagetools/lib/components/imagetools_impl/imagetools.gd.cls.php

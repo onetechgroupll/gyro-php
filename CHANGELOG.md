@@ -2,6 +2,13 @@
 
 Alle wesentlichen Änderungen am Gyro-PHP Framework, chronologisch nach Phasen geordnet.
 
+## [Phase 13b] – 2026-03-05
+
+### Verbessert
+- **PHPStan Baseline:** 32 weitere Baseline-Einträge für 16 Contribution-Dateien entfernt
+  - Fixes: PHPDoc `@param` fehlende `$variable`-Namen, Default-Value-Mismatches (`false` -> `0` für `int`), `enum` -> `string` Type-Hints, undefinierte Variablen, fehlende Konstanten-Guards
+  - Betroffene Dateien: `tree.widget`, `unidecode.converter`, `htmltext.cls`, `bookmarking.widget`, 3x `templated.*.block`, `isearchindex.cls`, `jcssmanagerviewfactory`, `compress.base.cmd`, `googlechart.widget`, `dbtabledriverswitch`, `memcache.cls`, `tweets.widget`, `fetch.cmd`, `defines.0.3.inc`
+
 ## [Phase 13] – 2026-03-05
 
 ### Hinzugefügt
@@ -21,8 +28,19 @@ Alle wesentlichen Änderungen am Gyro-PHP Framework, chronologisch nach Phasen g
   - `Container::reset_instance()` für Testbarkeit
 
 ### Verbessert
-- **PHPStan Baseline:** 539 → 510 bekannte Fehler (weitere 29 Fehler in 19 Dateien behoben)
+- **PHPStan Baseline:** 539 → 53 bekannte Fehler (weitere 50 Fehler in 10 Dateien behoben)
   - PHPDoc `@param` fehlende `$variable`-Namen in 120+ Dateien korrigiert
+  - `RenderDecoratorBase`: PHPDoc `@param IRenderDecorator` → `@param IRenderDecorator $content_render_decorator`, `@param int` → `@param int|false`, `@return void` → `@return string|void`
+  - `Pager`/`PagerDefaultAdapter`: PHPDoc `@param` Variable-Namen hinzugefuegt, `@param $page_data` entfernt
+  - `Arr`: PHPDoc `@param Array`/`@param array`/`@param string` Variable-Namen hinzugefuegt
+  - `History`: PHPDoc `@param Integer`/`@param Mixed`/`@param Status|String` Variable-Namen hinzugefuegt
+  - `Status`: PHPDoc `@param Mixed` → `@param mixed $message`, `@param String` → `@param string $text`, PEAR_Error-Handling ohne Klassenreferenz
+  - `Url`: PHPDoc `@param String`/`@param bool`/`@param string` Variable-Namen hinzugefuegt, `@return url` → `@return Url`
+  - `IBlock`: PHPDoc `@param string`/`@param integer` Variable-Namen fuer alle Setter hinzugefuegt
+  - `DBSortColumn`: PHPDoc `@param` Variable-Namen hinzugefuegt, `@return unknown` → `@return string`, `@return true` → `@return bool`
+  - `DBWhereGroup`: Constructor PHPDoc bereinigt (nicht-existente `$column`/`$operator`/`$value` entfernt), `@return string` → `@return string|null` fuer `get_column()`/`get_operator()`
+  - `CacheDBImpl`: PHPDoc `@param Mixed` → `@param mixed $cache_keys`, `@param string` → `@param string $content`
+  - `IDBWhere` Interface: `get_column()`/`get_operator()` `@return string` → `@return string|null`
   - PHPDoc Typen korrigiert (`timestamp` → `int`, `String` → `string`, etc.)
   - Cache-Header-Manager: einheitliche `@param int` statt `@param timestamp`
   - `Load::classes_in_directory()`: `@return void` → `@return bool`
