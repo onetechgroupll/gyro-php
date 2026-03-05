@@ -6,11 +6,11 @@
  * @ingroup Usermanagement
  */
 class BcryptHash implements IHashAlgorithm {
-	public function hash($source) {
+	public function hash(string $source): string {
 		return password_hash($source, PASSWORD_BCRYPT, ['cost' => 12]);
 	}
 
-	public function check($source, $hash) {
+	public function check(string $source, string $hash): bool {
 		return password_verify($source, $hash);
 	}
 }

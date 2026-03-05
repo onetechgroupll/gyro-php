@@ -17,7 +17,7 @@ class BcrypHash implements IHashAlgorithm {
 	 * @param string $source
 	 * @return string
 	 */
-	public function hash($source) {
+	public function hash(string $source): string {
 		return password_hash($source, PASSWORD_BCRYPT, array('cost' => 12));
 	}
 
@@ -30,7 +30,7 @@ class BcrypHash implements IHashAlgorithm {
 	 * @param string $hash
 	 * @return bool
 	 */
-	public function check($source, $hash) {
+	public function check(string $source, string $hash): bool {
 		return password_verify($source, $hash);
 	}
 }
