@@ -502,7 +502,7 @@ mit aktuellen PHP-Versionen nicht mehr funktionieren:
 ./vendor/bin/phpstan analyse --clear-result-cache
 ```
 
-PHPStan Level 2 ist konfiguriert mit einer Baseline von 1262 bekannten Fehlern.
+PHPStan Level 3 ist konfiguriert mit einer Baseline von 584 bekannten Fehlern.
 **Neue Fehler werden sofort gemeldet** — bestehende sind in `phpstan-baseline.neon`
 getracked und können schrittweise behoben werden.
 

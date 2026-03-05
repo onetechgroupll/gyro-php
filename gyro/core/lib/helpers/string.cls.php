@@ -179,8 +179,8 @@ class GyroString {
 	 * 
 	 * Be aware to not pass a number to this function twice!
 	 *
-	 * @param string $val
-	 * @param string
+	 * @param string $val Number string in C locale format
+	 * @return string Number string in current locale format
 	 */
 	public static function localize_number($val) {
 		// Convert C specific float value to locale float
@@ -206,8 +206,8 @@ class GyroString {
 	 * 
 	 * Be aware to not pass a number to this function twice!
 	 *
-	 * @param string $val
-	 * @param string
+	 * @param string $val Number string in current locale format
+	 * @return string Number string in C locale format
 	 */
 	public static function delocalize_number($val) {
 		// Convert language specific float value to C float
@@ -234,6 +234,10 @@ class GyroString {
 	 *  
 	 * @since 0.5.1
 	 * 
+	 * @param int $num The number to check
+	 * @param string $singular Text to return when $num is 1
+	 * @param string $plural Text to return when $num is not 1 (%num is replaced by $num)
+	 * @param string|false $none Text to return when $num is 0 (false to use $plural)
 	 * @return string
 	 */
 	public static function singular_plural($num, $singular, $plural, $none = false) {
@@ -284,23 +288,56 @@ class GyroString {
 
 	/**
 	 * Character set aware strlen()
+	 *
+	 * @param string $val String to measure
+	 * @return int Length of string in characters
 	 */
 	public static function length($val) {
 		return self::$impl->length($val);
 	}
 
+	/**
+	 * Character set aware strpos()
+	 *
+	 * @param string $haystack String to search in
+	 * @param string $needle String to search for
+	 * @param int $offset Starting position for search
+	 * @return int|false Position of needle, or false if not found
+	 */
 	public static function strpos($haystack, $needle, $offset = 0) {
 		return self::$impl->strpos($haystack, $needle, $offset);
 	}
 
+	/**
+	 * Character set aware case-insensitive strpos()
+	 *
+	 * @param string $haystack String to search in
+	 * @param string $needle String to search for
+	 * @param int $offset Starting position for search
+	 * @return int|false Position of needle, or false if not found
+	 */
 	public static function stripos($haystack, $needle, $offset = 0) {
 		return self::$impl->stripos($haystack, $needle, $offset);
 	}
 
+	/**
+	 * Character set aware strrpos() - finds last occurrence of needle
+	 *
+	 * @param string $haystack String to search in
+	 * @param string $needle String to search for
+	 * @return int|false Position of last occurrence, or false if not found
+	 */
 	public static function strrpos($haystack, $needle) {
 		return self::$impl->strrpos($haystack, $needle);
 	}
 	
+	/**
+	 * Check if haystack contains needle
+	 *
+	 * @param string $haystack String to search in
+	 * @param string $needle String to search for
+	 * @return bool True if needle is found in haystack
+	 */
 	public static function contains($haystack, $needle) {
 		return (self::strpos($haystack, $needle) !== false);
 	}
@@ -322,21 +359,60 @@ class GyroString {
 		return preg_replace($pattern, $replacement, $subject, $limit, $count);
 	}
 
+	/**
+	 * Unicode aware implementation of preg_replace_callback
+	 *
+	 * @param string $pattern The regex pattern to search for
+	 * @param callable $callback Callback to generate replacement string
+	 * @param string $subject The text to search
+	 * @param int $limit Maximum number of replacements (-1 for unlimited)
+	 * @param int|false $count Filled with number of replacements done
+	 * @return string|null The resulting string, or null on error
+	 */
 	public static function preg_replace_callback($pattern, $callback, $subject, $limit = -1, &$count = false) {
 		self::apply_u_modifier($pattern);
 		return preg_replace_callback($pattern, $callback, $subject, $limit, $count);
 	}	
 	
+	/**
+	 * Unicode aware implementation of preg_match
+	 *
+	 * @param string $pattern The regex pattern to search for
+	 * @param string $subject The text to search
+	 * @param array $matches Filled with match results
+	 * @param int $flags PREG_* flags
+	 * @param int $offset Starting offset in subject
+	 * @return int|false 1 if pattern matches, 0 if not, false on error
+	 */
 	public static function preg_match($pattern, $subject, &$matches = array(), $flags = 0, $offset = 0) {
 		self::apply_u_modifier($pattern);
 		return preg_match($pattern, $subject, $matches, $flags, $offset);
 	}
 
+	/**
+	 * Unicode aware implementation of preg_match_all
+	 *
+	 * @param string $pattern The regex pattern to search for
+	 * @param string $subject The text to search
+	 * @param array $matches Filled with match results
+	 * @param int $flags PREG_* flags
+	 * @param int $offset Starting offset in subject
+	 * @return int|false Number of matches, or false on error
+	 */
 	public static function preg_match_all($pattern, $subject, &$matches = array(), $flags = 0, $offset = 0) {
 		self::apply_u_modifier($pattern);
 		return preg_match_all($pattern, $subject, $matches, $flags, $offset);
 	}
 	
+	/**
+	 * Unicode aware implementation of preg_split
+	 *
+	 * @param string $pattern The regex pattern to split on
+	 * @param string $subject The text to split
+	 * @param int $limit Maximum number of splits (-1 for unlimited)
+	 * @param int $flags PREG_SPLIT_* flags
+	 * @return array|false Array of substrings, or false on error
+	 */
 	public static function preg_split($pattern, $subject, $limit = -1, $flags = 0) {
 		self::apply_u_modifier($pattern);
 		return preg_split($pattern, $subject, $limit, $flags);		
@@ -398,6 +474,11 @@ class GyroString {
 	
 	/**
 	 * Character set aware substr
+	 *
+	 * @param string $val Input string
+	 * @param int $start Start position (can be negative for offset from end)
+	 * @param int|null $length Maximum number of characters to return
+	 * @return string The extracted substring
 	 */
 	public static function substr($val, $start = 0, $length = NULL) {
 		return self::$impl->substr($val, $start, $length);
@@ -405,11 +486,12 @@ class GyroString {
 
 	/**
 	 * Get substr, but respect word boundaries
-	 * 
-	 * @param string $val 
+	 *
+	 * @param string $val Input string
 	 * @param int $start Start of substr (usually 0)
 	 * @param int $max_length Maximum length of substring
 	 * @param bool $elipsis Append "..." to the string
+	 * @return string The extracted substring
 	 */
 	public static function substr_word($val, $start, $max_length, $elipsis = false) {
 		$val .= ' ';
@@ -445,6 +527,7 @@ class GyroString {
 	 * @param int $start Start of substr (usually 0)
 	 * @param int $max_length Maximum length of substring
 	 * @param bool $elipsis Append "..." to the string
+	 * @return string The extracted substring
 	 */
 	public static function substr_sentence($val, $start, $max_length, $elipsis = false) {
 		$val_temp = self::preg_replace('|\s+|', ' ', $val) . ' ';
@@ -494,6 +577,13 @@ class GyroString {
 		return $ret;
 	}
 
+	/**
+	 * Split text into an array of lines, each respecting word boundaries and max length
+	 *
+	 * @param string $val Text to split
+	 * @param int $max_length Maximum length per line
+	 * @return array Array of string segments
+	 */
 	public static function split_words($val, $max_length) {
 		$ret = array();
 		$vals = explode("\n", $val);
@@ -508,18 +598,36 @@ class GyroString {
 		return $ret;
 	}
 	
+	/**
+	 * Return the rightmost characters of a string
+	 *
+	 * @param string $val Input string
+	 * @param int $count Number of characters to return
+	 * @return string
+	 */
 	public static function right($val, $count) {
 		return self::substr($val, -$count, $count);
 	}
 
+	/**
+	 * Return the leftmost characters of a string
+	 *
+	 * @param string $val Input string
+	 * @param int $count Number of characters to return
+	 * @return string
+	 */
 	public static function left($val, $count) {
 		return self::substr($val, 0, $count);
 	}
 
 	/**
-	 * Returns true if haystack starts with needlse
-	 * 
-	 * @attention If needle is en empty string, this function returns false! 
+	 * Returns true if haystack starts with needle
+	 *
+	 * @attention If needle is an empty string, this function returns false!
+	 *
+	 * @param string $haystack String to search in
+	 * @param string $needle String to search for at the beginning
+	 * @return bool
 	 */
 	public static function starts_with($haystack, $needle) {
 		if ($needle !== '') {
@@ -537,7 +645,11 @@ class GyroString {
 	}
 
 	/**
-	 * Returns true if haystack starts with needlse
+	 * Returns true if haystack ends with needle
+	 *
+	 * @param string $haystack String to search in
+	 * @param string $needle String to search for at the end
+	 * @return bool
 	 */
 	public static function ends_with($haystack, $needle) {
 		$lenght_needle = self::length($needle);
@@ -552,8 +664,10 @@ class GyroString {
 	 *
 	 * Text is converted to lower case, too
 	 *
-	 * @param string text to clean
-	 * @param string if not empty, everything that is not a letter or number is replaced by this
+	 * @param string $path Text to clean
+	 * @param string $separator If not empty, everything that is not a letter or number is replaced by this
+	 * @param bool $removewhitespace If true, whitespace and special chars are replaced
+	 * @return string The ASCII-safe string
 	 */
 	public static function plain_ascii($path, $separator = '-', $removewhitespace = true) {
 		// Away with html specific stuff
@@ -592,8 +706,12 @@ class GyroString {
 
 	/**
 	 * Returns part of haystack that is before needle
-	 * 
+	 *
 	 * If needle is not found, $haystack is returned
+	 *
+	 * @param string $haystack String to extract from
+	 * @param string $needle Delimiter to search for
+	 * @return string
 	 */
 	public static function extract_before($haystack, $needle) {
 		$pos = strpos($haystack, $needle);
@@ -606,8 +724,12 @@ class GyroString {
 
 	/**
 	 * Returns part of haystack that is after needle
-	 * 
+	 *
 	 * If needle is not found, $haystack is returned
+	 *
+	 * @param string $haystack String to extract from
+	 * @param string $needle Delimiter to search for
+	 * @return string
 	 */
 	public static function extract_after($haystack, $needle) {
 		$pos = strpos($haystack, $needle);
@@ -620,10 +742,11 @@ class GyroString {
 	}
 	
 	/**
-	 * Extracts arguments from given string. Arguments are seperated by white space,
-	 * but everything quoted by " is regarded as one argumne
+	 * Extracts arguments from given string. Arguments are separated by white space,
+	 * but everything quoted by " is regarded as one argument
 	 *
-	 * @return array
+	 * @param string $term The input string to parse
+	 * @return array Array of extracted terms
 	 */
 	public static function explode_terms($term) {
 		// split into array

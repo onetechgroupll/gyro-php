@@ -611,6 +611,9 @@ class DataObjectBase implements IDataObject, ISelfDescribingType, IActionSource 
 	
 	/**
 	 * Limit result
+	 *
+	 * @param int $start Offset to start from
+	 * @param int $number_of_items Maximum number of items to return (0 for no limit)
 	 */
 	public function limit($start = 0, $number_of_items = 0) {
 		$this->limit[0] = $start;

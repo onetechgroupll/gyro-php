@@ -2,6 +2,26 @@
 
 Alle wesentlichen Änderungen am Gyro-PHP Framework, chronologisch nach Phasen geordnet.
 
+## [Phase 12] – 2026-03-05
+
+### Verbessert
+- **PHPStan Level 2 → 3:** Strengere statische Analyse
+  - Baseline von 1262 → 584 bekannte Fehler (54% Reduktion)
+  - Contribution-Module mit fehlenden Dependencies konsequent excludiert
+  - Template-Dateien (`.tpl.php`) von Analyse ausgeschlossen
+  - `DBField::$policy` Typ-Annotation korrigiert (`bool` → `int`)
+- **PHPDoc-Dokumentation** für öffentliche APIs der wichtigsten Framework-Klassen:
+  - `GyroString` (`string.cls.php`): `@param`/`@return` Tags für `starts_with`, `ends_with`, `extract_before`, `extract_after`, `explode_terms`, `substr_word`, `substr_sentence`, `singular_plural`, `plain_ascii`, `localize_number`, `delocalize_number`
+  - `Logger` (`logger.cls.php`): PHPDoc für alle 8 PSR-3 Level-Methoden (`emergency` bis `debug`)
+  - `DBField` (`dbfield.cls.php`): PHPDoc für Konstruktor, `has_default_value`, `format_select`, `read_from_array`, `quote`, `is_null`
+
+### Ergebnis
+- 361 Tests, 1290 Assertions (alle grün)
+- PHPStan Level 3: 0 neue Fehler
+- PHPDoc-Abdeckung von ~15-20% auf ~25-30% verbessert
+
+---
+
 ## [Phase 11] – 2026-03-05
 
 ### Hinzugefügt

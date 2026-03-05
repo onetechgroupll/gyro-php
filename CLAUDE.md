@@ -1,6 +1,6 @@
 # Gyro-PHP Framework – Projektanalyse & Memory
 
-> Letzte Aktualisierung: 2026-03-05 (Phase 11 abgeschlossen)
+> Letzte Aktualisierung: 2026-03-05 (Phase 12 abgeschlossen)
 
 ## Projektübersicht
 
@@ -9,7 +9,7 @@
 - **Composer** für Dev-Dependencies (PHPUnit, PHPStan), kein PSR-4, kein Namespace-System
 - **Test-Framework:** PHPUnit 10.5 (primär, 361 Tests) + SimpleTest 1.1.0 (Legacy, abandoned)
 - **CLI-Tool:** `bin/gyro` (Phase 8) — model:list, model:show, db:sync
-- **Statische Analyse:** PHPStan Level 2 mit Baseline (1262 bekannte Fehler getracked)
+- **Statische Analyse:** PHPStan Level 3 mit Baseline (584 bekannte Fehler, 0 neue)
 - **Environment:** `.env` Support (Phase 7), rückwärtskompatibel mit `APP_*` Konstanten
 
 ## Verzeichnisstruktur
@@ -49,10 +49,10 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | REST-API-Modul | 3 Dateien (Controller, Helper, Start) |
 | SimpleTest (Legacy) | 57 Dateien (größtenteils nach PHPUnit portiert) |
 | Testabdeckung | ~50%+ (Phase 7: massive Erweiterung) |
-| PHPDoc-Abdeckung | ~15-20% |
+| PHPDoc-Abdeckung | ~25-30% |
 | TODO/FIXME/HACK | 14 Marker |
 | Contributions | 57+ Module (3 tote entfernt in Phase 5) |
-| PHPStan | Level 2, Baseline mit 1262 bekannten Fehlern |
+| PHPStan | Level 3, Baseline mit 584 bekannten Fehlern (von 1262) |
 
 ## Sicherheitsprobleme
 
@@ -404,7 +404,7 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 |--------|-----------|---------|
 | Testabdeckung | 8/10 | ~60%+, 361 Tests / 1290 Assertions (PHPUnit 10.5) |
 | Test-Framework | 7/10 | PHPUnit 10.5 primär, Mock-Infrastruktur, SimpleTest Legacy |
-| Dokumentation | 4/10 | PHPDoc sparse |
+| Dokumentation | 5/10 | PHPDoc ~25-30%, Core-APIs dokumentiert (Phase 12) |
 | Dead Code | 8/10 | Minimal, sauber |
 | Konfiguration | 7/10 | ✅ `.env` Support, zentralisiert, noch Magic Numbers |
 | Error Logging | 7/10 | ✅ PSR-3 Levels, JSON-Output, Context, Exception-Support |
@@ -413,7 +413,7 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | CLI-Tooling | 6/10 | ✅ `bin/gyro` mit model:list, model:show, db:sync |
 | Auto-Admin | 7/10 | ✅ Django-Style CRUD UI aus Model-Schema |
 | REST-API | 8/10 | ✅ Auto-REST-API + OpenAPI/Swagger Dokumentation |
-| Statische Analyse | 5/10 | ✅ PHPStan Level 2 mit Baseline, 1262 Fehler getracked |
+| Statische Analyse | 7/10 | ✅ PHPStan Level 3, Baseline 584 (von 1262), 0 neue Fehler |
 
 ## Moderne PHP-Features Analyse
 

@@ -28,9 +28,9 @@ class DBField implements IDBField {
 	 */
 	protected $default_value = null;
 	/**
-	 * Is a null value allowed here?
+	 * Bitmask of field policies (NOT_NULL, INTERNAL, etc.)
 	 *
-	 * @var bool
+	 * @var int
 	 */
 	protected $policy;
 	/**
@@ -46,6 +46,14 @@ class DBField implements IDBField {
 	 */
 	protected $table;
 	
+	/**
+	 * Create a new database field definition
+	 *
+	 * @param string $name Column name in the database
+	 * @param mixed $default_value Default value for this field
+	 * @param int $policy Bitmask of field policies (e.g. NOT_NULL, INTERNAL)
+	 * @param string|IDBDriver $connection Database connection identifier
+	 */
 	public function __construct($name, $default_value = null, $policy = self::NONE, $connection = DB::DEFAULT_CONNECTION) {
 		$this->name = $name;
 		$this->default_value = $default_value;
@@ -73,6 +81,8 @@ class DBField implements IDBField {
 
 	/**
 	 * Returns true, if field has default value
+	 *
+	 * @return bool
 	 */
 	public function has_default_value() {
 		return !$this->is_null($this->default_value);
@@ -164,6 +174,8 @@ class DBField implements IDBField {
 
 	/**
 	 * Allow replacements for field in select from clause
+	 *
+	 * @return string Column expression for SELECT queries
 	 */
 	public function format_select() {
 		return $this->get_field_name();
@@ -180,7 +192,10 @@ class DBField implements IDBField {
 	}
 	
 	/**
-	 * Reads value from array (e.g $_POST) and converts it into something meaningfull
+	 * Reads value from array (e.g. $_POST) and converts it into something meaningful
+	 *
+	 * @param array $arr Associative array to read from (typically user input)
+	 * @return mixed|null The value for this field, or null if not present
 	 */
 	public function read_from_array($arr) {
 		return Arr::get_item($arr, $this->get_field_name(), null);
@@ -255,7 +270,10 @@ class DBField implements IDBField {
 	}
 	
 	/**
-	 * Quote value
+	 * Quote and escape a value for safe use in SQL queries
+	 *
+	 * @param mixed $value Value to quote
+	 * @return string Quoted and escaped string
 	 */
 	protected function quote($value) {
 		return DB::quote(Cast::string($value), $this->get_connection()); 
@@ -263,6 +281,9 @@ class DBField implements IDBField {
 	
 	/**
 	 * Returns true if $value is NULL or DBNull
+	 *
+	 * @param mixed $value Value to check
+	 * @return bool
 	 */
 	protected function is_null($value) {
 		return is_null($value) || $value instanceof DBNull;

@@ -113,34 +113,82 @@ class Logger {
 		self::write_entry($level, $entry);
 	}
 
+	/**
+	 * Log an emergency-level message (system is unusable)
+	 *
+	 * @param string $message Message with optional {placeholder} tokens
+	 * @param array $context Key-value pairs for interpolation and metadata
+	 */
 	public static function emergency(string $message, array $context = array()): void {
 		self::log_level(self::EMERGENCY, $message, $context);
 	}
 
+	/**
+	 * Log an alert-level message (action must be taken immediately)
+	 *
+	 * @param string $message Message with optional {placeholder} tokens
+	 * @param array $context Key-value pairs for interpolation and metadata
+	 */
 	public static function alert(string $message, array $context = array()): void {
 		self::log_level(self::ALERT, $message, $context);
 	}
 
+	/**
+	 * Log a critical-level message (critical conditions)
+	 *
+	 * @param string $message Message with optional {placeholder} tokens
+	 * @param array $context Key-value pairs for interpolation and metadata
+	 */
 	public static function critical(string $message, array $context = array()): void {
 		self::log_level(self::CRITICAL, $message, $context);
 	}
 
+	/**
+	 * Log an error-level message (runtime errors that do not require immediate action)
+	 *
+	 * @param string $message Message with optional {placeholder} tokens
+	 * @param array $context Key-value pairs for interpolation and metadata
+	 */
 	public static function error(string $message, array $context = array()): void {
 		self::log_level(self::ERROR, $message, $context);
 	}
 
+	/**
+	 * Log a warning-level message (exceptional occurrences that are not errors)
+	 *
+	 * @param string $message Message with optional {placeholder} tokens
+	 * @param array $context Key-value pairs for interpolation and metadata
+	 */
 	public static function warning(string $message, array $context = array()): void {
 		self::log_level(self::WARNING, $message, $context);
 	}
 
+	/**
+	 * Log a notice-level message (normal but significant events)
+	 *
+	 * @param string $message Message with optional {placeholder} tokens
+	 * @param array $context Key-value pairs for interpolation and metadata
+	 */
 	public static function notice(string $message, array $context = array()): void {
 		self::log_level(self::NOTICE, $message, $context);
 	}
 
+	/**
+	 * Log an info-level message (interesting events)
+	 *
+	 * @param string $message Message with optional {placeholder} tokens
+	 * @param array $context Key-value pairs for interpolation and metadata
+	 */
 	public static function info(string $message, array $context = array()): void {
 		self::log_level(self::INFO, $message, $context);
 	}
 
+	/**
+	 * Log a debug-level message (detailed debug information)
+	 *
+	 * @param string $message Message with optional {placeholder} tokens
+	 * @param array $context Key-value pairs for interpolation and metadata
+	 */
 	public static function debug(string $message, array $context = array()): void {
 		self::log_level(self::DEBUG, $message, $context);
 	}
