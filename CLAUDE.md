@@ -62,8 +62,8 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 - Nutzt nur `mysqli_real_escape_string()` – keine parametrisierten Queries
 - **Fix:** Migration auf PDO mit Prepared Statements
 
-### OFFEN: Session-Konfiguration
-- Keine `httponly`, `secure`, `samesite` Flags auf Session-Cookies konfiguriert
+### ✅ GEFIXT: Session-Konfiguration
+- `httponly`, `secure` (bei HTTPS), `samesite=Lax` auf Session-Cookies konfiguriert
 
 ## ✅ PHP 8.x Kompatibilität (GEFIXT)
 
@@ -141,10 +141,19 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 - Bestehende `execute()`/`query()` bleiben unverändert (keine Breaking Changes)
 - Nutzung: `$driver->execute_prepared('INSERT INTO t (col) VALUES (?)', ['value'])`
 
-### Phase 3: Sicherheit (Vertiefung)
-- [ ] Session-Security (httponly, secure, samesite)
-- [ ] CSRF-Token-System prüfen/härten
-- [ ] Input-Validation systematisch prüfen
+### Phase 3: Sicherheit (Vertiefung) ✅ ERLEDIGT
+- [x] Session-Security: `secure` Flag bei HTTPS, PHP < 7.3 Branch entfernt, `httponly=true` hardcoded
+- [x] CSRF-Token-System: Bereits robust (random_bytes, Session-gebunden, DB-gestützt, Einmal-Tokens)
+- [x] CSRF: `==` → `===` in FormHandler::validate() für strikten Vergleich
+- [x] Input-Validation: Core sauber (PageData/TracedArray), nur 3rd-Party hat rohe $_REQUEST Zugriffe
+
+#### Phase 3 Details
+- `session.cls.php`: `ini_set('session.cookie_secure', 1)` bei HTTPS automatisch gesetzt
+- `session.cls.php`: PHP < 7.3 `setcookie()` Branch entfernt (braucht PHP >= 8.0)
+- `formhandler.cls.php`: Strikter Vergleich `===` statt `==` bei Token-Validation
+- CSRF-Tokens: `Common::create_token()` nutzt `random_bytes(20)` → kryptographisch sicher
+- Input-Zugriff: Kein direkter `$_POST/$_GET` im Core (nur `$_GET['cookietest']` in Session)
+- 3rd-Party `$_REQUEST` Zugriffe in csstidy/wymeditor → nicht im Scope
 
 ### Phase 4: Modernisierung
 - [ ] Type Declarations schrittweise einführen (Start: Interfaces)
@@ -167,7 +176,7 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | Konfiguration | 6/10 | Zentralisiert aber Magic Numbers |
 | Error Logging | 3/10 | CSV-only, minimal |
 | Moderne PHP-Features | 2/10 | Keine Nutzung |
-| Sicherheit | 6/10 | ✅ bcrypt, ✅ Headers, ✅ Prepared Stmt, OFFEN: Session |
+| Sicherheit | 7/10 | ✅ bcrypt, ✅ Headers, ✅ Prepared Stmt, ✅ Session, ✅ CSRF |
 
 ## Wichtige Dateien für schnellen Einstieg
 
