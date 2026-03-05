@@ -3,7 +3,7 @@ interface INewsSiteItem {
 	/**
 	 * Return publication date
 	 * 
-	 * @return timestamp
+	 * @return int
 	 */
 	public function get_publication_date(); 
 

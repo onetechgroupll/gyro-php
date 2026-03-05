@@ -9,14 +9,14 @@ interface ITimeStamped {
 	/**
 	 * Return creation date and time
 	 *
-	 * @return timestamp
+	 * @return int
 	 */
 	public function get_creation_date();
 
 	/**
 	 * Return modification date and time
 	 *
-	 * @return timestamp
+	 * @return int
 	 */
 	public function get_modification_date();
 }

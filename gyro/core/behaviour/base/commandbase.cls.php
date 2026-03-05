@@ -17,8 +17,8 @@ class CommandBase implements ICommand {
 	protected $obj;
 	/**
 	 * Parameters for command
-	 * 
-	 * @param mixed
+	 *
+	 * @var mixed
 	 */
 	protected $params;
 	/**

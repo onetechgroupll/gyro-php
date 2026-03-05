@@ -381,6 +381,48 @@ AdminController::register_model('users', 'DAOUsers');
 
 **Kein Handlungsbedarf** — das Modul ist optional und muss explizit aktiviert werden.
 
+### 4.7 Middleware-System (Phase 13)
+
+Das neue Middleware-System formalisiert das bestehende RenderDecorator-Pattern:
+
+```php
+// Eigene Middleware erstellen
+class CorsMiddleware extends MiddlewareBase {
+    public function handle($page_data, $next) {
+        GyroHeaders::set('Access-Control-Allow-Origin', '*');
+    }
+}
+
+// Global registrieren (z.B. in start.inc.php)
+MiddlewareStack::add(new CorsMiddleware());
+
+// Mit Priorität (niedrig = früher)
+MiddlewareStack::add(new AuthMiddleware(), 50);
+
+// Per-Route Middleware
+$route->add_middleware(new RateLimitMiddleware());
+```
+
+**Kein Handlungsbedarf** — das System ist additiv und ändert nichts am bestehenden Verhalten.
+
+### 4.8 DI-Container (Phase 13)
+
+Einfacher Service-Container für bessere Testbarkeit:
+
+```php
+// Services registrieren
+$c = Container::instance();
+$c->singleton('mailer', function($c) {
+    return new Mailer($c->get('config'));
+});
+$c->bind('config', $config_object);
+
+// Services auflösen
+$mailer = Container::get_service('mailer');
+```
+
+**Kein Handlungsbedarf** — der Container ist optional und ändert nichts am bestehenden Code.
+
 ---
 
 ## 5. Breaking Changes
@@ -395,6 +437,10 @@ Die folgenden Änderungen können in seltenen Fällen bestehenden Code betreffen
 | Default-Hash ist `bcryp` statt `pas3p` | Usermanagement | Nur neue Accounts betroffen |
 | `E_STRICT` nicht mehr separat | Error-Handler | Nur wenn explizit auf E_STRICT geprüft wird |
 | CSRF: `===` statt `==` | FormHandler | Nur bei nicht-String Token-Vergleich (sehr unwahrscheinlich) |
+| `IImageTools::watermark()` Default `$text = false` → `$text = ''` | Eigene IImageTools-Implementierungen | Signatur anpassen |
+| `IImageInformation::get_extension()` `@return int` → `@return string` | Eigene IImageInformation-Implementierungen | Return Type-Hint anpassen |
+| `StringMBString::check_encoding()` Default `$encoding = false` → `$encoding = ''` | Direkter Aufruf mit `false` | `''` statt `false` übergeben |
+| `StringMBString::convert()` Defaults `$from/$to = false` → `$from/$to = ''` | Direkter Aufruf mit `false` | `''` statt `false` übergeben |
 
 ### Interface-Änderungen
 

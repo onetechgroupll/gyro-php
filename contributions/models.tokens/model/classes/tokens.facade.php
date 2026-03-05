@@ -9,7 +9,7 @@ class Tokens {
 	 * @param string $seed Optional extra seed for token
 	 * @param int $duration_seconds Valid duration time in seconds. Defaults to 10 days
 	 */
-	public static function create_token($seed = false, $duration_seconds = 0) {
+	public static function create_token($seed = '', $duration_seconds = 0) {
 		self::clear();
 		
 		$dao = new DAOTokens();

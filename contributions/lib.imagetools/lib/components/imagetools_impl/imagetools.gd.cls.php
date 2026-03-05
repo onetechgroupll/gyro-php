@@ -111,11 +111,11 @@ class ImageToolsGD implements IImageTools {
 	 * Add a Watermark
 	 * 
 	 * @param IImageInformation $src Image to add watermark to
-	 * @param string|false $text Text of Watermark, if empty "© {Application Title}" is taken
+	 * @param string $text Text of Watermark, if empty "© {Application Title}" is taken
 	 *
 	 * @return IImageInformation
 	 */
-	public function watermark(IImageInformation $src, $text = false) {
+	public function watermark(IImageInformation $src, $text = '') {
 		if (empty($text)) {
 			$text = '© ' . Config::get_value(Config::TITLE);
 		}

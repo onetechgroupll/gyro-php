@@ -16,8 +16,8 @@ interface IDBConstraint {
 	/**
 	 * Check if constraints are fullfiled.  
 	 *
-	 * @param array Cosntraint Column data Associative array of form fieldname => fieldvalue
-	 * @param array Key Column Data Associative array of form fieldname => fieldvalue
+	 * @param array $arr_fields Constraint column data, associative array of form fieldname => fieldvalue
+	 * @param array $arr_keys Key column data, associative array of form fieldname => fieldvalue
 	 * @return Status
 	 */
 	public function validate($arr_fields, $arr_keys);

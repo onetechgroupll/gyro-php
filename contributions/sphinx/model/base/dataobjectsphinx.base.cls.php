@@ -30,6 +30,7 @@ class DataObjectSphinxBase extends DataObjectBase {
     	if (!empty($this->sphinx_all_fields)) {
 			$query->add_where('*', '=', $this->sphinx_all_fields);    		
     	}
+    	/** @phpstan-ignore property.notFound */
     	$query->sphinx_features = $this->sphinx_features;
 	}	
 	

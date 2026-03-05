@@ -12,11 +12,18 @@ class DBSqlBuilderWhereGroup implements IDBSqlBuilder {
 	protected $group = null;
 	
 	/**
-	 * @param DBWhereGroup $where
+	 * @var mixed
+	 */
+	protected $params = false;
+
+	/**
+	 * @param DBWhereGroup $group
+	 * @param mixed $params
 	 */
 	public function __construct($group, $params = false) {
 		$this->group = $group;
-	}	
+		$this->params = $params;
+	}
 	
 	/**
 	 * Return SQL fragment

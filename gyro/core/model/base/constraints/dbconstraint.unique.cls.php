@@ -9,7 +9,7 @@ class DBConstraintUnique extends DBConstraint {
 	/**
 	 * Check if constraints are fullfiled.  
 	 *
-	 * @param array Associative array of form fieldname => fieldvalue
+	 * @param array $arr_fields Associative array of form fieldname => fieldvalue
 	 * @return Status
 	 */
 	public function validate($arr_fields, $key_fields) {

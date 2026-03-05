@@ -10,7 +10,7 @@ class ConverterTextPlaceholders implements IConverter {
 	 * Purify HTML
 	 * 
 	 * @param string $value
-	 * @param array See http://htmlpurifier.org/live/configdoc/plain.html for all possible values
+	 * @param array|false $params See http://htmlpurifier.org/live/configdoc/plain.html for all possible values
 	 */
 	public function encode(mixed $value, mixed $params = false): mixed {
 		return TextPlaceholders::apply($value);

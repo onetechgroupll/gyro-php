@@ -30,8 +30,8 @@ class DBFilter implements IDBQueryModifier {
 	/**
 	 * contructor
 	 * 
-	 * @param string title
-	 * @param string key
+	 * @param string $title
+	 * @param string $key
 	 */
 	public function __construct($title, $key = '') {
 		$this->title = $title;

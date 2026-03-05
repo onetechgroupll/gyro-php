@@ -366,7 +366,7 @@ class GyroString {
 	 * @param callable $callback Callback to generate replacement string
 	 * @param string $subject The text to search
 	 * @param int $limit Maximum number of replacements (-1 for unlimited)
-	 * @param int|false $count Filled with number of replacements done
+	 * @param int $count Filled with number of replacements done
 	 * @return string|null The resulting string, or null on error
 	 */
 	public static function preg_replace_callback($pattern, $callback, $subject, $limit = -1, &$count = 0) {

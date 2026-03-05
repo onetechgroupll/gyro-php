@@ -27,6 +27,7 @@ class ConverterPunycode implements IConverter {
 	} 	
 	
 	private function create_converter() {
+		/** @phpstan-ignore class.notFound */
 		return new idna_convert();
 	}
 } 

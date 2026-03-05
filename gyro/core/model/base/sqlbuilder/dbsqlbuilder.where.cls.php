@@ -10,13 +10,20 @@ class DBSqlBuilderWhere implements IDBSqlBuilder {
 	 * @var IDBWhere
 	 */
 	protected $where = null;
-	
+
+	/**
+	 * @var mixed
+	 */
+	protected $params;
+
 	/**
 	 * @param IDBWhere $where
+	 * @param mixed $params Additional parameters
 	 */
 	public function __construct($where, $params = false) {
 		$this->where = $where;
-	}	
+		$this->params = $params;
+	}
 	
 	/**
 	 * Return SQL fragment

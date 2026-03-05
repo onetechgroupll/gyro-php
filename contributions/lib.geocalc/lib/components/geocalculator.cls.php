@@ -101,7 +101,7 @@ class GeoCalculator {
 	 *
 	 * @static
 	 * @param $arr_coordinates Array of associative array with keys "lat" and "lon"
-	 * @return array Array with two elements 'lat' and 'lon', each containing an array
+	 * @return array|false Array with two elements 'lat' and 'lon', each containing an array
 	 *               with two elements 'min' and 'max. False if $arr_coordinates is empty
 	 */
 	public static function bounding_box_of($arr_coordinates) {

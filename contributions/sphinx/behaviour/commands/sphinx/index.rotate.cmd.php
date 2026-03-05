@@ -15,6 +15,7 @@ class SphinxIndexRotateCommand extends CommandBase {
 		/* @var $index DataObjectSphinx */
 		$index = $this->get_instance();
 		$index_name = $index->get_table_driver()->get_db_name() . $index->get_table_name();
+		/** @phpstan-ignore constant.notFound */
 		$call = APP_SPHINX_INDEXER_INVOKE . ' --quiet --rotate ' . $index_name;
 		Load::commands('generics/execute.shell');
 		$cmd = new ExecuteShellCommand($call);

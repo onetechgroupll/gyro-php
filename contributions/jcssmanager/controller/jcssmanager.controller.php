@@ -7,6 +7,7 @@ class JCSSManagerController extends ControllerBase {
  	 */
 	public function get_routes() {
 		return array(
+			/** @phpstan-ignore class.notFound */
 			new ExactMatchRoute('jcssmanager/compress', $this, 'jcssmanager_compress', new ConsoleOnlyRenderDecorator()),
 			 
 		);

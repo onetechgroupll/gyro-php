@@ -93,7 +93,7 @@ class DBFieldInt extends DBField {
 	 * @return string
 	 */
 	protected function do_format_not_null($value) {
-		return Cast::int($value);
+		return (string)Cast::int($value);
 	}
 
 	/**

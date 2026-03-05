@@ -34,7 +34,7 @@ class AccessControlBase implements IAccessControl {
 	/**
 	 * Pass types (=model names), the implementation is responsible of 
 	 *
-	 * @param string|array $item_types
+	 * @param string|array|false $item_types
 	 */
 	public function __construct($item_types = false) {
 		if (!empty($item_types)) {

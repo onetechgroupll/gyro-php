@@ -2,6 +2,54 @@
 
 Alle wesentlichen Änderungen am Gyro-PHP Framework, chronologisch nach Phasen geordnet.
 
+## [Phase 13] – 2026-03-05
+
+### Hinzugefügt
+- **Middleware-Pattern:** Formalisiertes Middleware-System für den Request/Response-Pipeline
+  - `IMiddleware` Interface (`gyro/core/lib/interfaces/imiddleware.cls.php`)
+  - `MiddlewareBase` Basisklasse für eigene Middleware
+  - `MiddlewareStack` für globale Middleware-Registrierung mit Prioritäten
+  - `MiddlewareRenderDecorator` als Brücke zum bestehenden RenderDecorator-System
+  - Per-Route Middleware via `RouteBase::add_middleware()`
+  - Globale Middleware via `MiddlewareStack::add($mw, $priority)`
+- **DI-Container:** Einfacher Dependency-Injection-Container (`gyro/core/lib/components/container.cls.php`)
+  - Singleton-Services (lazy, einmal erstellt)
+  - Factory-Services (jedes Mal neu erstellt)
+  - Instance-Binding (vorgefertigte Objekte)
+  - Container-Injection in Factories
+  - Statischer Shortcut: `Container::get_service('name')`
+  - `Container::reset_instance()` für Testbarkeit
+
+### Verbessert
+- **PHPStan Baseline:** 539 → 510 bekannte Fehler (weitere 29 Fehler in 19 Dateien behoben)
+  - PHPDoc `@param` fehlende `$variable`-Namen in 120+ Dateien korrigiert
+  - PHPDoc Typen korrigiert (`timestamp` → `int`, `String` → `string`, etc.)
+  - Cache-Header-Manager: einheitliche `@param int` statt `@param timestamp`
+  - `Load::classes_in_directory()`: `@return void` → `@return bool`
+  - `Session::set_from()`: `isset($url)` → `!empty($url)`
+  - `ConverterUnidecode::encode()`: `@param string` → `@param string|false`
+  - `ConverterTextPlaceholders::encode()`: `@param array` → `@param array|false`
+  - Widget-Klassen: `render()` PHPDoc `@param int|false $policy` hinzugefuegt (Block, Breadcrumb, DebugBlock)
+  - `WidgetBlock::retrieve()`: `@return void` → `@return array`
+  - `WidgetDebugBlock`: `APP_START_MICROTIME` mit `defined()` Guard
+  - `DBSqlBuilderSelect`/`Count`: `@var DBQuerySelect` fuer `$query` (statt `DBQuery`)
+  - `DBSqlBuilderWhereGroup`: `$params` Property hinzugefuegt (war unused), PHPDoc `$where` → `$group`
+  - `ITimeStamped`/`DataObjectTimestampedCached`: `@return timestamp` → `@return int`
+  - `CommandChainAdapter`: PHPDoc `@param ICommand $cmd` Variable hinzugefuegt
+  - `CommandChain::$prev`: `@var CommandChain|ICommand|null` (akzeptiert ICommand)
+  - `Common::header()`: `@param string $value` → `string|false`, fehlender `$override` Name
+  - `IActionSource::get_actions()`: PHPDoc `@param` Variable-Namen hinzugefuegt
+  - `IDBConstraint`/`DBConstraint`: PHPDoc `@param` Variable-Namen korrigiert
+  - `DBFilter`: PHPDoc `@param` Variable-Namen hinzugefuegt
+  - `Filter`: PHPDoc `@param Url` und `@param string` Variable-Namen hinzugefuegt
+  - `RouteBase`: PHPDoc `@param` Variable-Namen hinzugefuegt (`$action`, `$decorators`)
+- **PHPDoc-Abdeckung:** ~25-30% → ~45-50% durch flaechendeckende Korrekturen
+- **25 neue Tests:** MiddlewareTest (10) + ContainerTest (15)
+
+### Ergebnis
+- 386 Tests, 1333 Assertions (alle grün)
+- PHPStan Level 3: Baseline 510 bekannte Fehler, 0 neue Fehler
+
 ## [Phase 12] – 2026-03-05
 
 ### Verbessert
@@ -14,6 +62,20 @@ Alle wesentlichen Änderungen am Gyro-PHP Framework, chronologisch nach Phasen g
   - `BlockBase`: Alle 11 PHPStan-Fehler behoben — fehlende `$variable`-Namen in `@param` Tags (Konstruktor + Setter), `render()` PHPDoc `int` → `int|false` für `$policy`
   - Event-System: PHPDoc `@param` in `IEventSink`, `IEventSource`, `EventSource` und 10 EventSink-Implementierungen korrigiert (fehlende `$variable`-Namen); `@return status` → `@return Status` in `IEventSource`
   - 3 `check_preconditions.php` Dateien: `@phpstan-ignore class.notFound` für dynamisch geladene `SystemUpdateInstaller`-Klasse
+  - `GyroCookie`: 7 PHPDoc `@param` Tags mit fehlenden `$variable`-Namen korrigiert
+  - `StringMBString`: 3 Default-Value-Mismatches (`false` → `''` für `string`-typisierte Parameter), 3 PHPDoc `@param` Tags korrigiert
+  - `Session`: Fehlende `return`-Statements in `cookies_enabled()`, 5 PHPDoc `@param` Tags korrigiert
+  - `Cast`: PHPDoc-Typos (`mixes`, `date`, fehlende `$variable`-Namen), `@return date` → `@return mixed`
+  - `FilterText`: `@return unknown_type` → `@return string`, 4 PHPDoc `@param` Tags korrigiert
+  - `PageData`: `Pathstack` → `PathStack` (Casing), `strin` → `string`, `unknown_type` → `array`, `empty()` → null-Check, `@param IDispatcher Dispatcher` korrigiert
+  - `ImageToolsGD`: `$sie` → `$size` (Typo/Bug-Fix), `get_extension()` `@return int` → `@return string` + Default-Case, `IImageInformation` `@property` für `$handle`/`$type`
+  - `JCSSManagerCompressCSSCsstidyCommand`: `strnig` → `string` Typo, `csstidy` 3rd-Party via `scanFiles` eingebunden
+  - `GyroString` (`string.cls.php`): Alle 18 PHPStan-Baseline-Fehler behoben:
+    - 10 PHPDoc `@param` Tags mit fehlenden `$variable`-Namen korrigiert (`clear_html`, `unescape`, `currency`, `int`, `number`, `to_lower`, `to_upper`)
+    - 3 Default-Value-Mismatches: `$encoding`/`$from`/`$to` PHPDoc `string` → `string|false`, `$count` Default `false` → `0`
+    - `preg_replace()` `@return integer` → `@return string|null` (korrekter Rückgabetyp)
+    - `$decimal_sep` → `$decimal_point` (undefinierte Variable in `currency()`)
+    - Inner named function `_append_u_modifier` → anonyme Closure (PHPStan-kompatibel)
 - **PHPDoc-Dokumentation** für öffentliche APIs der wichtigsten Framework-Klassen:
   - `GyroString` (`string.cls.php`): `@param`/`@return` Tags für `starts_with`, `ends_with`, `extract_before`, `extract_after`, `explode_terms`, `substr_word`, `substr_sentence`, `singular_plural`, `plain_ascii`, `localize_number`, `delocalize_number`
   - `Logger` (`logger.cls.php`): PHPDoc für alle 8 PSR-3 Level-Methoden (`emergency` bis `debug`)
@@ -21,7 +83,33 @@ Alle wesentlichen Änderungen am Gyro-PHP Framework, chronologisch nach Phasen g
 
 ### Ergebnis
 - 361 Tests, 1290 Assertions (alle grün)
-- PHPStan Level 3: 0 neue Fehler
+- PHPStan Level 3: 0 neue Fehler, Baseline aktuell 549 bekannte Fehler (505 Einträge)
+- PHPStan-Baseline-Fehler in Interface- und Core-Dateien behoben:
+  - PHPDoc `@param` fehlende `$variable`-Namen in 10 Interfaces/Klassen
+  - PHPDoc `@return $headers` → `@return array` in `IMailMessageBuilder` + `SingleMessageBuilder`
+  - Typ-Korrekturen: `PageDate` → `PageData`, `IDBSQLBuilder` → `IDBSqlBuilder`, `@param timestamp` → `@param int`
+  - Default-Value-Mismatches: PHPDoc-Typen um `|false` erweitert wo nötig
+  - `CacheRenderDecorator`: Property-Typo `$chache_manager` → `$cache_manager`
+  - `CatchAllRoute`: Undeclared property `$path_further` deklariert
+  - `MailMessage`: `Status::append()` mit 3 Parametern → `tr()` Wrapper
+  - `GyroHttpRequestConfig`: `CONVERTER_JSON` Konstante → String-Literal `'json'`
+  - `Translator`: Return-Value von `Load::classes_in_directory()` nicht mehr verwendet
+  - `UpfrontCache`: `method_exists()` Check vor `is_cached()` Aufruf
+  - `CommandBase`: `@param mixed` → `@var mixed` für Property-PHPDoc
+  - `CommandsFactory`: `@return ICommand` → `@return ICommand|false`
+  - 16 Widget/View-Klassen: `render($policy = self::NONE)` → `render($policy = 0)` (Default `false` inkompatibel mit `int`)
+  - `TemplatePathResolver`: Variable `$ret` vor Schleife initialisiert
+  - `TemplateEngineCore`: `resolve_quick_tags()` Return-Wert zu `string` gecastet
+  - `DBConstraintUnique`, `DBRelation`: PHPDoc `@param array Associative...` → `@param array $arr_fields Associative...`
+  - `DBJoinCondition`: PHPDoc `@param IDBTable One table` → `@param IDBTable $table1 One table`
+  - `DBExpression`: PHPDoc `@param mixed $value` entfernt (Parameter existiert nicht)
+  - `DBSession::gc()`: `return true` → `return 0` (Rückgabetyp `int|false`)
+  - `DBFieldInt::do_format_not_null()`: `return Cast::int($value)` → `return (string)Cast::int($value)`
+  - `DBFieldSet::do_format_not_null()`: Return-Wert zu `string` gecastet
+  - `DBFieldTime::format_date_value()`: Überflüssigen zweiten Parameter von `GyroDate::mysql_time()` entfernt
+  - `DBQueryJoined::$relations`: PHPDoc `@var array` → `@var array|false`
+  - `DBSqlBuilderWhere`: Ungenutzten `$params`-Parameter als Property gespeichert
+  - `DBWhereFulltext`: PHPDoc `@param enum $mode` → `@param string $mode`
 - PHPDoc-Abdeckung von ~15-20% auf ~25-30% verbessert
 
 ---

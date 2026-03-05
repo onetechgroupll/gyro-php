@@ -6,6 +6,10 @@
  * @ingroup Model
  */
 class DBSqlBuilderSelect extends DBSqlBuilderBase {
+	/**
+	 * @var DBQuerySelect
+	 */
+	protected $query;
 	protected function get_sql_template() {
 		return 'SELECT%distinct %!fields FROM %!from%join%where%group_by%having%order_by%limit%for_update';
 	}

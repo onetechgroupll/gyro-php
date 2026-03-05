@@ -17,7 +17,7 @@ class JCSSCompressedFiles {
 	 * @param string $out_filename Path of compressed file
 	 * @param array $sources Input files for compression
 	 * @param Status $err
-	 * @return DAOJCsscompressedfiles
+	 * @return DAOJcsscompressedfiles
 	 */
 	public static function update_db($type, $out_filename, $sources, $err) {
 		$hash = md5_file($out_filename);

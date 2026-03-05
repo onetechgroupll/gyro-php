@@ -19,7 +19,7 @@ class SearchIndexRepository {
 	/**
 	 * Get the index implementation
 	 * 
-	 * @return ISearchIndex
+	 * @return ISearchIndex|IDataObject
 	 */
 	public static function get_index_implementation() {
 		if (self::$index) {

@@ -64,7 +64,7 @@ class DataObjectTimestampedCached extends DataObjectCached implements ITimeStamp
 	/**
 	 * Return creation date and time
 	 *
-	 * @return timestamp
+	 * @return int
 	 */
 	public function get_creation_date() {
 		return $this->creationdate;
@@ -73,7 +73,7 @@ class DataObjectTimestampedCached extends DataObjectCached implements ITimeStamp
 	/**
 	 * Return modification date and time
 	 *
-	 * @return timestamp
+	 * @return int
 	 */
 	public function get_modification_date() {
 		return $this->modificationdate;

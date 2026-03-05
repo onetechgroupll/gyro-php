@@ -72,7 +72,7 @@ class DBWhereFulltext extends DBWhere {
 	 * @param IDBTable $table Table that contains column
 	 * @param string $column Column to query upon, or a full sql where statement
  	 * @param array $value Array of Tokens
- 	 * @param enum $mode Either IDBWhere::LOGIC_AND or IDBWhere::LOGIC_OR
+ 	 * @param string $mode Either IDBWhere::LOGIC_AND or IDBWhere::LOGIC_OR
  	 * @param string $additions  Additional commads like "IN BOOLEAN MODE"
  	 * @return string
  	 */

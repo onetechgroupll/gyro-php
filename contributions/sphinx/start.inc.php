@@ -75,4 +75,5 @@ if (!class_exists('SphinxClient')) {
 }
 if (!defined('APP_SPHINX_MAX_MATCHES')) define ('APP_SPHINX_MAX_MATCHES', 1000);
 if (!defined('APP_SPHINX_DB_HOST')) define ('APP_SPHINX_DB_HOST', 'localhost');
+if (!defined('APP_SPHINX_DB_NAME')) define('APP_SPHINX_DB_NAME', '');
 DB::create_connection('sphinx', 'sphinx', APP_SPHINX_DB_NAME, false, false, APP_SPHINX_DB_HOST);

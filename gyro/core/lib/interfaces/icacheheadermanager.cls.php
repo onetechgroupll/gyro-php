@@ -9,8 +9,8 @@ interface ICacheHeaderManager {
 	 * Send cache headers
 	 * 
 	 * @param string $content
-	 * @param int $expirationdate
-	 * @param int $lastmodifieddate
+	 * @param int $expirationdate Unix timestamp
+	 * @param int $lastmodifieddate Unix timestamp
 	 */
 	public function send_headers(&$content, $expirationdate, $lastmodifieddate);
 }
