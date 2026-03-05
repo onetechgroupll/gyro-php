@@ -23,16 +23,11 @@ require_once GYRO_CORE_DIR . 'constants.inc.php';
 if (Config::has_feature(Config::TESTMODE)) {
 	ini_set('display_errors', 1);
 	ini_set('log_errors', 1);
-	error_reporting(E_ALL | E_STRICT);
+	error_reporting(E_ALL);
 } else {
 	ini_set('display_errors', 0);
 	ini_set('log_errors', 1);
-	if (defined('E_DEPRECATED')) {
-		// PHP 5.3
-		error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
-	} else {
-		error_reporting(E_ALL ^ E_NOTICE);
-	}
+	error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
 }
 
 
