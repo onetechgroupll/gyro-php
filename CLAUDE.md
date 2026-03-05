@@ -350,6 +350,16 @@ Framework ist **selektiv modernisiert**: Return Types + Union Types in Core-Inte
 | Changelog | `CHANGELOG.md` |
 | Upgrade-Leitfaden | `UPGRADING.md` |
 
+## Pflichtregeln für Änderungen
+
+Bei **jeder Code-Änderung** müssen folgende Dateien mit-aktualisiert werden:
+
+1. **`CHANGELOG.md`** — Neue Einträge oben einfügen (gleiche Phase oder neue Phase)
+2. **`UPGRADING.md`** — Wenn die Änderung bestehende Nutzer betrifft (Breaking Changes, neue Features, neue Konfiguration)
+3. **`CLAUDE.md`** — Statistiken, Scorecard, Phase-Details und Feature-Tabelle aktuell halten
+
+**Reihenfolge:** Zuerst Code ändern → Tests grün → Dokumentation updaten → Committen
+
 ## Git-Branch
 
 - Entwicklung auf: `claude/analyze-repository-7ADOV`
