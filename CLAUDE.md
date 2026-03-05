@@ -39,11 +39,11 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | Metrik | Wert |
 |--------|------|
 | Core-Klassen | 239 (.cls.php, .model.php, .facade.php) |
-| Test-Dateien | 57 (50 Core + 7 Contributions) |
-| Testabdeckung | ~20% (selektiv, nicht umfassend) |
+| Test-Dateien | 57 SimpleTest + 8 PHPUnit (66 Tests, 350 Assertions) |
+| Testabdeckung | ~25% (PHPUnit-Migration fortgeschritten) |
 | PHPDoc-Abdeckung | ~15-20% |
 | TODO/FIXME/HACK | 14 Marker |
-| Contributions | 60+ Module |
+| Contributions | 57+ Module (3 tote entfernt in Phase 5) |
 
 ## Sicherheitsprobleme
 
@@ -99,16 +99,15 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 
 ## Veraltete/Tote Module
 
-### Definitiv veraltet
-- `cache.xcache` – XCache seit PHP 7 tot
-- `cache.acpu` – APC deprecated, prüfen ob APCu gemeint
-- SimpleTest 1.1.0 – abandoned seit 2012
+### ✅ Entfernt in Phase 5
+- `cache.xcache` – XCache seit PHP 7 tot (8 Dateien)
+- `javascript.cleditor` – CLEditor abandoned (~36 Dateien)
+- `javascript.wymeditor` – WYMeditor abandoned (~79 Dateien)
 
-### Potenziell ungenutzt
-- `gyro/modules/phpinfo/` – Debug-Utility (51 Zeilen)
-- `gyro/modules/doxygen.php` – Nur Doku-Definition (6 Zeilen)
+### Noch vorhanden, prüfen
+- `cache.acpu` – APCu noch aktiv, nur entfernen wenn Server kein APCu nutzt
+- SimpleTest 1.1.0 – abandoned seit 2012, PHPUnit parallel eingerichtet
 - Mehrere CSS-Präprozessor-Module (`css.sass`, `css.yaml`, `css.postcss`)
-- `javascript.cleditor`, `javascript.wymeditor` – abandoned JS-Editoren
 
 ## Modernisierungsplan (Phasen)
 

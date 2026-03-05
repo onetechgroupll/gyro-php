@@ -27,34 +27,34 @@ class MemcacheCacheItem implements ICacheItem {
 	 * 
 	 * @return datetime
 	 */
-	public function get_creationdate() {
+	public function get_creationdate(): mixed {
 		return $this->item_data['creationdate'];
-	}	
-	
-	/**
-	 * Return expiration date 
-	 * 
-	 * @return datetime
-	 */
-	public function get_expirationdate() {
-		return $this->item_data['expirationdate'];
 	}
-	
+
 	/**
-	 * Return data associated with this item
-	 * 
+	 * Return expiration date
+	 *
 	 * @return mixed
 	 */
-	public function get_data() {
+	public function get_expirationdate(): mixed {
+		return $this->item_data['expirationdate'];
+	}
+
+	/**
+	 * Return data associated with this item
+	 *
+	 * @return mixed
+	 */
+	public function get_data(): mixed {
 		return $this->item_data['data'];
 	}
-	
+
 	/**
 	 * Return the content in plain form
-	 * 
+	 *
 	 * @return string
 	 */
-	public function get_content_plain() {
+	public function get_content_plain(): string {
 		$ret = $this->get_content_compressed();
 		if ($ret && function_exists('gzinflate')) {
 			$ret = gzinflate($ret);
@@ -67,9 +67,9 @@ class MemcacheCacheItem implements ICacheItem {
 	 * 
 	 * @return string
 	 */
-	public function get_content_compressed() {
+	public function get_content_compressed(): string {
 		return $this->item_data['content'];
-	}	
+	}
 }
 
 /**
