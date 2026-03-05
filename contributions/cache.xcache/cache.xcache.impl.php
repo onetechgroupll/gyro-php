@@ -87,7 +87,7 @@ class CacheXCacheImpl implements ICachePersister {
 	/**
 	 * Returns true, if item is chaced 
 	 */
-	public function is_cached($cache_keys) {
+	public function is_cached(mixed $cache_keys): bool {
 		$key = $this->flatten_keys($cache_keys);
 		return xcache_isset($key);
 	}
@@ -98,7 +98,7 @@ class CacheXCacheImpl implements ICachePersister {
 	 * @param Mixed A set of key params, may be an array or a string
 	 * @return ICacheItem The cache as array with members "content" and "data", false if cache is not found
 	 */
-	public function read($cache_keys) {
+	public function read(mixed $cache_keys): ICacheItem|false {
 		$ret = false;
 		$key = $this->flatten_keys($cache_keys);
 		if (xcache_isset($key)) {
@@ -113,7 +113,7 @@ class CacheXCacheImpl implements ICachePersister {
 	 * @param Mixed A set of key params, may be an array or a string
 	 * @param string The cache
 	 */
-	public function store($cache_keys, $content, $cache_life_time, $data = '', $is_compressed = false) {
+	public function store(mixed $cache_keys, string $content, int $cache_life_time, mixed $data = '', bool $is_compressed = false): void {
 		if (!$is_compressed) {
 			if (function_exists('gzdeflate')) {
 				$content = gzdeflate($content, 9);
@@ -137,7 +137,7 @@ class CacheXCacheImpl implements ICachePersister {
 	 * 
 	 * @param Mixed A set of key params, may be an array or a string, or an ICachable instance. If NULL, all is cleared
 	 */
-	public function clear($cache_keys = NULL) {
+	public function clear(mixed $cache_keys = NULL): void {
 		if (empty($cache_keys)) {
 			$this->do_clear_all();
 		}
@@ -205,7 +205,7 @@ class CacheXCacheImpl implements ICachePersister {
 	/**
 	 * Removes expired cache entries
 	 */
-	public function remove_expired() {
+	public function remove_expired(): void {
 		// Nothing to do, xcache does this for us
 	}
 	

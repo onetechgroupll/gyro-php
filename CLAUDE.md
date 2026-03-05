@@ -74,20 +74,23 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 
 ## Architektur-Schwächen
 
-### Kein Typ-System
-- 0/239 Klassen haben Typ-Deklarationen (Parameter, Return, Properties)
-- Kein Einsatz von PHP 7.4+ Typed Properties, Union Types, Enums etc.
-- Beispiel: `public $component; public $version;` – keine `@var`/Typ-Annotations
+### Typ-System (Phase 4 gestartet)
+- Interfaces mit Type Declarations versehen (Phase 4)
+- Kein Einsatz von PHP 7.4+ Typed Properties, Enums etc.
+- Noch keine Properties-Typisierung
 
 ### Kein Namespace-System
 - Alle Klassen im globalen Namespace
 - Namenskonventionen statt Namespaces: `DAO*`, `*Controller`, `*Facade`
 - Eigenes Autoloading statt PSR-4
 
-### Logger minimal (27 Zeilen)
+### ✅ Logger modernisiert (Phase 4)
 - **Datei:** `gyro/core/lib/components/logger.cls.php`
-- CSV-only, dateibasiert, kein PSR-3, keine Levels/Context
-- Silent Failure bei Schreibfehlern (`@fopen`, `@fputcsv`, `@fclose`)
+- PSR-3 kompatible Log-Levels (emergency → debug)
+- Context-Interpolation (`{placeholder}` Syntax)
+- JSON-Ausgabe für strukturierte Logs, CSV für Legacy `log()`
+- Exception-Support mit Stack-Traces
+- Konfigurierbares Minimum-Level via `Logger::set_min_level()`
 
 ### Konfigurations-Schwächen
 - Hardcoded Timeouts: `$timeout_sec = 30` (HTTP), `$max_age = 600` (Cache)
@@ -155,10 +158,27 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 - Input-Zugriff: Kein direkter `$_POST/$_GET` im Core (nur `$_GET['cookietest']` in Session)
 - 3rd-Party `$_REQUEST` Zugriffe in csstidy/wymeditor → nicht im Scope
 
-### Phase 4: Modernisierung
-- [ ] Type Declarations schrittweise einführen (Start: Interfaces)
-- [ ] Namespaces einführen (PSR-4)
-- [ ] Structured Logging (PSR-3 / Monolog)
+### Phase 4: Modernisierung ✅ ERLEDIGT
+- [x] Type Declarations in Interfaces + Implementierungen eingeführt
+- [ ] Namespaces einführen (PSR-4) – **zurückgestellt** (zu großer Breaking Change)
+- [x] Structured Logging (PSR-3 kompatibel)
+
+#### Phase 4 Details: Type Declarations
+- **IDBResultSet** + 3 Implementierungen (DBResultSet, DBResultSetMysql, DBResultSetSphinx)
+- **ISessionHandler** + 4 Implementierungen (DBSession, ACPuSession, MemcacheSession, XCacheSession)
+- **IHashAlgorithm** + 6 Implementierungen (bcryp, bcrypt, md5, sha1, pas2p, pas3p)
+- **IConverter** + 12 Implementierungen (callback, chain, html, mimeheader, none, json, htmltidy, punycode, htmlpurifier, textplaceholders, unidecode, twitter)
+- **ICachePersister** + 5 Implementierungen (CacheDBImpl, CacheFileImpl, CacheXCacheImpl, CacheACPuImpl, CacheMemcacheImpl)
+- Union Types: `array|false`, `string|false`, `int|false`, `ICacheItem|false`, `mixed`
+- **IDBDriver** zurückgestellt (Sphinx-Driver hat fehlende Methoden)
+
+#### Phase 4 Details: Structured Logging
+- `Logger` erweitert um PSR-3 kompatible Methoden: `Logger::error()`, `Logger::info()`, etc.
+- Context-Interpolation: `Logger::error('User {user} failed login', ['user' => $name])`
+- JSON-Output pro Level-Datei (z.B. `error-2026-03-05.log`)
+- Exception-Support: `Logger::error('Fehler', ['exception' => $ex])` → inkl. Trace
+- Konfigurierbar: `Logger::set_min_level(Logger::WARNING)` filtert Debug/Info/Notice
+- Legacy `Logger::log()` bleibt voll rückwärtskompatibel (CSV-Format)
 
 ### Phase 5: Qualität & Cleanup
 - [ ] Veraltete Module entfernen (xcache, acpu, abandoned JS-Libs)
@@ -174,8 +194,8 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | Dokumentation | 4/10 | PHPDoc sparse |
 | Dead Code | 8/10 | Minimal, sauber |
 | Konfiguration | 6/10 | Zentralisiert aber Magic Numbers |
-| Error Logging | 3/10 | CSV-only, minimal |
-| Moderne PHP-Features | 2/10 | Keine Nutzung |
+| Error Logging | 7/10 | ✅ PSR-3 Levels, JSON-Output, Context, Exception-Support |
+| Moderne PHP-Features | 4/10 | ✅ Type Declarations in Interfaces, Union Types |
 | Sicherheit | 7/10 | ✅ bcrypt, ✅ Headers, ✅ Prepared Stmt, ✅ Session, ✅ CSRF |
 
 ## Wichtige Dateien für schnellen Einstieg

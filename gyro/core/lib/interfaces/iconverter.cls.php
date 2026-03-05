@@ -6,7 +6,7 @@
  * @ingroup Interfaces
  */
 interface IConverter {
-	public function encode($value, $params = false);
-	public function decode($value, $params = false); 
+	public function encode(mixed $value, mixed $params = false): mixed;
+	public function decode(mixed $value, mixed $params = false): mixed;
 }
 ?>
