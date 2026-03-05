@@ -14,13 +14,3 @@ parameters:
 			message: "#^Access to an undefined property IImageInformation\\:\\:\\$type\\.$#"
 			count: 6
 			path: contributions/lib.imagetools/lib/components/imagetools_impl/imagetools.gd.cls.php
-
-		-
-			message: "#^Access to constant COPY_NO_REPLACE on an unknown class SystemUpdateInstaller\\.$#"
-			count: 1
-			path: contributions/models.contact/install/check_postconditions.php
-
-		-
-			message: "#^Access to constant COPY_NO_REPLACE on an unknown class SystemUpdateInstaller\\.$#"
-			count: 1
-			path: contributions/models.searchindex/install/check_postconditions.php
