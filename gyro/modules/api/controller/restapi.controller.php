@@ -57,6 +57,7 @@ class RestApiController extends ControllerBase {
 	public function get_routes() {
 		return array(
 			new ExactMatchRoute('api/', $this, 'api_index', null),
+			new ExactMatchRoute('api/openapi.json', $this, 'api_openapi', null),
 			new RouteBase('api/', $this, 'api_dispatch', null),
 		);
 	}
@@ -150,6 +151,23 @@ class RestApiController extends ControllerBase {
 			'version' => '1.0',
 			'models' => $endpoints,
 		));
+	}
+
+	/**
+	 * GET /api/openapi.json — OpenAPI 3.0 specification
+	 */
+	public function action_api_openapi($page_data) {
+		$this->require_method('GET');
+
+		$base_url = '';
+		if (class_exists('Url', false)) {
+			$base_url = rtrim(Url::current()->clear_query()->build(), '/');
+			// Remove /api/openapi.json from the URL
+			$base_url = preg_replace('#/api/openapi\.json$#', '', $base_url);
+		}
+
+		$spec = OpenApiGenerator::generate($base_url);
+		JsonResponse::send($spec);
 	}
 
 	/**

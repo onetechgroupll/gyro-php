@@ -1,13 +1,13 @@
 # Gyro-PHP Framework – Projektanalyse & Memory
 
-> Letzte Aktualisierung: 2026-03-05 (Phase 9 abgeschlossen)
+> Letzte Aktualisierung: 2026-03-05 (Phase 10 abgeschlossen)
 
 ## Projektübersicht
 
 - **Framework:** Gyro-PHP, eigenes PHP-Webframework (seit 2004, PHP 4 → PHP 5 Rewrite 2005)
 - **Aktueller Stand:** Läuft auf PHP 8.x mit Safeguards, Code-Stil ist PHP 5.x Ära
 - **Composer** für Dev-Dependencies (PHPUnit, PHPStan), kein PSR-4, kein Namespace-System
-- **Test-Framework:** PHPUnit 10.5 (primär, 307 Tests) + SimpleTest 1.1.0 (Legacy, abandoned)
+- **Test-Framework:** PHPUnit 10.5 (primär, 327 Tests) + SimpleTest 1.1.0 (Legacy, abandoned)
 - **CLI-Tool:** `bin/gyro` (Phase 8) — model:list, model:show, db:sync
 - **Statische Analyse:** PHPStan Level 2 mit Baseline (1262 bekannte Fehler getracked)
 - **Environment:** `.env` Support (Phase 7), rückwärtskompatibel mit `APP_*` Konstanten
@@ -45,7 +45,7 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | Metrik | Wert |
 |--------|------|
 | Core-Klassen | 239 (.cls.php, .model.php, .facade.php) |
-| PHPUnit-Tests | 307 Tests, 1138 Assertions (67 Test-Dateien) |
+| PHPUnit-Tests | 327 Tests, 1199 Assertions (68 Test-Dateien) |
 | REST-API-Modul | 3 Dateien (Controller, Helper, Start) |
 | SimpleTest (Legacy) | 57 Dateien (größtenteils nach PHPUnit portiert) |
 | Testabdeckung | ~50%+ (Phase 7: massive Erweiterung) |
@@ -344,11 +344,35 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 - **Error Responses:** Einheitliches JSON-Format mit HTTP Status Codes (400, 404, 405, 422, 500)
 - **Composite Keys:** `/api/table/key1|key2` für Multi-Column Primary Keys
 
+### Phase 10: OpenAPI/Swagger ✅ ERLEDIGT
+- [x] `OpenApiGenerator` Klasse (`gyro/modules/api/lib/helpers/openapigenerator.cls.php`)
+- [x] `GET /api/openapi.json` Endpoint im RestApiController
+- [x] Vollständige OpenAPI 3.0.3 Spezifikation aus DAO-Modellen
+- [x] Schema-Generation mit Typ-Mapping, Enum-Werte, maxLength, nullable, required
+- [x] Input-Schemas ohne AUTOINCREMENT Primary Keys
+- [x] 20 neue Tests für OpenApiGenerator
+- **Ergebnis:** 327 Tests, 1199 Assertions (alle grün)
+
+#### Phase 10 Details: OpenAPI Generator
+- **Datei:** `gyro/modules/api/lib/helpers/openapigenerator.cls.php`
+- **Endpoint:** `GET /api/openapi.json` — liefert vollständige OpenAPI 3.0.3 Spezifikation
+- **Features:**
+  - Auto-Discovery: Liest alle registrierten Models aus RestApiController
+  - Typ-Mapping: DBField → OpenAPI-Typen (integer, number, boolean, string mit Formaten)
+  - Enum-Werte: DBFieldEnum-Werte werden als `enum` im Schema ausgegeben
+  - Text-Längen: `maxLength` aus DBFieldText
+  - Nullable: Felder ohne NOT_NULL bekommen `nullable: true`
+  - Required: NOT_NULL Felder ohne Default werden als `required` markiert
+  - Input-Schemas: Separate Schemas ohne AUTOINCREMENT PKs für POST/PUT
+  - Vollständige Pfade: GET list, GET show, POST create, PUT update, DELETE, Schema
+  - Query-Parameter: page, per_page, sort, order für List-Endpoints
+  - Error-Responses: 400, 404, 405, 422 mit einheitlichem Schema
+
 ## Scorecard
 
 | Aspekt | Bewertung | Notizen |
 |--------|-----------|---------|
-| Testabdeckung | 7/10 | ~55%+, 307 Tests / 1138 Assertions (PHPUnit 10.5) |
+| Testabdeckung | 7/10 | ~55%+, 327 Tests / 1199 Assertions (PHPUnit 10.5) |
 | Test-Framework | 7/10 | PHPUnit 10.5 primär, Mock-Infrastruktur, SimpleTest Legacy |
 | Dokumentation | 4/10 | PHPDoc sparse |
 | Dead Code | 8/10 | Minimal, sauber |
@@ -357,7 +381,7 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | Moderne PHP-Features | 5/10 | ✅ Type Declarations, ✅ Typed Properties, ✅ Union Types |
 | Sicherheit | 7/10 | ✅ bcrypt, ✅ Headers, ✅ Prepared Stmt, ✅ Session, ✅ CSRF |
 | CLI-Tooling | 6/10 | ✅ `bin/gyro` mit model:list, model:show, db:sync |
-| REST-API | 7/10 | ✅ Auto-REST-API aus DAO-Modellen, CRUD + Schema + Paging |
+| REST-API | 8/10 | ✅ Auto-REST-API + OpenAPI/Swagger Dokumentation |
 | Statische Analyse | 5/10 | ✅ PHPStan Level 2 mit Baseline, 1262 Fehler getracked |
 
 ## Moderne PHP-Features Analyse
@@ -423,6 +447,7 @@ Framework ist **selektiv modernisiert**: Return Types + Union Types in Core-Inte
 | CLI Commands | `gyro/core/cli/commands/` |
 | REST-API Controller | `gyro/modules/api/controller/restapi.controller.php` |
 | JSON Response Helper | `gyro/modules/api/lib/helpers/jsonresponse.cls.php` |
+| OpenAPI Generator | `gyro/modules/api/lib/helpers/openapigenerator.cls.php` |
 | API Module Init | `gyro/modules/api/start.inc.php` |
 | DB-Driver | `gyro/core/model/drivers/mysql/dbdriver.mysql.php` |
 | Logger | `gyro/core/lib/components/logger.cls.php` |

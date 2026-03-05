@@ -82,9 +82,10 @@ class RestApiControllerTest extends TestCase {
 		$controller = new RestApiController();
 		$routes = $controller->get_routes();
 
-		$this->assertCount(2, $routes);
+		$this->assertCount(3, $routes);
 		$this->assertInstanceOf(ExactMatchRoute::class, $routes[0]);
-		$this->assertInstanceOf(RouteBase::class, $routes[1]);
+		$this->assertInstanceOf(ExactMatchRoute::class, $routes[1]);
+		$this->assertInstanceOf(RouteBase::class, $routes[2]);
 	}
 
 	public function test_explicit_registration_preserved_after_discovery() {

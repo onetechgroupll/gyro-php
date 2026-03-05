@@ -2,6 +2,25 @@
 
 Alle wesentlichen Änderungen am Gyro-PHP Framework, chronologisch nach Phasen geordnet.
 
+## [Phase 10] – 2026-03-05
+
+### Hinzugefügt
+- **OpenAPI/Swagger Dokumentation** (`gyro/modules/api/lib/helpers/openapigenerator.cls.php`):
+  Automatische Generierung einer vollständigen OpenAPI 3.0.3 Spezifikation aus DAO-Modellen:
+  - `GET /api/openapi.json` — Vollständige API-Dokumentation im OpenAPI-Format
+  - Typ-Mapping: DBField → OpenAPI-Typen (integer, number, boolean, string mit format)
+  - Enum-Werte, maxLength, nullable, required automatisch aus Model-Schema
+  - Separate Input-Schemas ohne AUTOINCREMENT Primary Keys (für POST/PUT)
+  - Alle CRUD-Endpoints mit Query-Parametern (page, per_page, sort, order)
+  - Error-Response-Schemas (400, 404, 405, 422)
+  - Kompatibel mit Swagger UI, Redoc und anderen OpenAPI-Tools
+- **20 neue Tests** für OpenApiGenerator
+
+### Ergebnis
+- 327 Tests, 1199 Assertions (alle grün)
+
+---
+
 ## [Phase 9] – 2026-03-05
 
 ### Hinzugefügt

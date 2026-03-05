@@ -20,8 +20,9 @@
  * @since 0.9
  */
 
-// Load JSON response helper
+// Load API helpers
 require_once dirname(__FILE__) . '/lib/helpers/jsonresponse.cls.php';
+require_once dirname(__FILE__) . '/lib/helpers/openapigenerator.cls.php';
 
 // Load CLI model discovery (for auto-discovery)
 if (class_exists('CLICommand', false)) {

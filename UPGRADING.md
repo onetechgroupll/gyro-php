@@ -316,6 +316,33 @@ class MyCommand extends CLICommand {
 }
 ```
 
+### 4.6 OpenAPI/Swagger Dokumentation
+
+Wenn das API-Modul aktiviert ist, steht automatisch eine vollständige API-Dokumentation bereit:
+
+```bash
+# OpenAPI 3.0 Spezifikation abrufen
+GET /api/openapi.json
+```
+
+**Nutzung mit Swagger UI:**
+```html
+<!-- In Ihrer HTML-Seite -->
+<script src="https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js"></script>
+<div id="swagger-ui"></div>
+<script>
+SwaggerUIBundle({ url: '/api/openapi.json', dom_id: '#swagger-ui' });
+</script>
+```
+
+Die Spezifikation wird dynamisch aus den registrierten DAO-Modellen generiert:
+- Alle CRUD-Endpoints mit Request/Response-Schemas
+- Feld-Typen, Enum-Werte, maxLength, nullable, required
+- Query-Parameter für Paging, Filtering, Sorting
+- Einheitliche Error-Response-Schemas
+
+**Kein Handlungsbedarf** — der Endpoint ist automatisch verfügbar wenn das API-Modul aktiv ist.
+
 ---
 
 ## 5. Breaking Changes
