@@ -12,7 +12,7 @@
 - **CLI-Tool:** `bin/gyro` (Phase 8) — model:list, model:show, db:sync
 - **Middleware:** MiddlewareStack + IMiddleware Interface (Phase 13)
 - **DI-Container:** Container-Klasse mit Singleton/Factory/Bind (Phase 13)
-- **Statische Analyse:** PHPStan Level 3 mit Baseline (14 bekannte Fehler, 0 neue)
+- **Statische Analyse:** PHPStan Level 3, 0 Fehler (Baseline leer)
 - **Environment:** `.env` Support (Phase 7), rückwärtskompatibel mit `APP_*` Konstanten
 
 ## Verzeichnisstruktur
@@ -60,7 +60,7 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | PHPDoc-Abdeckung | ~25-30% |
 | TODO/FIXME/HACK | 14 Marker |
 | Contributions | 57+ Module (3 tote entfernt in Phase 5) |
-| PHPStan | Level 3, Baseline mit 53 bekannten Fehlern (von 1262) |
+| PHPStan | Level 3, 0 Fehler (Baseline leer, von ursprünglich 1262) |
 
 ## Sicherheitsprobleme
 
@@ -453,7 +453,7 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | CLI-Tooling | 6/10 | ✅ `bin/gyro` mit model:list, model:show, db:sync |
 | Auto-Admin | 7/10 | ✅ Django-Style CRUD UI aus Model-Schema |
 | REST-API | 8/10 | ✅ Auto-REST-API + OpenAPI/Swagger Dokumentation |
-| Statische Analyse | 9/10 | ✅ PHPStan Level 3, Baseline 14 (von 1262), 0 neue Fehler |
+| Statische Analyse | 10/10 | ✅ PHPStan Level 3, 0 Fehler (Baseline leer, von 1262) |
 
 ## Moderne PHP-Features Analyse
 
@@ -504,7 +504,7 @@ Framework ist **umfassend modernisiert**: Return Types + Union Types in Core-Int
 - ~~CLI-Tool für Code-Generierung (ähnlich Artisan)~~ ✅ Phase 8: `bin/gyro`
 - ~~Auto-REST-API aus DAO-Modellen generieren~~ ✅ Phase 9: `gyro/modules/api/`
 - ~~Auto-Admin-Interface aus ISelfDescribing + IActionSource~~ ✅ Phase 11: `gyro/modules/admin/`
-- PHPStan Baseline verbleibende 13 Fehler (12x IImageInformation @property, 1x empty() false positive)
+- ~~PHPStan Baseline verbleibende 13 Fehler~~ ✅ Alle behoben (Baseline leer)
 - ~~Namespaces/PSR-4 einführen~~ ✅ Phase 15: Dual-Loading mit `class_alias()`
 - **Migrations-Assistent** (Phase 14) — siehe Plan unten
 

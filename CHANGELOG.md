@@ -2,6 +2,19 @@
 
 Alle wesentlichen Änderungen am Gyro-PHP Framework, chronologisch nach Phasen geordnet.
 
+## [PHPStan Baseline Fix] – 2026-03-06
+
+### Gefixt
+- **PHPStan Baseline auf 0 Fehler:** Alle 14 verbleibenden Baseline-Fehler behoben
+  - `empty($binary)` → `!$binary` in `BinariesBaseController`
+  - `css.yaml/` von PHPStan-Analyse ausgeschlossen (Duplikat-Klasse `WidgetYAMLSubtemplates`)
+  - `IImageInformation`: Neue Getter-Methoden `get_handle()` und `get_image_type()` statt Property-Zugriff
+  - `ImageToolsGD`: Alle 12 `$src->handle`/`$src->type` Zugriffe auf Interface-Methoden migriert
+  - `ImageInformationIMagick`: Getter-Methoden für Interface-Konsistenz hinzugefügt
+
+### Geändert
+- **PHPStan Baseline:** 14 → 0 bekannte Fehler (Baseline jetzt leer)
+
 ## [Phase 16] – 2026-03-06
 
 ### Hinzugefügt

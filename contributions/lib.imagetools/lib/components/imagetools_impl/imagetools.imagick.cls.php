@@ -67,9 +67,25 @@ class ImageInformationIMagick implements IImageInformation {
 	
 	/**
 	 * Returns image file extension
-	 * @return int
+	 * @return string
 	 */
 	public function get_extension() {
-		
-	}	
+
+	}
+
+	/**
+	 * Returns image resource handle
+	 * @return mixed
+	 */
+	public function get_handle() {
+		return $this->img;
+	}
+
+	/**
+	 * Returns image type constant (IMAGETYPE_*)
+	 * @return int
+	 */
+	public function get_image_type() {
+		return 0;
+	}
 }

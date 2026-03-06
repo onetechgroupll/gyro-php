@@ -41,8 +41,8 @@ class BinariesBaseController extends ControllerBase {
  	 */
  	public function action_binaries_view($page_data, $id) {
  		$binary = Binaries::get($id);
-		if (empty($binary)) {
-			return CONTROLLER_NOT_FOUND; 	
+		if (!$binary) {
+			return CONTROLLER_NOT_FOUND;
 		}
 		
 		/** @phpstan-ignore class.notFound */

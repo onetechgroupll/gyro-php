@@ -29,6 +29,8 @@ parameters:
         - contributions/usermanagement.notifications/
         # Contributions depending on DAOScheduler (excluded model)
         - contributions/scheduler/
+        # css.yaml and css.yaml4 both define WidgetYAMLSubtemplates — exclude older version
+        - contributions/css.yaml/
         # Depends on Users facade class and runtime config
         - contributions/javascript.cookieconsent/
     scanFiles:
