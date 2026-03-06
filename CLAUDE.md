@@ -1,6 +1,6 @@
 # Gyro-PHP Framework – Projektanalyse & Memory
 
-> Letzte Aktualisierung: 2026-03-06 (Phase 15 abgeschlossen)
+> Letzte Aktualisierung: 2026-03-06 (Phase 16 abgeschlossen)
 
 ## Projektübersicht
 
@@ -8,11 +8,11 @@
 - **Aktueller Stand:** Läuft auf PHP 8.x mit Safeguards, Code-Stil ist PHP 5.x Ära
 - **Composer** für Dev-Dependencies (PHPUnit, PHPStan) + PSR-4 Autoload (`Gyro\` → `src/`)
 - **Namespaces:** 10 Core-Klassen via `class_alias()` Dual-Loading (Phase 15)
-- **Test-Framework:** PHPUnit 10.5 (primär, 415 Tests) + SimpleTest 1.1.0 (Legacy, abandoned)
+- **Test-Framework:** PHPUnit 10.5 (primär, 470 Tests) + SimpleTest 1.1.0 (Legacy, abandoned)
 - **CLI-Tool:** `bin/gyro` (Phase 8) — model:list, model:show, db:sync
 - **Middleware:** MiddlewareStack + IMiddleware Interface (Phase 13)
 - **DI-Container:** Container-Klasse mit Singleton/Factory/Bind (Phase 13)
-- **Statische Analyse:** PHPStan Level 3 mit Baseline (53 bekannte Fehler, 0 neue)
+- **Statische Analyse:** PHPStan Level 3 mit Baseline (14 bekannte Fehler, 0 neue)
 - **Environment:** `.env` Support (Phase 7), rückwärtskompatibel mit `APP_*` Konstanten
 
 ## Verzeichnisstruktur
@@ -52,7 +52,7 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | Metrik | Wert |
 |--------|------|
 | Core-Klassen | 239 (.cls.php, .model.php, .facade.php) |
-| PHPUnit-Tests | 415 Tests, 1384 Assertions (73 Test-Dateien) |
+| PHPUnit-Tests | 470 Tests, 1468 Assertions (77 Test-Dateien) |
 | PSR-4 Namespace-Aliase | 10 Klassen in `src/` (Phase 15) |
 | REST-API-Modul | 3 Dateien (Controller, Helper, Start) |
 | SimpleTest (Legacy) | 57 Dateien (größtenteils nach PHPUnit portiert) |
@@ -442,7 +442,7 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 
 | Aspekt | Bewertung | Notizen |
 |--------|-----------|---------|
-| Testabdeckung | 8/10 | ~65%+, 415 Tests / 1384 Assertions (PHPUnit 10.5) |
+| Testabdeckung | 8/10 | ~65%+, 470 Tests / 1468 Assertions (PHPUnit 10.5) |
 | Test-Framework | 7/10 | PHPUnit 10.5 primär, Mock-Infrastruktur, SimpleTest Legacy |
 | Dokumentation | 6/10 | PHPDoc ~45-50%, Core-APIs dokumentiert (Phase 12+13) |
 | Dead Code | 8/10 | Minimal, sauber |
@@ -453,7 +453,7 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | CLI-Tooling | 6/10 | ✅ `bin/gyro` mit model:list, model:show, db:sync |
 | Auto-Admin | 7/10 | ✅ Django-Style CRUD UI aus Model-Schema |
 | REST-API | 8/10 | ✅ Auto-REST-API + OpenAPI/Swagger Dokumentation |
-| Statische Analyse | 9/10 | ✅ PHPStan Level 3, Baseline 53 (von 1262), 0 neue Fehler |
+| Statische Analyse | 9/10 | ✅ PHPStan Level 3, Baseline 14 (von 1262), 0 neue Fehler |
 
 ## Moderne PHP-Features Analyse
 
@@ -469,7 +469,7 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | Readonly Properties | NEIN | Nicht genutzt |
 | Fibers/Async | NEIN | Nicht genutzt |
 | Attributes | NEIN | Kein PHP 8.0+ `#[...]` |
-| PSR-Interfaces | MINIMAL | Eigene Event-Interfaces (IEventSink/IEventSource), kein PSR-7/11/14/15/17/18 |
+| PSR-Interfaces | ✅ TEILWEISE | PSR-11 (Container), PSR-3 (Logger), PSR-15 (Middleware-Adapter), PSR-16 (Cache-Adapter) |
 | Composer Autoload | ✅ TEILWEISE | PSR-4 für `Gyro\` Namespace (Phase 15), eigene `Load`-Klasse als primär |
 | Environment Vars (.env) | ✅ JA | Eigener `.env` Loader (`Env`-Klasse), `APP_*` auto-define (Phase 7) |
 | Return Type Declarations | TEILWEISE | In 5 Core-Interfaces (Phase 4) |
@@ -537,6 +537,44 @@ Framework ist **umfassend modernisiert**: Return Types + Union Types in Core-Int
 | `Arr` | `Gyro\Lib\Helpers\Arr` | `gyro/core/lib/helpers/array.cls.php` |
 | `Cast` | `Gyro\Lib\Helpers\Cast` | `gyro/core/lib/helpers/cast.cls.php` |
 | `Url` | `Gyro\Lib\Helpers\Url` | `gyro/core/lib/helpers/url.cls.php` |
+
+### Phase 16: PSR-Interface-Adoption ✅ ERLEDIGT
+- [x] PSR-11: `Container` implementiert `Psr\Container\ContainerInterface`
+- [x] PSR-3: Neue `LoggerInstance` Klasse implementiert `Psr\Log\LoggerInterface`
+- [x] PSR-15: `Psr15Adapter` und `GyroPsr15Bridge` Middleware-Adapter
+- [x] PSR-16: `Psr16Adapter` implementiert `Psr\SimpleCache\CacheInterface`
+- [x] Composer-Dependencies: `psr/container`, `psr/log`, `psr/http-server-middleware`, `psr/http-message`, `psr/simple-cache`
+- [x] 55 neue Tests (PSR-11: 12, PSR-3: 14, PSR-15: 11, PSR-16: 18)
+- **Ergebnis:** 470 Tests, 1468 Assertions (alle grün), PHPStan 0 neue Fehler
+
+#### Phase 16 Details: PSR-11 Container
+- **Datei:** `gyro/core/lib/components/container.cls.php`
+- `Container` implementiert `Psr\Container\ContainerInterface` direkt
+- `get(string $id): mixed` mit typisierter Signatur
+- `has(string $id): bool` mit typisierter Signatur
+- `ServiceNotFoundException` (`src/Lib/Components/Exception/`) implementiert `NotFoundExceptionInterface`
+- Bestehende Methoden (`singleton()`, `factory()`, `bind()`) bleiben unverändert
+
+#### Phase 16 Details: PSR-3 Logger
+- **Datei:** `src/Lib/Components/LoggerInstance.php`
+- Wrapper-Klasse die `Psr\Log\LoggerInterface` implementiert
+- Delegiert alle Aufrufe an die statische `Logger`-Klasse
+- `log($level, ...)` akzeptiert `Psr\Log\LogLevel` Konstanten
+- Statische Logger-Facade bleibt unverändert für bestehenden Code
+
+#### Phase 16 Details: PSR-15 Middleware-Adapter
+- **Dateien:** `src/Core/Middleware/Psr15Adapter.php`, `GyroPsr15Bridge.php`
+- `Psr15Adapter`: Wrapped `Psr\Http\Server\MiddlewareInterface` als `IMiddleware`
+- `GyroPsr15Bridge`: Wrapped `IMiddleware` als `Psr\Http\Server\MiddlewareInterface`
+- `Psr15PageData`: Minimaler PageData-Wrapper für PSR-7 Request Transport
+- Bestehende `IMiddleware` und `MiddlewareStack` bleiben unverändert
+
+#### Phase 16 Details: PSR-16 Cache-Adapter
+- **Datei:** `src/Lib/Cache/Psr16Adapter.php`
+- Implementiert `Psr\SimpleCache\CacheInterface`
+- Wrapped `ICachePersister` mit Serialisierung (serialize/unserialize)
+- `DateInterval` TTL-Support, Key-Validation nach PSR-16 Spec
+- `InvalidCacheKeyException` implementiert `Psr\SimpleCache\InvalidArgumentException`
 
 ### Phase 14: Migrations-Assistent (GEPLANT)
 
@@ -639,8 +677,12 @@ tests/core/
 | User-Model | `contributions/usermanagement/model/classes/users.model.php` |
 | String-Helpers | `gyro/core/lib/helpers/string.cls.php` |
 | PSR-4 Namespace-Stubs | `src/` (10 Dateien) |
+| PSR-3 Logger Instance | `src/Lib/Components/LoggerInstance.php` |
+| PSR-11 Exception | `src/Lib/Components/Exception/ServiceNotFoundException.php` |
+| PSR-15 Middleware-Adapter | `src/Core/Middleware/Psr15Adapter.php`, `GyroPsr15Bridge.php` |
+| PSR-16 Cache-Adapter | `src/Lib/Cache/Psr16Adapter.php` |
 | Namespace-Tests | `tests/core/NamespaceAliasTest.php` |
-| PHPUnit-Tests | `tests/core/` (57 Dateien) |
+| PHPUnit-Tests | `tests/core/` (61 Dateien) |
 | Test-Bootstrap | `tests/bootstrap.php` |
 | SimpleTest (Legacy) | `gyro/modules/simpletest/simpletests/` |
 | Routing | `gyro/core/controller/base/routes/` |

@@ -1,7 +1,11 @@
 <?php
+// Load PSR-11 exception class (Phase 16)
+require_once dirname(__FILE__) . '/../../../../src/Lib/Components/Exception/ServiceNotFoundException.php';
+
 /**
  * Simple Dependency Injection Container
  *
+ * Implements PSR-11 ContainerInterface for interoperability.
  * Provides service registration and lazy resolution. Supports:
  * - Singleton services (resolved once, reused)
  * - Factory services (new instance each time)
@@ -31,7 +35,7 @@
  * @author Gyro-PHP Framework
  * @ingroup Components
  */
-class Container {
+class Container implements \Psr\Container\ContainerInterface {
 	/**
 	 * The singleton container instance
 	 *
@@ -121,41 +125,43 @@ class Container {
 	}
 
 	/**
-	 * Resolve a service by name
+	 * Resolve a service by name (PSR-11 compatible)
 	 *
-	 * @param string $name Service name
+	 * @param string $id Service identifier
 	 * @return mixed The resolved service
-	 * @throws Exception if service is not registered
+	 * @throws \Gyro\Lib\Components\Exception\ServiceNotFoundException if service is not registered
 	 */
-	public function get($name) {
+	public function get(string $id): mixed {
 		// Return cached singleton instance
-		if (isset($this->instances[$name])) {
-			return $this->instances[$name];
+		if (isset($this->instances[$id])) {
+			return $this->instances[$id];
 		}
 
 		// Resolve from definition
-		if (!isset($this->definitions[$name])) {
-			throw new Exception("Service '$name' is not registered in the container.");
+		if (!isset($this->definitions[$id])) {
+			throw new \Gyro\Lib\Components\Exception\ServiceNotFoundException(
+				"Service '$id' is not registered in the container."
+			);
 		}
 
-		$resolved = call_user_func($this->definitions[$name], $this);
+		$resolved = call_user_func($this->definitions[$id], $this);
 
 		// Cache singletons
-		if (isset($this->types[$name]) && $this->types[$name] === 'singleton') {
-			$this->instances[$name] = $resolved;
+		if (isset($this->types[$id]) && $this->types[$id] === 'singleton') {
+			$this->instances[$id] = $resolved;
 		}
 
 		return $resolved;
 	}
 
 	/**
-	 * Check if a service is registered
+	 * Check if a service is registered (PSR-11 compatible)
 	 *
-	 * @param string $name Service name
+	 * @param string $id Service identifier
 	 * @return bool
 	 */
-	public function has($name) {
-		return isset($this->definitions[$name]) || isset($this->instances[$name]);
+	public function has(string $id): bool {
+		return isset($this->definitions[$id]) || isset($this->instances[$id]);
 	}
 
 	/**

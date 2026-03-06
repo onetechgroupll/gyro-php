@@ -65,6 +65,29 @@ Verfügbare Namespace-Aliase:
 
 **Keine Aktion erforderlich** — alle bestehenden Klassen funktionieren wie bisher.
 
+### PSR-Interface-Adoption (Phase 16)
+
+Ab Phase 16 implementieren Core-Klassen Standard-PSR-Interfaces:
+
+| Klasse | PSR-Interface | Paket |
+|--------|--------------|-------|
+| `Container` | `Psr\Container\ContainerInterface` (PSR-11) | `psr/container` |
+| `Gyro\Lib\Components\LoggerInstance` | `Psr\Log\LoggerInterface` (PSR-3) | `psr/log` |
+| `Gyro\Lib\Cache\Psr16Adapter` | `Psr\SimpleCache\CacheInterface` (PSR-16) | `psr/simple-cache` |
+
+**PSR-15 Middleware-Adapter** ermöglichen die Integration externer Middleware:
+
+```php
+// Externe PSR-15 Middleware in Gyro nutzen:
+$adapter = new \Gyro\Core\Middleware\Psr15Adapter($psrMiddleware);
+MiddlewareStack::add($adapter);
+
+// Gyro Middleware als PSR-15 exportieren:
+$bridge = new \Gyro\Core\Middleware\GyroPsr15Bridge($gyroMiddleware);
+```
+
+**Breaking Change:** `Container::get()` wirft jetzt `ServiceNotFoundException` (implementiert `Psr\Container\NotFoundExceptionInterface`) statt einer generischen `Exception`. Code, der `catch (Exception $e)` verwendet, ist nicht betroffen.
+
 ### Composer installieren (falls noch nicht vorhanden)
 
 ```bash

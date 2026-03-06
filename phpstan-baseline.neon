@@ -6,6 +6,11 @@ parameters:
 			path: contributions/binaries/controller/base/binaries.basecontroller.php
 
 		-
+			message: "#^Method WidgetYAMLSubtemplates\\:\\:create_slots\\(\\) invoked with 2 parameters, 1 required\\.$#"
+			count: 1
+			path: contributions/css.yaml4/view/widgets/yamlsubtemplates.widget.php
+
+		-
 			message: "#^Access to an undefined property IImageInformation\\:\\:\\$handle\\.$#"
 			count: 6
 			path: contributions/lib.imagetools/lib/components/imagetools_impl/imagetools.gd.cls.php

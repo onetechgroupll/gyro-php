@@ -2,6 +2,37 @@
 
 Alle wesentlichen Änderungen am Gyro-PHP Framework, chronologisch nach Phasen geordnet.
 
+## [Phase 16] – 2026-03-06
+
+### Hinzugefügt
+- **PSR-11 Container:** `Container` implementiert jetzt `Psr\Container\ContainerInterface`
+  - `get(string $id): mixed` mit typisierter Signatur
+  - `has(string $id): bool` mit typisierter Signatur
+  - `ServiceNotFoundException` implementiert `Psr\Container\NotFoundExceptionInterface`
+- **PSR-3 Logger:** Neue `Gyro\Lib\Components\LoggerInstance` Klasse
+  - Implementiert `Psr\Log\LoggerInterface`
+  - Delegiert an den bestehenden statischen `Logger`
+  - Akzeptiert `Psr\Log\LogLevel` Konstanten via `log()` Methode
+  - Unterstützt `\Stringable` Messages
+- **PSR-15 Middleware-Adapter:** Brücke zwischen Gyro und PSR-15
+  - `Gyro\Core\Middleware\Psr15Adapter`: Wrapped PSR-15 Middleware als `IMiddleware`
+  - `Gyro\Core\Middleware\GyroPsr15Bridge`: Wrapped `IMiddleware` als PSR-15 Middleware
+  - `Gyro\Core\Middleware\Psr15PageData`: Minimal-PageData für PSR-7 Request Transport
+- **PSR-16 Cache-Adapter:** `Gyro\Lib\Cache\Psr16Adapter`
+  - Implementiert `Psr\SimpleCache\CacheInterface`
+  - Wrapped `ICachePersister` für PSR-16 kompatiblen Zugriff
+  - `DateInterval` TTL-Unterstützung, Key-Validation nach PSR-16 Spec
+- **55 neue Tests:** PSR-11 (12), PSR-3 (14), PSR-15 (11), PSR-16 (18)
+- **Composer-Dependencies:** `psr/container`, `psr/log`, `psr/http-server-middleware`, `psr/http-message`, `psr/simple-cache`
+
+### Geändert
+- **Container `get()` Exception:** Wirft jetzt `ServiceNotFoundException` (implementiert `NotFoundExceptionInterface`) statt generischer `Exception`
+- **Container `get()`/`has()`:** Typisierte Parameter (`string $id`) und Rückgabewerte (`mixed`/`bool`)
+- **PHPStan Baseline:** 53 → 14 bekannte Fehler (Update auf Level 3)
+
+### Ergebnis
+- 470 Tests, 1468 Assertions (alle grün), PHPStan 0 neue Fehler
+
 ## [Phase 15] – 2026-03-06
 
 ### Hinzugefügt
