@@ -6,6 +6,9 @@
  * without requiring a database connection or full application context.
  */
 
+// Load Composer autoloader for PSR-4 namespace support (Phase 15)
+require_once dirname(__DIR__) . '/vendor/autoload.php';
+
 define('APP_START_MICROTIME', microtime(true));
 date_default_timezone_set('UTC');
 

@@ -1,13 +1,14 @@
 # Gyro-PHP Framework – Projektanalyse & Memory
 
-> Letzte Aktualisierung: 2026-03-05 (Phase 13 abgeschlossen)
+> Letzte Aktualisierung: 2026-03-06 (Phase 15 abgeschlossen)
 
 ## Projektübersicht
 
 - **Framework:** Gyro-PHP, eigenes PHP-Webframework (seit 2004, PHP 4 → PHP 5 Rewrite 2005)
 - **Aktueller Stand:** Läuft auf PHP 8.x mit Safeguards, Code-Stil ist PHP 5.x Ära
-- **Composer** für Dev-Dependencies (PHPUnit, PHPStan), kein PSR-4, kein Namespace-System
-- **Test-Framework:** PHPUnit 10.5 (primär, 386 Tests) + SimpleTest 1.1.0 (Legacy, abandoned)
+- **Composer** für Dev-Dependencies (PHPUnit, PHPStan) + PSR-4 Autoload (`Gyro\` → `src/`)
+- **Namespaces:** 10 Core-Klassen via `class_alias()` Dual-Loading (Phase 15)
+- **Test-Framework:** PHPUnit 10.5 (primär, 415 Tests) + SimpleTest 1.1.0 (Legacy, abandoned)
 - **CLI-Tool:** `bin/gyro` (Phase 8) — model:list, model:show, db:sync
 - **Middleware:** MiddlewareStack + IMiddleware Interface (Phase 13)
 - **DI-Container:** Container-Klasse mit Singleton/Factory/Bind (Phase 13)
@@ -19,6 +20,10 @@
 ```
 bin/                             # CLI-Werkzeuge
   gyro                           # CLI Entry Point (Phase 8)
+src/                           # PSR-4 Namespace-Stubs (Phase 15)
+  Core/                        # Config, Common, DB
+  Lib/Components/              # Logger, Container
+  Lib/Helpers/                 # Env, GyroString, Arr, Cast, Url
 gyro/                          # Framework-Core
   core/
     config.cls.php             # Zentrale Config (281 Zeilen, 100+ Konstanten)
@@ -47,7 +52,8 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | Metrik | Wert |
 |--------|------|
 | Core-Klassen | 239 (.cls.php, .model.php, .facade.php) |
-| PHPUnit-Tests | 386 Tests, 1333 Assertions (72 Test-Dateien) |
+| PHPUnit-Tests | 415 Tests, 1384 Assertions (73 Test-Dateien) |
+| PSR-4 Namespace-Aliase | 10 Klassen in `src/` (Phase 15) |
 | REST-API-Modul | 3 Dateien (Controller, Helper, Start) |
 | SimpleTest (Legacy) | 57 Dateien (größtenteils nach PHPUnit portiert) |
 | Testabdeckung | ~50%+ (Phase 7: massive Erweiterung) |
@@ -436,13 +442,13 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 
 | Aspekt | Bewertung | Notizen |
 |--------|-----------|---------|
-| Testabdeckung | 8/10 | ~65%+, 386 Tests / 1333 Assertions (PHPUnit 10.5) |
+| Testabdeckung | 8/10 | ~65%+, 415 Tests / 1384 Assertions (PHPUnit 10.5) |
 | Test-Framework | 7/10 | PHPUnit 10.5 primär, Mock-Infrastruktur, SimpleTest Legacy |
 | Dokumentation | 6/10 | PHPDoc ~45-50%, Core-APIs dokumentiert (Phase 12+13) |
 | Dead Code | 8/10 | Minimal, sauber |
 | Konfiguration | 7/10 | ✅ `.env` Support, zentralisiert, noch Magic Numbers |
 | Error Logging | 7/10 | ✅ PSR-3 Levels, JSON-Output, Context, Exception-Support |
-| Moderne PHP-Features | 6/10 | ✅ Type Declarations, ✅ Typed Properties, ✅ Union Types, ✅ Middleware, ✅ DI-Container |
+| Moderne PHP-Features | 7/10 | ✅ Type Declarations, ✅ Typed Properties, ✅ Union Types, ✅ Middleware, ✅ DI-Container, ✅ PSR-4 Namespaces |
 | Sicherheit | 7/10 | ✅ bcrypt, ✅ Headers, ✅ Prepared Stmt, ✅ Session, ✅ CSRF |
 | CLI-Tooling | 6/10 | ✅ `bin/gyro` mit model:list, model:show, db:sync |
 | Auto-Admin | 7/10 | ✅ Django-Style CRUD UI aus Model-Schema |
@@ -451,11 +457,11 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 
 ## Moderne PHP-Features Analyse
 
-### Bestandsaufnahme (Stand 2026-03-05)
+### Bestandsaufnahme (Stand 2026-03-06)
 
 | Feature | Vorhanden? | Details |
 |---------|-----------|---------|
-| Namespaces | NEIN | 0 Deklarationen im Framework (nur 3rd-Party FPDI nutzt sie) |
+| Namespaces | ✅ TEILWEISE | 10 Core-Klassen via `class_alias()` Dual-Loading (Phase 15), Rest noch global |
 | Typed Properties | TEILWEISE | ✅ In 12 Interface-Implementierungen (Phase 6), Rest noch untypisiert |
 | Enums | NEIN | Kein PHP 8.1+ `enum` |
 | Named Arguments | NEIN | Nicht genutzt |
@@ -464,7 +470,7 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | Fibers/Async | NEIN | Nicht genutzt |
 | Attributes | NEIN | Kein PHP 8.0+ `#[...]` |
 | PSR-Interfaces | MINIMAL | Eigene Event-Interfaces (IEventSink/IEventSource), kein PSR-7/11/14/15/17/18 |
-| Composer Autoload | NEIN | classmap entfernt (Pfadkonflikt), eigene `Load`-Klasse |
+| Composer Autoload | ✅ TEILWEISE | PSR-4 für `Gyro\` Namespace (Phase 15), eigene `Load`-Klasse als primär |
 | Environment Vars (.env) | ✅ JA | Eigener `.env` Loader (`Env`-Klasse), `APP_*` auto-define (Phase 7) |
 | Return Type Declarations | TEILWEISE | In 5 Core-Interfaces (Phase 4) |
 | Union Types | TEILWEISE | `string\|false`, `array\|false`, `int\|false`, `ICacheItem\|false`, `mixed` |
@@ -481,13 +487,14 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 
 ### Autoloading
 
-- **Eigene Klasse:** `gyro/core/load.cls.php` (`Load::add_module_base_dir()`)
-- Kein PSR-4, kein Composer-Autoload
+- **Primär:** `gyro/core/load.cls.php` (`Load::add_module_base_dir()`)
+- **Sekundär:** Composer PSR-4 Autoload für `Gyro\` Namespace (`src/`)
+- Composer-Autoloader wird als Fallback in `Load`-Klasse registriert
 - Modul-Discovery über Framework-eigenes System
 
 ### Fazit
 
-Framework ist **umfassend modernisiert**: Return Types + Union Types in Core-Interfaces, Typed Properties in Implementierungen, `.env` Support, PHPStan Level 3, Middleware-Pattern, DI-Container. Keine Nutzung von Namespaces, Enums, Attributes, Match, Readonly. Code-Stil bleibt PHP 5.x Ära mit PHP 8.x Kompatibilität und moderner Tooling-Infrastruktur.
+Framework ist **umfassend modernisiert**: Return Types + Union Types in Core-Interfaces, Typed Properties in Implementierungen, `.env` Support, PHPStan Level 3, Middleware-Pattern, DI-Container, **PSR-4 Namespaces für 10 Core-Klassen**. Keine Nutzung von Enums, Attributes, Match, Readonly. Code-Stil bleibt PHP 5.x Ära mit PHP 8.1+ Kompatibilität und moderner Tooling-Infrastruktur.
 
 ### Nächste Schritte (Empfehlung)
 - ~~PHPStan Baseline schrittweise abbauen~~ ✅ Phase 13: 1262 → 13 Fehler (99% Reduktion)
@@ -498,8 +505,38 @@ Framework ist **umfassend modernisiert**: Return Types + Union Types in Core-Int
 - ~~Auto-REST-API aus DAO-Modellen generieren~~ ✅ Phase 9: `gyro/modules/api/`
 - ~~Auto-Admin-Interface aus ISelfDescribing + IActionSource~~ ✅ Phase 11: `gyro/modules/admin/`
 - PHPStan Baseline verbleibende 13 Fehler (12x IImageInformation @property, 1x empty() false positive)
-- Namespaces/PSR-4 einführen (großer Breaking Change)
+- ~~Namespaces/PSR-4 einführen~~ ✅ Phase 15: Dual-Loading mit `class_alias()`
 - **Migrations-Assistent** (Phase 14) — siehe Plan unten
+
+### Phase 15: Namespace Foundation ✅ ERLEDIGT
+- [x] `src/` Verzeichnis mit PSR-4 Struktur (`Core/`, `Lib/Components/`, `Lib/Helpers/`)
+- [x] Composer PSR-4 Autoloading: `"Gyro\\": "src/"`
+- [x] PHP Minimum auf 8.1 angehoben
+- [x] 10 Core-Klassen mit `class_alias()` Dual-Loading
+- [x] Composer-Autoloader als Fallback in `Load`-Klasse registriert
+- [x] 29 neue Tests (`NamespaceAliasTest`)
+- **Ergebnis:** 415 Tests, 1384 Assertions (alle grün), PHPStan 0 neue Fehler
+
+#### Phase 15 Details: Namespace-Strategie
+- **Ansatz:** Dual-Loading — Original-Klassen bleiben in `gyro/`, `class_alias()` macht Namespaces verfügbar
+- **Kein Breaking Change** — bestehender Code nutzt weiterhin globale Klassennamen
+- **Neuer Code** kann `use Gyro\Core\Config;` etc. verwenden
+- **`src/` Stubs:** Enthalten `require_once` + verlassen sich auf das `class_alias()` im Original
+- **Composer-Fallback:** `Load`-Klasse registriert Composers Autoloader als Fallback
+
+#### Phase 15 Details: Migrierte Klassen
+| Global | Namespace | Original-Datei |
+|--------|-----------|---------------|
+| `Config` | `Gyro\Core\Config` | `gyro/core/config.cls.php` |
+| `Common` | `Gyro\Core\Common` | `gyro/core/lib/helpers/common.cls.php` |
+| `DB` | `Gyro\Core\DB` | `gyro/core/model/base/db.cls.php` |
+| `Logger` | `Gyro\Lib\Components\Logger` | `gyro/core/lib/components/logger.cls.php` |
+| `Container` | `Gyro\Lib\Components\Container` | `gyro/core/lib/components/container.cls.php` |
+| `Env` | `Gyro\Lib\Helpers\Env` | `gyro/core/lib/helpers/env.cls.php` |
+| `GyroString` | `Gyro\Lib\Helpers\GyroString` | `gyro/core/lib/helpers/string.cls.php` |
+| `Arr` | `Gyro\Lib\Helpers\Arr` | `gyro/core/lib/helpers/array.cls.php` |
+| `Cast` | `Gyro\Lib\Helpers\Cast` | `gyro/core/lib/helpers/cast.cls.php` |
+| `Url` | `Gyro\Lib\Helpers\Url` | `gyro/core/lib/helpers/url.cls.php` |
 
 ### Phase 14: Migrations-Assistent (GEPLANT)
 
@@ -601,7 +638,9 @@ tests/core/
 | Logger | `gyro/core/lib/components/logger.cls.php` |
 | User-Model | `contributions/usermanagement/model/classes/users.model.php` |
 | String-Helpers | `gyro/core/lib/helpers/string.cls.php` |
-| PHPUnit-Tests | `tests/core/` (56 Dateien) |
+| PSR-4 Namespace-Stubs | `src/` (10 Dateien) |
+| Namespace-Tests | `tests/core/NamespaceAliasTest.php` |
+| PHPUnit-Tests | `tests/core/` (57 Dateien) |
 | Test-Bootstrap | `tests/bootstrap.php` |
 | SimpleTest (Legacy) | `gyro/modules/simpletest/simpletests/` |
 | Routing | `gyro/core/controller/base/routes/` |

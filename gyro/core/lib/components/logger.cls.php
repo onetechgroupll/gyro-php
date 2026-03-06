@@ -233,3 +233,6 @@ class Logger {
 		}
 	}
 }
+
+// Namespace alias for PSR-4 compatibility (Phase 15)
+class_alias('Logger', 'Gyro\\Lib\\Components\\Logger');

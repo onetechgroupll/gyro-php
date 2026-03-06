@@ -537,6 +537,9 @@ class DB {
 				$text = $status->to_string(Status::OUTPUT_PLAIN) . " [$query]";
 				throw new Exception($text);
 			}
-		}		
+		}
 	}
 }
+
+// Namespace alias for PSR-4 compatibility (Phase 15)
+class_alias('DB', 'Gyro\\Core\\DB');

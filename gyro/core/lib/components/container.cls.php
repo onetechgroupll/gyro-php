@@ -193,3 +193,6 @@ class Container {
 		self::$container = null;
 	}
 }
+
+// Namespace alias for PSR-4 compatibility (Phase 15)
+class_alias('Container', 'Gyro\\Lib\\Components\\Container');

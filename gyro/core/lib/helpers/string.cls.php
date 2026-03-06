@@ -825,3 +825,6 @@ else {
 if (PHP_MAJOR_VERSION < 7 && !class_exists('String')) {
 	include __DIR__ . '/string_impl/string.compat.cls.php';
 }
+
+// Namespace alias for PSR-4 compatibility (Phase 15)
+class_alias('GyroString', 'Gyro\\Lib\\Helpers\\GyroString');

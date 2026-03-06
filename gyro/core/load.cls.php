@@ -507,3 +507,10 @@ if (!function_exists('gyro_autoload')) {
 	}
 	spl_autoload_register('gyro_autoload');
 }
+
+// Register Composer autoloader as fallback for PSR-4 namespaced classes (Phase 15)
+$_gyro_composer_autoload = dirname(__FILE__) . '/../../vendor/autoload.php';
+if (file_exists($_gyro_composer_autoload)) {
+	require_once $_gyro_composer_autoload;
+}
+unset($_gyro_composer_autoload);

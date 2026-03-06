@@ -317,3 +317,6 @@ class Arr {
 		}
 	}
 }
+
+// Namespace alias for PSR-4 compatibility (Phase 15)
+class_alias('Arr', 'Gyro\\Lib\\Helpers\\Arr');

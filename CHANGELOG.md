@@ -2,6 +2,28 @@
 
 Alle wesentlichen Änderungen am Gyro-PHP Framework, chronologisch nach Phasen geordnet.
 
+## [Phase 15] – 2026-03-06
+
+### Hinzugefügt
+- **PSR-4 Namespace-Aliase:** 10 Core-Klassen sind jetzt auch über Namespaces erreichbar
+  - `Gyro\Core\Config`, `Gyro\Core\Common`, `Gyro\Core\DB`
+  - `Gyro\Lib\Components\Logger`, `Gyro\Lib\Components\Container`
+  - `Gyro\Lib\Helpers\Env`, `Gyro\Lib\Helpers\GyroString`, `Gyro\Lib\Helpers\Arr`, `Gyro\Lib\Helpers\Cast`, `Gyro\Lib\Helpers\Url`
+- **`src/` Verzeichnis** mit PSR-4 Autoload-Stubs für Composer
+- **Composer PSR-4 Autoloading:** `"Gyro\\": "src/"` in `composer.json`
+- **Composer-Autoloader in Load-Klasse:** Fallback-Registration für PSR-4 Klassen
+- **29 neue Tests:** `NamespaceAliasTest` prüft alle Aliase und Interoperabilität
+
+### Geändert
+- **PHP Minimum:** 8.0 → **8.1** in `composer.json`
+- **`tests/bootstrap.php`:** Composer-Autoloader wird jetzt vor dem Framework geladen
+
+### Strategie
+- **Dual-Loading:** `class_alias()` am Ende jeder Original-Datei macht die Klasse unter beiden Namen verfügbar
+- **Zero Breaking Changes:** Bestehender Code nutzt weiterhin die globalen Klassennamen
+- **Neuer Code** kann `use Gyro\Core\Config;` etc. verwenden
+- **Ergebnis:** 415 Tests, 1384 Assertions (alle grün), PHPStan 0 neue Fehler
+
 ## [Phase 13b] – 2026-03-05
 
 ### Verbessert

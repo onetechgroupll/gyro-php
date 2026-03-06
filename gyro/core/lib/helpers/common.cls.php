@@ -327,3 +327,6 @@ class Common {
 		return $ret;
 	}
 }
+
+// Namespace alias for PSR-4 compatibility (Phase 15)
+class_alias('Common', 'Gyro\\Core\\Common');

@@ -28,11 +28,42 @@ und wo manuelles Eingreifen nötig ist.
 
 | Anforderung | Mindestversion | Empfohlen |
 |-------------|---------------|-----------|
-| PHP | 8.0 | 8.2+ |
+| PHP | 8.1 | 8.2+ |
 | MySQL/MariaDB | 5.7 | 8.0+ |
 | Composer | 2.x | 2.x |
 
-**Neu:** PHP 7.x wird **nicht mehr unterstützt**. Das Framework benötigt PHP >= 8.0.
+**Neu:** PHP 7.x wird **nicht mehr unterstützt**. Das Framework benötigt PHP >= 8.1 (seit Phase 15).
+
+### PSR-4 Namespaces (Phase 15)
+
+Ab Phase 15 sind die 10 wichtigsten Core-Klassen auch über PSR-4 Namespaces erreichbar:
+
+```php
+// Neuer Code kann Namespaces nutzen:
+use Gyro\Core\Config;
+use Gyro\Lib\Helpers\Arr;
+use Gyro\Lib\Components\Container;
+
+// Bestehender Code funktioniert weiterhin:
+Config::get_value('TITLE');
+Arr::get_item($data, 'key');
+```
+
+Verfügbare Namespace-Aliase:
+| Global | Namespace |
+|--------|-----------|
+| `Config` | `Gyro\Core\Config` |
+| `Common` | `Gyro\Core\Common` |
+| `DB` | `Gyro\Core\DB` |
+| `Logger` | `Gyro\Lib\Components\Logger` |
+| `Container` | `Gyro\Lib\Components\Container` |
+| `Env` | `Gyro\Lib\Helpers\Env` |
+| `GyroString` | `Gyro\Lib\Helpers\GyroString` |
+| `Arr` | `Gyro\Lib\Helpers\Arr` |
+| `Cast` | `Gyro\Lib\Helpers\Cast` |
+| `Url` | `Gyro\Lib\Helpers\Url` |
+
+**Keine Aktion erforderlich** — alle bestehenden Klassen funktionieren wie bisher.
 
 ### Composer installieren (falls noch nicht vorhanden)
 

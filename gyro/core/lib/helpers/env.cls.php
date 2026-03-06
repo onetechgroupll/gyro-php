@@ -199,3 +199,6 @@ class Env {
 		return $value;
 	}
 }
+
+// Namespace alias for PSR-4 compatibility (Phase 15)
+class_alias('Env', 'Gyro\\Lib\\Helpers\\Env');
