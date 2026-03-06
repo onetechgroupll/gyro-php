@@ -58,23 +58,23 @@ class ImageToolsGD implements IImageTools {
 	 */
 	public function resize(IImageInformation $src, $width, $height) {
 		$handle = imagecreatetruecolor($width, $height);
-		imagecopyresampled($handle, $src->handle, 0, 0, 0, 0, $width, $height, $src->get_width(), $src->get_height());
-		return new ImageInformationGD($handle, $src->type);		
+		imagecopyresampled($handle, $src->get_handle(), 0, 0, 0, 0, $width, $height, $src->get_width(), $src->get_height());
+		return new ImageInformationGD($handle, $src->get_image_type());
 	}
-	
+
 	/**
 	 * Resize given image. Image is not streched, so ratio is not changed.
-	 * 
+	 *
 	 * Resizing an image of 200 x 100 to 100 x 100 will result in a image of size 100 x 50
-	 * 
+	 *
 	 * @return IImageInformation False on failure
 	 */
 	public function resize_fit(IImageInformation $src, $width, $height) {
 		Load::components('imagetoolscalculator');
 		$rect = ImageToolsCalculator::fit($src->get_width(), $src->get_height(), $width, $height);
 		$handle = imagecreatetruecolor($rect->width, $rect->height);
-		imagecopyresampled($handle, $src->handle, 0, 0, 0, 0, $rect->width, $rect->height, $src->get_width(), $src->get_height());
-		return new ImageInformationGD($handle, $src->type);
+		imagecopyresampled($handle, $src->get_handle(), 0, 0, 0, 0, $rect->width, $rect->height, $src->get_width(), $src->get_height());
+		return new ImageInformationGD($handle, $src->get_image_type());
 	}	
 	
 	/**
@@ -84,8 +84,8 @@ class ImageToolsGD implements IImageTools {
 	 */
 	public function crop(IImageInformation $src, $x, $y, $width, $height) {
 		$handle = imagecreatetruecolor($width, $height);
-		imagecopy($handle, $src->handle, 0, 0, $x, $y, $width, $height);
-		return new ImageInformationGD($handle, $src->type);
+		imagecopy($handle, $src->get_handle(), 0, 0, $x, $y, $width, $height);
+		return new ImageInformationGD($handle, $src->get_image_type());
 	}
 	
 	/**
@@ -103,8 +103,8 @@ class ImageToolsGD implements IImageTools {
 		$rect = ImageToolsCalculator::fit($src->get_width(), $src->get_height(), $width, $height);
 		$rect = ImageToolsCalculator::center($rect->width, $rect->height, $width, $height);
 		
-		imagecopyresampled($handle, $src->handle, $rect->x, $rect->y, 0, 0, $rect->width, $rect->height, $src->get_width(), $src->get_height());
-		return new ImageInformationGD($handle, $src->type);
+		imagecopyresampled($handle, $src->get_handle(), $rect->x, $rect->y, 0, 0, $rect->width, $rect->height, $src->get_width(), $src->get_height());
+		return new ImageInformationGD($handle, $src->get_image_type());
 	}	
 	
 	/**
@@ -124,7 +124,7 @@ class ImageToolsGD implements IImageTools {
 		$size = 40;
 		$font = Load::get_module_dir('lib.imagetools'). '3rdparty/arial.ttf';
 		$watermark = imagecreatetruecolor($w, $h);
-		imagecopy($watermark, $src->handle, 0, 0, 0, 0, $w, $h);
+		imagecopy($watermark, $src->get_handle(), 0, 0, 0, 0, $w, $h);
 		$color = imagecolorallocatealpha($watermark, 0xFF, 0xFF, 0xFF, 0x70);
 		if ($w >= $h) {
 			// Landscape
@@ -134,7 +134,7 @@ class ImageToolsGD implements IImageTools {
 			// Portrait
 			imagettftext($watermark, $size, 90, $w - $size - 3, $h - 3, $color, $font, $text);
 		}		
-		return new ImageInformationGD($watermark, $src->type);	
+		return new ImageInformationGD($watermark, $src->get_image_type());
 	}
 
 	/**
@@ -146,8 +146,8 @@ class ImageToolsGD implements IImageTools {
 	 * @return IImageInformation False on failure
 	 */
 	public function rotate(IImageInformation $src, $degrees, $backgroundcolor = 0xFFFFFF) {
-		$rotated = imagerotate($src->handle, $degrees, $backgroundcolor);
-		return new ImageInformationGD($rotated, $src->type);
+		$rotated = imagerotate($src->get_handle(), $degrees, $backgroundcolor);
+		return new ImageInformationGD($rotated, $src->get_image_type());
 	}
 }
 
@@ -228,6 +228,22 @@ class ImageInformationGD implements IImageInformation {
 		return image_type_to_mime_type($this->type); 	
 	}
 	
+	/**
+	 * Returns image resource handle
+	 * @return mixed
+	 */
+	public function get_handle() {
+		return $this->handle;
+	}
+
+	/**
+	 * Returns image type constant (IMAGETYPE_*)
+	 * @return int
+	 */
+	public function get_image_type() {
+		return $this->type;
+	}
+
 	/**
 	 * Returns image file extension (without dot)
 	 * @return string

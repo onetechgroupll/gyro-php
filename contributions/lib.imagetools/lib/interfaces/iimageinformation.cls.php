@@ -43,4 +43,14 @@ interface IImageInformation {
 	 * @return string
 	 */
 	public function get_extension();
+	/**
+	 * Returns image resource handle
+	 * @return mixed
+	 */
+	public function get_handle();
+	/**
+	 * Returns image type constant (IMAGETYPE_*)
+	 * @return int
+	 */
+	public function get_image_type();
 }

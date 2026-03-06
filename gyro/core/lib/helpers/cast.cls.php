@@ -57,3 +57,6 @@ class Cast {
 		return strval($value);
 	}
 }
+
+// Namespace alias for PSR-4 compatibility (Phase 15)
+class_alias('Cast', 'Gyro\\Lib\\Helpers\\Cast');

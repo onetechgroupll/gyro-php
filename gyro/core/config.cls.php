@@ -279,3 +279,6 @@ class Config {
 		return sha1($ret);
 	}
 }
+
+// Namespace alias for PSR-4 compatibility (Phase 15)
+class_alias('Config', 'Gyro\\Core\\Config');

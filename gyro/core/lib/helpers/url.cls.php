@@ -966,3 +966,6 @@ class UrlQueryItem {
 		}
 	}
 }
+
+// Namespace aliases for PSR-4 compatibility (Phase 15)
+class_alias('Url', 'Gyro\\Lib\\Helpers\\Url');
