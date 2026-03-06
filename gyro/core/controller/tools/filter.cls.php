@@ -81,8 +81,8 @@ class Filter implements IDBQueryModifier {
 	/**
 	 * Prepare URL so filter gets applied
 	 * 
-	 * @param Url Instance of URL class. This instance is changed.
-	 * @param string Filter to append
+	 * @param Url $url Instance of URL class. This instance is changed.
+	 * @param string $filter Filter to append
 	 * @param string $group_id
 	 *
 	 * @return void

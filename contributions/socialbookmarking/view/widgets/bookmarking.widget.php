@@ -25,7 +25,7 @@ class WidgetBookmarking implements IWidget {
 	 * @param int $policy 
 	 * @return string
 	 */
-	public static function output($page_data, $set_or_array, $policy = self::NONE) {
+	public static function output($page_data, $set_or_array, $policy = 0) {
 		$w = new WidgetBookmarking($page_data, $set_or_array);
 		return $w->render($policy);
 	}
@@ -41,7 +41,7 @@ class WidgetBookmarking implements IWidget {
 	 * @param int $policy
 	 * @return string
 	 */
-	public function render($policy = self::NONE) {
+	public function render($policy = 0) {
 		$arr_services = array();
 		foreach($this->services as $service) {
 			$tmp = SocialBookmarking::get_service($service);

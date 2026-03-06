@@ -12,7 +12,7 @@ interface IRoute {
 	/**
 	 * Returns a suitable renderer 
 	 *
-	 * @param PageDate $page_data The page data
+	 * @param PageData $page_data The page data
 	 * @return IRenderer
 	 */
 	public function get_renderer($page_data);

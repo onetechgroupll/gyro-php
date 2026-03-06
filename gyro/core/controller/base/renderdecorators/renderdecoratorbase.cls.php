@@ -88,9 +88,9 @@ class RenderDecoratorBase implements IRenderDecorator {
 	 * Render page
 	 *
 	 * @param PageData $page_data
-	 * @param IRenderDecorator Decorator to invoke render_content upon
-	 * @param int $policy If set to IView::DISPLAY, content is printed, if false it is returned only
-	 * @return void
+	 * @param IRenderDecorator $content_render_decorator Decorator to invoke render_content upon
+	 * @param int|false $policy If set to IView::DISPLAY, content is printed, if false it is returned only
+	 * @return string|void
 	 */
 	public function render_page($page_data, $content_render_decorator, $policy = IView::NONE) {
 		return $this->render_page_next($page_data, $content_render_decorator, $policy);
@@ -100,8 +100,8 @@ class RenderDecoratorBase implements IRenderDecorator {
 	 * Call render_page() on next decorator
 	 *
 	 * @param PageData $page_data
-	 * @param IRenderDecorator Decorator to invoke render_content upon
-	 * @param int $policy If set to IView::DISPLAY, content is printed, if false it is returned only
+	 * @param IRenderDecorator $content_render_decorator Decorator to invoke render_content upon
+	 * @param int|false $policy If set to IView::DISPLAY, content is printed, if false it is returned only
 	 * @return string The rendered content
 	 */
 	protected function render_page_next($page_data, $content_render_decorator, $policy = IView::NONE) {

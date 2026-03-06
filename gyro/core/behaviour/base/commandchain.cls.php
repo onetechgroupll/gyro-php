@@ -21,7 +21,7 @@ class CommandChain extends CommandBase {
 	/**
 	 * Previous command in chain
 	 *
-	 * @var CommandChain
+	 * @var CommandChain|ICommand|null
 	 */
 	protected $prev = null;
 	
@@ -175,7 +175,7 @@ class CommandChainAdapter extends CommandChain {
 	/**
 	 * Constructor
 	 * 
-	 * @param ICommand Command to adapt
+	 * @param ICommand $cmd Command to adapt
 	 */
 	public function __construct($cmd) {
 		if ($cmd instanceof ICommand) {

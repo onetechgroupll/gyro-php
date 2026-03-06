@@ -43,7 +43,7 @@ interface IRenderDecorator {
 	 * Render page
 	 *
 	 * @param PageData $page_data
-	 * @param IRenderDecorator Decorator to invoke render_content upon
+	 * @param IRenderDecorator $content_render_decorator Decorator to invoke render_content upon
 	 * @param int $policy If set to IView::DISPLAY, content is printed, if false it is returned only
 	 * @return mixed Success information
 	 */

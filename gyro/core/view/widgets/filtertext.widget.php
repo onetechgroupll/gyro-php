@@ -11,7 +11,7 @@ class WidgetFilterText implements IWidget {
 	
 	public $data;	
 	
-	public static function output($data, $policy = self::NONE) {
+	public static function output($data, $policy = 0) {
 		$w = new WidgetFilterText($data);
 		return $w->render($policy);
 	}
@@ -20,7 +20,7 @@ class WidgetFilterText implements IWidget {
 		$this->data = $data;
 	}
 	
-	public function render($policy = self::NONE) {
+	public function render($policy = 0) {
 		$out = '';
 		foreach (Arr::force($this->data, false) as $item) {
 			$adapter = Arr::get_item($item, 'adapter', false);

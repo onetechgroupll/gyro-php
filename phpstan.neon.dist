@@ -2,7 +2,7 @@ includes:
     - phpstan-baseline.neon
 
 parameters:
-    level: 2
+    level: 3
     paths:
         - gyro/core/
         - contributions/
@@ -11,16 +11,26 @@ parameters:
         - */simpletests/*
         - */simpletest/*
         - vendor/*
+        # Template files (not classlike PHP)
+        - */template/*.tpl.php
+        - */templates/*.tpl.php
+        - */templates/*/*.tpl.php
+        - */templates/*/*/*.tpl.php
         # Contributions depending on unloaded external classes/interfaces
         # These cannot be analysed without their full dependency context
         - contributions/pdf/lib/components/pdfmaker.cls.php
         - contributions/sphinx/model/drivers/sphinx/
-        - contributions/scheduler/behaviour/commands/scheduler/status.active.cmd.php
-        - contributions/scheduler/model/classes/scheduler.model.php
-        - contributions/usermanagement/behaviour/commands/users/status.any.cmd.php
-        - contributions/usermanagement/model/classes/users.model.php
-        - contributions/usermanagement.notifications/behaviour/commands/notifications/status.read.cmd.php
-        - contributions/usermanagement.notifications/model/classes/notifications.model.php
+        - contributions/models.searchindex.sphinx/
         - contributions/lib.imagetools/lib/components/imagetools_impl/imagetools.imagick.cls.php
-        - contributions/text.htmlpurifier/lib/helpers/converters/htmlpurifier.autoparagraph.converter.php
+        - contributions/text.htmlpurifier/
+        # Contributions depending on DAOUsers (excluded model)
+        - contributions/usermanagement/
+        - contributions/usermanagement.hijackaccount/
+        - contributions/usermanagement.notifications/
+        # Contributions depending on DAOScheduler (excluded model)
+        - contributions/scheduler/
+        # Depends on Users facade class and runtime config
+        - contributions/javascript.cookieconsent/
+    scanFiles:
+        - contributions/jcssmanager/3rdparty/csstidy/class.csstidy.php
     reportUnmatchedIgnoredErrors: false

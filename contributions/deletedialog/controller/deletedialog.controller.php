@@ -169,7 +169,7 @@ class DeleteDialogController extends ControllerBase {
 	protected function get_instance($model, $id) {
 		$ret = false;
 		$dao = DB::create($model);
-		if (!empty($dao)) {
+		if ($dao) {
 			$arr_id = explode(GYRO_COMMAND_ID_SEP, $id);
 			foreach ($dao->get_table_keys() as $key => $field) {
 				$dao->$key = array_shift($arr_id);

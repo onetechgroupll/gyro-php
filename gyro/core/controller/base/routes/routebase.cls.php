@@ -2,6 +2,7 @@
 Load::directories('controller/base/cachemanager');
 Load::directories('controller/base/cachemanager/headermanager');
 Load::directories('controller/base/renderdecorators');
+Load::directories('controller/base/middleware');
 require_once dirname(__FILE__) . '/../renderer/rendererchain.cls.php';
 
 /**
@@ -21,6 +22,13 @@ class RouteBase implements IRoute, IDispatcher, IUrlBuilder  {
 	protected $scheme = '';
 	protected $decorators = null;
 	protected $is_directory = false;
+
+	/**
+	 * Route-level middleware
+	 *
+	 * @var IMiddleware[]
+	 */
+	protected $route_middleware = array();
 	
 	/**
 	 * Contructor
@@ -28,7 +36,7 @@ class RouteBase implements IRoute, IDispatcher, IUrlBuilder  {
 	 * @param string $path The URL this route is responsible for
 	 * @param IController $controller The controller to invoke
 	 * @param string $action The function to invoke on controller
-	 * @param mixed Array or single instance of IRouteDecorator 
+	 * @param mixed $decorators Array or single instance of IRouteDecorator
 	 */
 	public function __construct($path, $controller, $action, $decorators = null) {
 		$this->controller = $controller;
@@ -78,7 +86,18 @@ class RouteBase implements IRoute, IDispatcher, IUrlBuilder  {
 		$arr_default_decorator = $this->get_default_render_decorators();
 		$arr_overloaded_default_decorators = $page_data->get_render_decorators($this);
 		$arr_decorators = array();
-		// Alllow cache managers as decorator
+
+		// Inject global middleware as render decorators (runs first)
+		foreach (MiddlewareStack::get_all() as $middleware) {
+			$arr_decorators[] = new MiddlewareRenderDecorator($middleware);
+		}
+
+		// Inject route-level middleware
+		foreach ($this->route_middleware as $middleware) {
+			$arr_decorators[] = new MiddlewareRenderDecorator($middleware);
+		}
+
+		// Allow cache managers as decorator
 		foreach($this->decorators as $decorator) {
 			if ($decorator instanceof ICacheManager) {
 				$arr_decorators[] = new CacheRenderDecorator($decorator);
@@ -89,6 +108,16 @@ class RouteBase implements IRoute, IDispatcher, IUrlBuilder  {
 		}
 		$arr_decorators = array_merge($arr_decorators, $arr_overloaded_default_decorators, $arr_default_decorator);
 		return new RendererChain($page_data, $arr_decorators);
+	}
+
+	/**
+	 * Add middleware to this specific route
+	 *
+	 * @param IMiddleware $middleware
+	 * @return void
+	 */
+	public function add_middleware($middleware) {
+		$this->route_middleware[] = $middleware;
 	}
 
 	/**
@@ -271,7 +300,7 @@ class RouteBase implements IRoute, IDispatcher, IUrlBuilder  {
 	/**
 	 * Return fucntion to invoke for given action
 	 * 
-	 * @param string Name of action
+	 * @param string $action Name of action
 	 * @return string
 	 */
 	protected function get_action_func_name($action) {

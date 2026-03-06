@@ -41,7 +41,7 @@ interface IDBDriver {
 	 * @param string $host Host
 	 * @param mixed $params Driver dependend
 	 */
-	public function initialize($dbname, $user = '', $password = '', $host = 'localhost', $params = false);
+	public function initialize($dbname, $user = '', $password = '', $host = 'localhost', $params = array());
 
 	/**
 	 * Escape given value
@@ -129,7 +129,7 @@ interface IDBDriver {
 	/**
 	 * Returns true, if a given feature is supported
 	 *
-	 * @param string feature
+	 * @param string $feature
 	 * @return bool
 	 */
 	public function has_feature($feature);

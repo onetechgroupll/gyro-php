@@ -14,9 +14,10 @@ class WidgetTweets implements IWidget {
 		$this->user = $user;
 	}
 	
-	public function render($policy = self::NONE) {
+	public function render($policy = 0) {
 		Load::models('tweets');
 		$tweets = Tweets::get_latest_for_user($this->user, 10);
+		$page_data = false;
 		$view = ViewFactory::create_view(IViewFactory::MESSAGE, 'widgets/tweets', $page_data);
 		$view->assign('tweets', $tweets);
 		return $view->render(); 

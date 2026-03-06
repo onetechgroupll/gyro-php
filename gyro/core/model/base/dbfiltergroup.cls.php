@@ -21,7 +21,10 @@ class DBFilterGroup implements IDBQueryModifier {
 	/**
 	 * Constructor
 	 * 
-	 * @param array Associative array of DBFilter instances
+	 * @param string $key
+	 * @param string $name
+	 * @param array $filters Associative array of DBFilter instances
+	 * @param string $default
 	 */
 	public function __construct($key = '', $name = '', $filters = array(), $default = '') {
 		$this->name = $name;
@@ -50,8 +53,8 @@ class DBFilterGroup implements IDBQueryModifier {
 	/**
 	 * Add a new filter
 	 * 
-	 * @param string The key for this filter
-	 * @param DBFilter DBFilter instance 
+	 * @param string $key The key for this filter
+	 * @param DBFilter $filter DBFilter instance
 	 */
 	public function add_filter($key, $filter) {
 		$filter->set_key($key);

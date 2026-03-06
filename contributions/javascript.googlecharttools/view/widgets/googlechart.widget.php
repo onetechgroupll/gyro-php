@@ -2,6 +2,8 @@
 /**
  * Renders a chart using Google Chart Tools
  */
+if (!defined('CONVERTER_JSON')) define('CONVERTER_JSON', 'json');
+
 class WidgetGoogleChart implements IWidget {
 	const COLUMN_CHART = 1000;
 	const PIE_CHART = 1001;
@@ -32,7 +34,7 @@ class WidgetGoogleChart implements IWidget {
 	 * @param int $policy Defines how to render, meaning depends on implementation
 	 * @return string The rendered content
 	 */
-	public function render($policy = self::NONE) {
+	public function render($policy = 0) {
 		GoogleChartTools::enable(GoogleChartTools::CORE_CHART);
 
 		$elem_id = GyroString::plain_ascii($this->title, '_');

@@ -89,7 +89,7 @@ class RouterBase implements IEventSink {
 	/**
 	 * Prepares all controllers
 	 *
-	 * @param string Data of current page
+	 * @param PageData $page_data Data of current page
 	 */
 	public function preprocess($page_data) {
 		foreach ($this->controllers as $controller) {

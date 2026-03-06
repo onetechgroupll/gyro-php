@@ -98,6 +98,6 @@ class DBSession implements ISessionHandler {
 			} catch (Exception $ex) {
 			}
 		}
-		return true;
+		return 0;
 	}
 }

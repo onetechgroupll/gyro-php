@@ -103,7 +103,7 @@ class JQueryUI {
 	/**
 	 * Returns paths for selected components
 	 * 
-	 * @param array $component
+	 * @param array $components
 	 * @return array
 	 */
 	public static function get_js_paths($components) {
@@ -201,7 +201,7 @@ class JQueryUI {
 	/**
 	 * Returns css paths for selected components
 	 * 
-	 * @param array $component
+	 * @param array $components
 	 * @return array
 	 */
 	public static function get_css_paths($components) {

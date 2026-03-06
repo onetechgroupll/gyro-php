@@ -48,7 +48,7 @@ class HtmlText {
 	 * Set a conversion
 	 * 
 	 * @param string $type Type, mostly one of STORAGE, OUTPUT or BASIC_SAFETY. You may add new ones, though
-	 * @param array Array of IConverter instances or converter names that can be resolved using ConverterFactory::create_chain()
+	 * @param array $conversions Array of IConverter instances or converter names that can be resolved using ConverterFactory::create_chain()
 	 * @param array|string $model Model name
 	 */
 	public static function set_conversion($type, $conversions, $model = self::CONVERSION_DEFAULT) {
@@ -83,7 +83,7 @@ class HtmlText {
 	 * Add a conversion
 	 * 
 	 * @param string $type Type, mostly one of STORAGE, OUTPUT or BASIC_SAFETY. You may add new ones, though
-	 * @param IConverter|array ICOnverter or array of IConverter instances or converter names that can be resolved using ConverterFactory::create_chain()
+	 * @param IConverter|array $conversions IConverter or array of IConverter instances or converter names that can be resolved using ConverterFactory::create_chain()
 	 * @param array|string $model Model name
 	 * @params bool $to_front If true, placehodler is prepended to list, else it is appended
 	 */

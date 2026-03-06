@@ -33,8 +33,8 @@ class DBTableDriverSwitch implements IDBTable {
 	/**
 	 * Switch given table to connection
 	 * 
-	 * @param string Table or model name
-	 * @param IDBDriver|string Driver or driver name
+	 * @param string $table_name Table or model name
+	 * @param IDBDriver|string $driver Driver or driver name
 	 */
 	public static function switch_table($table_name, $driver) {
 		DB::create($table_name);

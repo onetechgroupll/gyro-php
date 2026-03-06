@@ -25,7 +25,7 @@ class WidgetBlock implements IWidget {
 	 * @param string $name
 	 * @param PageData $page_data
 	 * @param string $route_id
-	 * @return void
+	 * @return array
 	 */
 	public static function retrieve($name, $page_data, $route_id = '', $position = false, $weight = false, $more_params = array()) {
 		$params = array(
@@ -69,6 +69,10 @@ class WidgetBlock implements IWidget {
 		$this->page_data = $page_data;
 	}
 	
+	/**
+	 * @param int|false $policy
+	 * @return string
+	 */
 	public function render($policy = self::NONE) {
 		$this->page_data->sort_blocks();
 		$arr_blocks = $this->page_data->get_blocks($this->position);

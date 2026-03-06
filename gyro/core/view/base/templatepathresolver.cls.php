@@ -29,6 +29,7 @@ class TemplatePathResolver {
 	 */
 	public static function resolve($resource, $required_file_extension = 'tpl.php') {
 		$resource = Arr::force($resource, false);
+		$ret = false;
 		foreach($resource as $res) {
 			$key = $res;
 			if (!isset(self::$resolved_paths[$key])) {

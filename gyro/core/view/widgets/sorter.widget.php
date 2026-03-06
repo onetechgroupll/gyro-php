@@ -11,16 +11,16 @@ class WidgetSorter implements IWidget {
 	
 	public $data;
 	
-	public static function output($data, $policy = self::NONE) {
+	public static function output($data, $policy = 0) {
 		$w = new WidgetSorter($data);
 		return $w->render($policy);
 	}
-	
+
 	public function __construct($data) {
 		$this->data = $data;
 	}
-	
-	public function render($policy = self::NONE) {
+
+	public function render($policy = 0) {
 		if (Arr::get_item($this->data, 'columns_total', 0) < 2) {
 			return '';
 		}

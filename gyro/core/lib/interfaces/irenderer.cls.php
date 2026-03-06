@@ -6,8 +6,8 @@
  * @ingroup Interfaces
  */
 interface IRenderer {
-	const NONE = false;
-	
+	const NONE = 0;
+
 	/**
 	 * Renders what should be rendered
 	 *

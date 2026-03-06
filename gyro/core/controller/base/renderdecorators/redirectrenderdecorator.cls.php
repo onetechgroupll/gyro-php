@@ -30,7 +30,7 @@ class RedirectRenderDecorator extends RenderDecoratorBase {
 	/**
 	 * Constructor
 	 *
-	 * @param ICacheManager $cache_manager Desired Cache Manager
+	 * @param string $target_path Target path for redirect
 	 * @return void
 	 */
 	public function __construct($target_path, $keep_query = false) {

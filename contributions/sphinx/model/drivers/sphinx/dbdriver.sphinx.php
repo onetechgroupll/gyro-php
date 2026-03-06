@@ -106,7 +106,7 @@ class DBDriverSphinx implements IDBDriver {
 	 * @param string $password Ignored
 	 * @param string $host Host
 	 */
-	public function initialize($dbname, $user = '', $password = '', $host = 'localhost', $params = false) {
+	public function initialize($dbname, $user = '', $password = '', $host = 'localhost', $params = array()) {
 		$host_and_port = explode(':', $host);
 		if (count($host_and_port) < 2) {
 			$host_and_port[] = 9312; // Sphinx default port

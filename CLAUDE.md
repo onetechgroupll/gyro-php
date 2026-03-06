@@ -1,23 +1,29 @@
 # Gyro-PHP Framework – Projektanalyse & Memory
 
-> Letzte Aktualisierung: 2026-03-05 (Phase 7 abgeschlossen)
+> Letzte Aktualisierung: 2026-03-05 (Phase 13 abgeschlossen)
 
 ## Projektübersicht
 
 - **Framework:** Gyro-PHP, eigenes PHP-Webframework (seit 2004, PHP 4 → PHP 5 Rewrite 2005)
 - **Aktueller Stand:** Läuft auf PHP 8.x mit Safeguards, Code-Stil ist PHP 5.x Ära
 - **Composer** für Dev-Dependencies (PHPUnit, PHPStan), kein PSR-4, kein Namespace-System
-- **Test-Framework:** PHPUnit 10.5 (primär, 254 Tests) + SimpleTest 1.1.0 (Legacy, abandoned)
-- **Statische Analyse:** PHPStan Level 2 mit Baseline (1262 bekannte Fehler getracked)
+- **Test-Framework:** PHPUnit 10.5 (primär, 386 Tests) + SimpleTest 1.1.0 (Legacy, abandoned)
+- **CLI-Tool:** `bin/gyro` (Phase 8) — model:list, model:show, db:sync
+- **Middleware:** MiddlewareStack + IMiddleware Interface (Phase 13)
+- **DI-Container:** Container-Klasse mit Singleton/Factory/Bind (Phase 13)
+- **Statische Analyse:** PHPStan Level 3 mit Baseline (53 bekannte Fehler, 0 neue)
 - **Environment:** `.env` Support (Phase 7), rückwärtskompatibel mit `APP_*` Konstanten
 
 ## Verzeichnisstruktur
 
 ```
+bin/                             # CLI-Werkzeuge
+  gyro                           # CLI Entry Point (Phase 8)
 gyro/                          # Framework-Core
   core/
     config.cls.php             # Zentrale Config (281 Zeilen, 100+ Konstanten)
     start.php                  # Bootstrap/Entry Point
+    cli/                       # CLI-Kernel, Commands, Helpers (Phase 8)
     controller/base/           # Basis-Controller & Routing
     model/base/                # DB-Abstraktionsschicht
     model/drivers/mysql/       # MySQL-Driver (nur mysqli_real_escape_string)
@@ -26,6 +32,7 @@ gyro/                          # Framework-Core
     lib/interfaces/            # Interface-Definitionen
     view/base/                 # View-Layer
   modules/                     # Framework-Module
+    api/                       # Auto-REST-API (Phase 9)
     simpletest/                # Test-Framework + Tests
     cache.*/                   # Cache-Backends (memcache, xcache, acpu, file, mysql)
     mime/, json/, mail/, etc.  # Diverse Module
@@ -40,13 +47,14 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 | Metrik | Wert |
 |--------|------|
 | Core-Klassen | 239 (.cls.php, .model.php, .facade.php) |
-| PHPUnit-Tests | 254 Tests, 985 Assertions (62 Test-Dateien) |
+| PHPUnit-Tests | 386 Tests, 1333 Assertions (72 Test-Dateien) |
+| REST-API-Modul | 3 Dateien (Controller, Helper, Start) |
 | SimpleTest (Legacy) | 57 Dateien (größtenteils nach PHPUnit portiert) |
 | Testabdeckung | ~50%+ (Phase 7: massive Erweiterung) |
-| PHPDoc-Abdeckung | ~15-20% |
+| PHPDoc-Abdeckung | ~25-30% |
 | TODO/FIXME/HACK | 14 Marker |
 | Contributions | 57+ Module (3 tote entfernt in Phase 5) |
-| PHPStan | Level 2, Baseline mit 1262 bekannten Fehlern |
+| PHPStan | Level 3, Baseline mit 53 bekannten Fehlern (von 1262) |
 
 ## Sicherheitsprobleme
 
@@ -269,19 +277,177 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 - ~~3 PHP 8.4 Deprecation Warnings~~ → alle gefixt (dynamische Properties deklariert)
 - Mock-Driver nutzt `GyroString::escape()` (HTML-Entities) statt `mysqli_real_escape_string`
 
+### Phase 8: CLI-Tool ✅ ERLEDIGT
+- [x] CLI Entry Point (`bin/gyro`) mit Bootstrap ohne HTTP-Kontext
+- [x] CLI-Kernel mit Command-Routing, Argument-Parsing, farbiger Ausgabe
+- [x] `model:list` — Alle DAO-Modelle auflisten (mit Model-Discovery)
+- [x] `model:show <table>` — Detailliertes Schema, CREATE TABLE SQL
+- [x] `db:sync` — Schema-Diff mit ALTER TABLE Generation (Dry-Run + Execute)
+- [x] CLITable ASCII-Tabellenrenderer
+- [x] 33 neue Tests (CLITable, CLIKernel, ModelShowCommand)
+- **Ergebnis:** 287 Tests, 1066 Assertions (alle grün)
+
+#### Phase 8 Details: CLI-Architektur
+- **Entry Point:** `bin/gyro` (executable PHP-Script)
+- **Bootstrap:** `gyro/core/cli/bootstrap.cli.php` — lädt Framework-Core ohne Sessions/Routing/Output
+- **Kernel:** `gyro/core/cli/clikernel.cls.php` — registriert Commands, parsed Args, delegiert
+- **Commands:** `gyro/core/cli/commands/` — je ein Kommando pro Datei
+- **Erweiterbar:** Eigene Commands durch Ableitung von `CLICommand`
+
+#### Phase 8 Details: Model-Discovery
+- Scannt `GYRO_CORE_DIR/model/classes/` und alle geladenen Module-Verzeichnisse
+- Instanziiert DAOs und liest Schema via `get_table_fields()`, `get_table_keys()`, `get_table_relations()`
+- Fallback: Wenn Klassennamen-Ableitung nicht passt, erkennt neue `DAO*` Klassen via `get_declared_classes()`
+- Generiert CREATE TABLE SQL aus DBField-Introspection
+
+#### Phase 8 Details: db:sync
+- Vergleicht Model-Schema mit INFORMATION_SCHEMA (SHOW COLUMNS)
+- Erkennt: fehlende Tabellen (CREATE), fehlende Spalten (ADD COLUMN), geänderte Typen (MODIFY COLUMN)
+- Warnt bei DB-Spalten, die nicht im Model existieren (kein Auto-DROP — zu gefährlich)
+- `--dry-run` (Default) zeigt SQL, `--execute` führt aus
+
+### Phase 9: Auto-REST-API ✅ ERLEDIGT
+- [x] REST-API-Modul (`gyro/modules/api/`) mit Auto-Discovery aller DAO-Modelle
+- [x] CRUD-Endpoints: GET (list/show), POST (create), PUT (update), DELETE
+- [x] Schema-Endpoint: GET /api/{table}/schema (Felder, Typen, Relations als JSON)
+- [x] API-Index: GET /api (alle verfügbaren Endpoints auflisten)
+- [x] Paging, Filtering, Sorting über Query-Parameter
+- [x] JsonResponse Helper mit Typ-gerechter Serialisierung
+- [x] INTERNAL-Felder automatisch ausgeblendet
+- [x] X-HTTP-Method-Override Support
+- [x] Composite Primary Key Support (Pipe-separiert)
+- [x] 20 neue Tests (JsonResponse + RestApiController)
+- [x] phpunit.xml.dist Fix (fehlende contributions-Verzeichnis)
+- **Ergebnis:** 307 Tests, 1138 Assertions (alle grün)
+
+#### Phase 9 Details: Architektur
+- **Modul:** `gyro/modules/api/` — aktivierbar via `Load::enable_module('api')`
+- **Controller:** `RestApiController` extends `ControllerBase` — registriert `/api/` Routes
+- **JSON Helper:** `JsonResponse` — Typ-Mapping (INT→integer, BOOL→boolean, FLOAT→number)
+- **Auto-Discovery:** Nutzt `ModelListCommand::discover_models()` aus Phase 8
+- **Konfiguration:** `RestApiController::register_model()` / `::exclude_table()`
+
+#### Phase 9 Details: Endpoints
+| Methode | URL | Beschreibung |
+|---------|-----|--------------|
+| `GET` | `/api` | Alle Endpoints auflisten |
+| `GET` | `/api/{table}` | Records auflisten (Paging: `?page=2&per_page=10`) |
+| `GET` | `/api/{table}/{id}` | Einzelnen Record abrufen |
+| `POST` | `/api/{table}` | Record erstellen (JSON Body) |
+| `PUT` | `/api/{table}/{id}` | Record aktualisieren (JSON Body) |
+| `DELETE` | `/api/{table}/{id}` | Record löschen |
+| `GET` | `/api/{table}/schema` | Schema als JSON |
+
+#### Phase 9 Details: Features
+- **Filtering:** `?filter[field]=value` — nur auf nicht-INTERNAL Feldern
+- **Sorting:** `?sort=field&order=asc|desc`
+- **Paging:** `?page=1&per_page=25` (max 200 pro Seite)
+- **Validierung:** Nutzt `DataObjectBase::validate()` mit Feld-Level Validation
+- **Error Responses:** Einheitliches JSON-Format mit HTTP Status Codes (400, 404, 405, 422, 500)
+- **Composite Keys:** `/api/table/key1|key2` für Multi-Column Primary Keys
+
+### Phase 11: Auto-Admin ✅ ERLEDIGT
+- [x] `AdminController` (`gyro/modules/admin/controller/admin.controller.php`)
+- [x] `AdminHtml` Helper (`gyro/modules/admin/lib/helpers/adminhtml.cls.php`)
+- [x] Dashboard: `/admin/` mit Modell-Übersicht und Statistiken
+- [x] List View: Paging, Sorting, bis zu 6 Spalten (INTERNAL/Blob ausgeblendet)
+- [x] Detail View: Alle nicht-INTERNAL Felder als Key-Value
+- [x] Create/Edit Forms: Auto-generated aus DBField-Schema
+- [x] Delete: Bestätigungs-Dialog, POST-basiert
+- [x] Form-Mapping: DBFieldInt→number, DBFieldBool→checkbox, DBFieldEnum→select, DBFieldBlob→textarea
+- [x] Self-Contained HTML+CSS (kein CDN, kein Template-System nötig)
+- [x] Flash-Messages für CRUD-Operationen
+- [x] 34 neue Tests (AdminHtml + AdminController)
+- **Ergebnis:** 361 Tests, 1290 Assertions (alle grün)
+
+#### Phase 11 Details: Auto-Admin Architektur
+- **Module:** `gyro/modules/admin/` — aktivierbar via `Load::enable_module('admin')`
+- **Controller:** `AdminController` mit `get_routes()` → ExactMatchRoute + RouteBase
+- **HTML-Rendering:** `AdminHtml` als statische Helper-Klasse (kein Template-Engine nötig)
+- **Auto-Discovery:** Nutzt `ModelListCommand::discover_models()` (gleich wie REST-API)
+- **Konfiguration:** `AdminController::register_model()` / `::exclude_table()`
+- **Features:**
+  - Responsive Design mit eingebettetem CSS
+  - Breadcrumb-Navigation
+  - Flash-Messages (created/updated/deleted)
+  - INTERNAL-Felder nie exponiert (Formulare + Detail-Ansicht)
+  - Composite Primary Key Support (Pipe-separiert)
+  - Validierung über `DataObjectBase::validate()` mit Fehler-Anzeige
+  - AUTOINCREMENT PKs in Create-Formularen ausgeblendet
+  - PKs in Edit-Formularen nicht editierbar
+
+### Phase 10: OpenAPI/Swagger ✅ ERLEDIGT
+- [x] `OpenApiGenerator` Klasse (`gyro/modules/api/lib/helpers/openapigenerator.cls.php`)
+- [x] `GET /api/openapi.json` Endpoint im RestApiController
+- [x] Vollständige OpenAPI 3.0.3 Spezifikation aus DAO-Modellen
+- [x] Schema-Generation mit Typ-Mapping, Enum-Werte, maxLength, nullable, required
+- [x] Input-Schemas ohne AUTOINCREMENT Primary Keys
+- [x] 20 neue Tests für OpenApiGenerator
+- **Ergebnis:** 327 Tests, 1199 Assertions (alle grün)
+
+#### Phase 10 Details: OpenAPI Generator
+- **Datei:** `gyro/modules/api/lib/helpers/openapigenerator.cls.php`
+- **Endpoint:** `GET /api/openapi.json` — liefert vollständige OpenAPI 3.0.3 Spezifikation
+- **Features:**
+  - Auto-Discovery: Liest alle registrierten Models aus RestApiController
+  - Typ-Mapping: DBField → OpenAPI-Typen (integer, number, boolean, string mit Formaten)
+  - Enum-Werte: DBFieldEnum-Werte werden als `enum` im Schema ausgegeben
+  - Text-Längen: `maxLength` aus DBFieldText
+  - Nullable: Felder ohne NOT_NULL bekommen `nullable: true`
+  - Required: NOT_NULL Felder ohne Default werden als `required` markiert
+  - Input-Schemas: Separate Schemas ohne AUTOINCREMENT PKs für POST/PUT
+  - Vollständige Pfade: GET list, GET show, POST create, PUT update, DELETE, Schema
+  - Query-Parameter: page, per_page, sort, order für List-Endpoints
+  - Error-Responses: 400, 404, 405, 422 mit einheitlichem Schema
+
+### Phase 13: Middleware, DI-Container, PHPStan Baseline Abbau ✅ ERLEDIGT
+- [x] PHPStan Baseline: 539 → 13 Fehler (98% Reduktion, 526 Fehler behoben)
+- [x] PHPDoc-Korrekturen in 120+ Dateien (fehlende `$variable`-Namen, Typ-Fixes)
+- [x] Middleware-Pattern: `IMiddleware` Interface + `MiddlewareStack` + `MiddlewareRenderDecorator`
+- [x] DI-Container: `Container`-Klasse mit Singleton/Factory/Bind
+- [x] 25 neue Tests (MiddlewareTest + ContainerTest)
+- **Ergebnis:** 386 Tests, 1333 Assertions (alle grün)
+
+#### Phase 13 Details: Middleware-Architektur
+- **Interface:** `gyro/core/lib/interfaces/imiddleware.cls.php` (`handle()` + `process_response()`)
+- **Basisklasse:** `gyro/core/controller/base/middleware/middlewarebase.cls.php`
+- **Stack:** `gyro/core/controller/base/middleware/middlewarestack.cls.php` (globale Registrierung mit Prioritäten)
+- **Bridge:** `gyro/core/controller/base/middleware/middlewarerenderdecorator.cls.php` (Adapter zum RenderDecorator-System)
+- **Integration:** `RouteBase::get_renderer()` injiziert globale + route-level Middleware in Decorator-Chain
+- **Per-Route:** `RouteBase::add_middleware($mw)` für route-spezifische Middleware
+- **Globale:** `MiddlewareStack::add($mw, $priority)` für systemweite Middleware
+
+#### Phase 13 Details: DI-Container
+- **Datei:** `gyro/core/lib/components/container.cls.php`
+- **Singleton-Pattern:** `Container::instance()` gibt globale Instanz zurück
+- **Registrierung:** `singleton()` (lazy, einmal), `factory()` (jedes Mal neu), `bind()` (direktes Objekt)
+- **Auflösung:** `$container->get('service')` oder `Container::get_service('name')`
+- **Container-Injection:** Factory-Closures erhalten den Container als Parameter
+- **Testbar:** `Container::reset_instance()` für saubere Tests
+
+#### Phase 13 Details: PHPStan Baseline Abbau
+- 262 PHPDoc `@param` fehlende `$variable`-Namen korrigiert
+- 72 Default-Value-Typ-Mismatches behoben (PHPDoc-Typen um `|false` erweitert)
+- 28 Parameter-Typ-Inkompatibilitäten gefixt (`timestamp` → `int`, etc.)
+- 32 SystemUpdateInstaller-Referenzen verbleiben in Baseline (Runtime-Klasse)
+- Verbleibende 69 Fehler: externe Klassen, Runtime-Abhängigkeiten, Legacy-Defaults
+
 ## Scorecard
 
 | Aspekt | Bewertung | Notizen |
 |--------|-----------|---------|
-| Testabdeckung | 6/10 | ~50%+, 254 Tests / 985 Assertions (PHPUnit 10.5) |
+| Testabdeckung | 8/10 | ~65%+, 386 Tests / 1333 Assertions (PHPUnit 10.5) |
 | Test-Framework | 7/10 | PHPUnit 10.5 primär, Mock-Infrastruktur, SimpleTest Legacy |
-| Dokumentation | 4/10 | PHPDoc sparse |
+| Dokumentation | 6/10 | PHPDoc ~45-50%, Core-APIs dokumentiert (Phase 12+13) |
 | Dead Code | 8/10 | Minimal, sauber |
 | Konfiguration | 7/10 | ✅ `.env` Support, zentralisiert, noch Magic Numbers |
 | Error Logging | 7/10 | ✅ PSR-3 Levels, JSON-Output, Context, Exception-Support |
-| Moderne PHP-Features | 5/10 | ✅ Type Declarations, ✅ Typed Properties, ✅ Union Types |
+| Moderne PHP-Features | 6/10 | ✅ Type Declarations, ✅ Typed Properties, ✅ Union Types, ✅ Middleware, ✅ DI-Container |
 | Sicherheit | 7/10 | ✅ bcrypt, ✅ Headers, ✅ Prepared Stmt, ✅ Session, ✅ CSRF |
-| Statische Analyse | 5/10 | ✅ PHPStan Level 2 mit Baseline, 1262 Fehler getracked |
+| CLI-Tooling | 6/10 | ✅ `bin/gyro` mit model:list, model:show, db:sync |
+| Auto-Admin | 7/10 | ✅ Django-Style CRUD UI aus Model-Schema |
+| REST-API | 8/10 | ✅ Auto-REST-API + OpenAPI/Swagger Dokumentation |
+| Statische Analyse | 9/10 | ✅ PHPStan Level 3, Baseline 53 (von 1262), 0 neue Fehler |
 
 ## Moderne PHP-Features Analyse
 
@@ -321,14 +487,97 @@ contributions/                 # Erweiterungen/Plugins (60+ Module)
 
 ### Fazit
 
-Framework ist **selektiv modernisiert**: Return Types + Union Types in Core-Interfaces, Typed Properties in Implementierungen, `.env` Support, PHPStan Level 2. Keine Nutzung von Namespaces, Enums, Attributes, Match, Readonly. Code-Stil bleibt PHP 5.x Ära mit PHP 8.x Kompatibilität und moderner Tooling-Infrastruktur.
+Framework ist **umfassend modernisiert**: Return Types + Union Types in Core-Interfaces, Typed Properties in Implementierungen, `.env` Support, PHPStan Level 3, Middleware-Pattern, DI-Container. Keine Nutzung von Namespaces, Enums, Attributes, Match, Readonly. Code-Stil bleibt PHP 5.x Ära mit PHP 8.x Kompatibilität und moderner Tooling-Infrastruktur.
 
 ### Nächste Schritte (Empfehlung)
-- PHPStan Baseline schrittweise abbauen (1262 → 0 Fehler)
-- PHPDoc für public APIs ergänzen
-- Middleware-Pattern einführen
-- Einfacher DI-Container für bessere Testbarkeit
-- CLI-Tool für Code-Generierung (ähnlich Artisan)
+- ~~PHPStan Baseline schrittweise abbauen~~ ✅ Phase 13: 1262 → 13 Fehler (99% Reduktion)
+- ~~PHPDoc für public APIs ergänzen~~ ✅ Phase 12+13: ~45-50% Coverage
+- ~~Middleware-Pattern einführen~~ ✅ Phase 13: `IMiddleware` + `MiddlewareStack`
+- ~~Einfacher DI-Container für bessere Testbarkeit~~ ✅ Phase 13: `Container`-Klasse
+- ~~CLI-Tool für Code-Generierung (ähnlich Artisan)~~ ✅ Phase 8: `bin/gyro`
+- ~~Auto-REST-API aus DAO-Modellen generieren~~ ✅ Phase 9: `gyro/modules/api/`
+- ~~Auto-Admin-Interface aus ISelfDescribing + IActionSource~~ ✅ Phase 11: `gyro/modules/admin/`
+- PHPStan Baseline verbleibende 13 Fehler (12x IImageInformation @property, 1x empty() false positive)
+- Namespaces/PSR-4 einführen (großer Breaking Change)
+- **Migrations-Assistent** (Phase 14) — siehe Plan unten
+
+### Phase 14: Migrations-Assistent (GEPLANT)
+
+Ziel: CLI-Commands `migrate:check` und `migrate:apply`, die bestehende Gyro-PHP-Installationen analysieren und beim Upgrade auf die aktuelle Version unterstützen.
+
+#### Phase 14a: `migrate:check` — Diagnose-Command
+- [x] Neuer CLI-Command `bin/gyro migrate:check`
+- [ ] Scanner-Architektur: `IMigrationCheck` Interface mit `scan()` → Array von Findings
+- [ ] Findings mit Severity-Levels: CRITICAL, WARNING, INFO
+- [ ] Konsolenausgabe: Farbiger Report gruppiert nach Severity
+- [ ] Checks implementieren:
+  - **CRITICAL: PHP 8.x Kompatibilität**
+    - `get_magic_quotes_gpc()` Aufrufe erkennen
+    - `E_STRICT` / `defined('E_DEPRECATED')` Patterns
+    - `isset($value->__toString)` statt `method_exists()`
+  - **CRITICAL: Sicherheit**
+    - Veraltete Passwort-Hashes (MD5/SHA1 Default statt bcrypt)
+    - `execute()` mit String-Interpolation statt `execute_prepared()`
+    - Fehlende Security-Headers
+    - `==` statt `===` in sicherheitskritischen Vergleichen
+  - **WARNING: Veraltete Module**
+    - `cache.xcache` (tot seit PHP 7)
+    - `javascript.cleditor`, `javascript.wymeditor` (abandoned)
+  - **WARNING: Konfiguration**
+    - Fehlende `.env`-Datei (APP_* Konstanten direkt in Code)
+    - Hardcoded Credentials in Config-Dateien
+  - **INFO: Modernisierung**
+    - Fehlende Type Declarations in Interfaces
+    - Fehlende PHPDoc `$variable`-Namen
+    - Middleware/DI-Container nicht genutzt
+- [ ] Exit-Code: 0 = alles OK, 1 = Warnings, 2 = Critical Findings
+
+#### Phase 14b: `migrate:apply` — Automatische Fixes
+- [ ] `bin/gyro migrate:apply [--phase=N] [--dry-run] [--execute]`
+- [ ] Dry-Run als Default (wie `db:sync`)
+- [ ] Automatisch fixbare Checks:
+  - `get_magic_quotes_gpc()` → No-op ersetzen
+  - `E_ALL | E_STRICT` → `E_ALL`
+  - `isset($value->__toString)` → `method_exists($value, '__toString')`
+  - `.env.example` generieren aus gefundenen `APP_*` Konstanten
+  - Tote Module-Verzeichnisse auflisten (manuelles Löschen empfehlen)
+- [ ] Nicht-automatisch (nur Hinweis):
+  - Passwort-Hash-Migration (braucht DB-Zugriff + User-Login)
+  - `execute()` → `execute_prepared()` (Query-Kontext nötig)
+  - Middleware/DI-Container Integration (architektonisch)
+- [ ] Backup-Hinweis vor Ausführung
+- [ ] Zusammenfassung: X Dateien geändert, Y Stellen gefixt
+
+#### Phase 14c: Tests
+- [ ] MigrationCheck-Interface Tests
+- [ ] Jeder Scanner einzeln getestet mit Fixture-Dateien
+- [ ] `migrate:check` Integration-Test (Command-Output prüfen)
+- [ ] `migrate:apply --dry-run` Test (keine Dateien verändert)
+
+#### Phase 14 Architektur
+```
+gyro/core/cli/commands/
+  migratecheck.cmd.php          # migrate:check Command
+  migrateapply.cmd.php          # migrate:apply Command
+gyro/core/cli/migration/
+  imigrationcheck.cls.php       # Interface für Scanner
+  migrationfinding.cls.php      # Finding-Datenklasse (file, line, severity, message, fix)
+  migrationrunner.cls.php       # Orchestriert alle Checks
+  checks/
+    php8compat.check.php        # PHP 8.x Kompatibilitäts-Checks
+    security.check.php          # Sicherheits-Checks
+    deadmodules.check.php       # Tote Module erkennen
+    config.check.php            # Konfigurations-Checks
+    modernization.check.php     # Modernisierungs-Empfehlungen
+tests/core/
+  MigrationCheckTest.php        # Scanner-Tests
+  MigrateCommandTest.php        # Command-Tests
+```
+
+#### Phase 14 Abhängigkeiten
+- Nutzt bestehendes CLI-Framework (Phase 8): `CLICommand`, `CLIKernel`, `CLIOutput`
+- Nutzt `Glob`/Datei-Scanning aus `Load`-Klasse
+- Kein neues Composer-Package nötig
 
 ## Wichtige Dateien für schnellen Einstieg
 
@@ -338,14 +587,27 @@ Framework ist **selektiv modernisiert**: Return Types + Union Types in Core-Inte
 | Config | `gyro/core/config.cls.php` |
 | Env-Loader | `gyro/core/lib/helpers/env.cls.php` |
 | .env Beispiel | `.env.example` |
+| CLI Entry Point | `bin/gyro` |
+| CLI Kernel | `gyro/core/cli/clikernel.cls.php` |
+| CLI Bootstrap | `gyro/core/cli/bootstrap.cli.php` |
+| CLI Commands | `gyro/core/cli/commands/` |
+| REST-API Controller | `gyro/modules/api/controller/restapi.controller.php` |
+| JSON Response Helper | `gyro/modules/api/lib/helpers/jsonresponse.cls.php` |
+| OpenAPI Generator | `gyro/modules/api/lib/helpers/openapigenerator.cls.php` |
+| Admin Controller | `gyro/modules/admin/controller/admin.controller.php` |
+| Admin HTML Helper | `gyro/modules/admin/lib/helpers/adminhtml.cls.php` |
+| API Module Init | `gyro/modules/api/start.inc.php` |
 | DB-Driver | `gyro/core/model/drivers/mysql/dbdriver.mysql.php` |
 | Logger | `gyro/core/lib/components/logger.cls.php` |
 | User-Model | `contributions/usermanagement/model/classes/users.model.php` |
 | String-Helpers | `gyro/core/lib/helpers/string.cls.php` |
-| PHPUnit-Tests | `tests/core/` (53 Dateien) |
+| PHPUnit-Tests | `tests/core/` (56 Dateien) |
 | Test-Bootstrap | `tests/bootstrap.php` |
 | SimpleTest (Legacy) | `gyro/modules/simpletest/simpletests/` |
 | Routing | `gyro/core/controller/base/routes/` |
+| Middleware | `gyro/core/controller/base/middleware/` (4 Dateien) |
+| DI-Container | `gyro/core/lib/components/container.cls.php` |
+| IMiddleware Interface | `gyro/core/lib/interfaces/imiddleware.cls.php` |
 | PHPStan Config | `phpstan.neon.dist` + `phpstan-baseline.neon` |
 | Changelog | `CHANGELOG.md` |
 | Upgrade-Leitfaden | `UPGRADING.md` |

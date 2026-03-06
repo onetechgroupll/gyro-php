@@ -13,7 +13,7 @@ class JCSSManagerCompressBaseCommand extends CommandDelegate {
 	public function __construct($in_files, $out_file) {
 		$this->in_files = $this->clean_in_files(Arr::force($in_files, false));
 		$this->out_file = $out_file;
-		parent::__construct(null, false);
+		parent::__construct(null);
 	}
 	
 	/**

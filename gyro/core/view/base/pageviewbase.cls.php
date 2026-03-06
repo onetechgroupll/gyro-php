@@ -32,7 +32,7 @@ class PageViewBase extends ViewBase {
 	 * @param $policy If set to IView::DISPLAY, content is printed, if false it is returned only
 	 * @return string The rendered content
 	 */
-	public function render($policy = self::NONE) {
+	public function render($policy = 0) {
 		if (Config::has_feature(Config::GZIP_SUPPORT)) {
 			if (!ini_get('zlib.output_compression')) {
 				$policy |= self::POLICY_GZIP;

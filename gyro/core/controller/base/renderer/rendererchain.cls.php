@@ -39,7 +39,7 @@ class RendererChain implements IRenderer {
 	/**
 	 * Renders what should be rendered
 	 *
-	 * @param int $policy 
+	 * @param int|false $policy
 	 * @return string The rendered content
 	 */
 	public function render($policy = self::NONE) {

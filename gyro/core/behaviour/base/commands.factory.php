@@ -20,7 +20,7 @@ class CommandsFactory {
 	/**
 	 * Return the strategy to change status of given object to $new_status 
 	 * 
-	 * @return ICommand Returns the command or FALSE, if no command was found
+	 * @return ICommand|false Returns the command or FALSE, if no command was found
 	 */
 	public static function create_command($obj, $cmd_name, $params) {
 		$inst_name = self::get_instance_name($obj);

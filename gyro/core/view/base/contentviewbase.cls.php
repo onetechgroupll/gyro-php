@@ -26,7 +26,7 @@ class ContentViewBase extends ViewBase {
 		$this->page_data = $page_data;
 	} 
 	
-	public function render($policy = self::NONE) {
+	public function render($policy = 0) {
 		$ret = parent::render($policy);
 		$this->page_data->content = $ret;
 		return $ret;

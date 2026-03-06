@@ -18,7 +18,6 @@ class DBExpression {
 	/**
 	 * Format this expression
 	 *
-	 * @param mixed $value
 	 * @return string
 	 */
 	public function format() {

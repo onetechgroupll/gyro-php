@@ -46,10 +46,10 @@ class GyroCookieConfig {
 class GyroCookie {
 	/**
 	 * Create Cookie
-	 * 
-	 * @param string Name of Cookie
-	 * @param string Cotent of Cookuie
-	 * @param int Number of seconds the cookie will be valid
+	 *
+	 * @param string $name Name of Cookie
+	 * @param string $content Content of Cookie
+	 * @param int $valid_seconds Number of seconds the cookie will be valid
 	 */
 	public static function create(
 		$name, $content, $valid_seconds = null, $path = '/',
@@ -67,8 +67,8 @@ class GyroCookie {
 	/**
 	 * Create Cookie
 	 *
-	 * @param string Name of Cookie
-	 * @param string Cotent of Cookuie
+	 * @param string $name Name of Cookie
+	 * @param string $content Content of Cookie
 	 * @param GyroCookieConfig $config
 	 */
 	public static function create_with_config(
@@ -90,8 +90,8 @@ class GyroCookie {
 
 	/**
 	 * Delete cookie
-	 * 
-	 * @param string Name of cookie to delete
+	 *
+	 * @param string $name Name of cookie to delete
 	 */
 	public static function delete($name) {
 		setcookie($name, '', 1, '/');
@@ -99,8 +99,8 @@ class GyroCookie {
 	
 	/**
 	 * Returns true if cookie exists, false otherwise
-	 * 
-	 * @param string Name of cookie
+	 *
+	 * @param string $name Name of cookie
 	 */
 	public static function exists($name) {
 		return isset($_COOKIE[$name]);

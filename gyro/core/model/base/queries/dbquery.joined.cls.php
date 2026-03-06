@@ -49,7 +49,7 @@ class DBQueryJoined extends DBQuerySelect {
 	/**
 	 * Relations (cache)
 	 *
-	 * @var array
+	 * @var array|false
 	 */
 	protected $relations = false;
 	

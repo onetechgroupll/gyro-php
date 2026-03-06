@@ -9,7 +9,7 @@ class WidgetListSimple implements IWidget {
 	protected $items;
 	protected $empty_message;
 	
-	public static function output($items, $empty_message = '', $policy = self::NONE) {
+	public static function output($items, $empty_message = '', $policy = 0) {
 		$widget = new WidgetListSimple($items, $empty_message);
 		return $widget->render($policy);			
 	} 
@@ -19,7 +19,7 @@ class WidgetListSimple implements IWidget {
 		$this->empty_message = $empty_message;	
 	} 
 	
-	public function render($policy = self::NONE) {
+	public function render($policy = 0) {
 		$ret = '';
 		$items = Arr::force($this->items, false);
 		$view = ViewFactory::create_view(IViewFactory::MESSAGE, 'widgets/list.simple');

@@ -58,8 +58,8 @@ class EventSource implements IEventSource {
 	 * Events can be anything, and they are invoked through the router
 	 * One event is "cron", it has no parameters
 	 * 
-	 * @param string Event name
-	 * @param mixed Event parameter(s)
+	 * @param string $event_name Event name
+	 * @param mixed $event_params Event parameter(s)
 	 * @return Status
 	 */
 	public function invoke_event($event_name, $event_params, &$event_result) {

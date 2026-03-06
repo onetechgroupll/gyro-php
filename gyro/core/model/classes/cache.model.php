@@ -20,8 +20,8 @@ class DAOCache extends DataObjectBase implements ICacheItem {
 	/**
 	 * Set cache keys
 	 * 
-	 * @param Array Array of keys that are set as key0, key1 etc
-	 * @param Boolean If TRUE a phrase keyX like 'valueX%' etc is added to where clause for each key
+	 * @param array $keys Array of keys that are set as key0, key1 etc
+	 * @param bool $force_where If TRUE a phrase keyX like 'valueX%' etc is added to where clause for each key
 	 */
 	public function set_keys($keys, $force_where = false) {
 		$c = count($keys);

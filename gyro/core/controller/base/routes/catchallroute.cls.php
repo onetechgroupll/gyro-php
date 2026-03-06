@@ -9,6 +9,11 @@ require_once dirname(__FILE__) . '/routebase.cls.php';
  */
 class CatchAllRoute extends RouteBase {
 	/**
+	 * @var array|null Further path segments
+	 */
+	protected $path_further = null;
+
+	/**
 	 * Weights first path against the second.
  	 * 
  	 * Always returns a high number. 

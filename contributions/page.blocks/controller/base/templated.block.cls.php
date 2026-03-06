@@ -19,12 +19,12 @@ class TemplatedBlock extends BlockBase {
 	
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param string $name The name of this block. Used as class, too
 	 * @param string $title The title of the block. Displayed as heading, e.g.
 	 * @param string $template The template to render
 	 * @param integer $index The block's index. A block with lowest index will be displayed first
-	 * @param enum $position Where the block is to be displayed. 
+	 * @param string $position Where the block is to be displayed.
 	 */
 	public function __construct($name, $title, $template, $index = 1000, $position = self::LEFT) {
 		parent::__construct($name, $title, '', $index, $position);
@@ -38,7 +38,7 @@ class TemplatedBlock extends BlockBase {
 	 * @return IView
 	 */
 	protected function create_view($template) {
-		$view = ViewFactory::create_view(IViewFactory::MESSAGE, $template, $page_data);
+		$view = ViewFactory::create_view(IViewFactory::MESSAGE, $template);
 		$view->assign('block', $this);
 		$this->configure_view($view);					
 		return $view;
@@ -70,7 +70,7 @@ class TemplatedBlock extends BlockBase {
 	/**
 	 * Renders what should be rendered
 	 *
-	 * @param int $policy Defines how to render, meaning depends on implementation
+	 * @param int|false $policy Defines how to render, meaning depends on implementation
 	 * @return string The rendered content
 	 */
 	public function render($policy = self::NONE) {

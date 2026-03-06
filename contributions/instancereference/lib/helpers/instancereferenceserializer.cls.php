@@ -21,7 +21,7 @@ class InstanceReferenceSerializier {
 	/**
 	 * Convert an an array (containing type and keys) to an instance
 	 *
-	 * @return IDataObject
+	 * @return IDataObject|false
 	 * @param array $arr_inst
 	 */
 	public static function array_to_instance($arr_inst) {

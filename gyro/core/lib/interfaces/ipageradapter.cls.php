@@ -9,7 +9,6 @@ interface IPagerAdapter {
 	/**
 	 * Return current page
 	 * 
-	 * @param PageData $page_data
 	 * @return int
 	 */
 	public function get_current_page();

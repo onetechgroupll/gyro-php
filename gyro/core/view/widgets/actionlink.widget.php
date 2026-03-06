@@ -30,7 +30,7 @@ class WidgetActionLink implements IWidget {
 		$this->params = $params;
 	}
 	
-	public function render($policy = self::NONE) {
+	public function render($policy = 0) {
 		$text = ($this->text instanceof ISelfDescribing) ? GyroString::escape($this->text->get_title()) : $this->text;
 		$path = ActionMapper::get_path($this->action, $this->params);
 		$query_params = Arr::get_item($this->attrs, 'gyro_query', null);

@@ -45,7 +45,9 @@ class BinariesBaseController extends ControllerBase {
 			return CONTROLLER_NOT_FOUND; 	
 		}
 		
+		/** @phpstan-ignore class.notFound */
 		$view = ViewFactory::create_view(ViewFactoryMime::MIME, 'binaries/view', $page_data);
+		/** @phpstan-ignore class.notFound */
 		$view->assign(MimeView::MIMETYPE, $binary->mimetype);
 		$view->assign('binary', $binary);
 		$view->render();

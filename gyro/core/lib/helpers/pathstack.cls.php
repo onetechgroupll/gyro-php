@@ -79,7 +79,7 @@ class PathStack {
 	/**
 	 * Points current element to first element not covered by $path_adjust
 	 * 
-	 * @return True, if success, false otherwise
+	 * @return bool True if success, false otherwise
 	 */
 	public function adjust($path) {
 		$adjust_stack = new PathStack($path);

@@ -33,7 +33,7 @@ class ConverterHtmlEx extends ConverterHtml {
 	 * 
 	 * The following parameters are supported:
 	 * 
-	 * @param array $params 
+	 * @param array|false $params
 	 *   Associative array supporting the following featurs:
 	 *   @li p: Text after paragraph. Default is "\n"
 	 *   @li br: Text after a <br> tag. Default is "\n"

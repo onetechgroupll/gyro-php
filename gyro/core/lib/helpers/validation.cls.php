@@ -63,8 +63,11 @@ class Validation {
 	
 	/**
 	 * Check if value is a string and validate its length
-	 * 
-	 * @param 
+	 *
+	 * @param mixed $value The value to check
+	 * @param int $min_length Minimum string length
+	 * @param int $max_length Maximum string length (-1 for no limit)
+	 * @return bool
 	 */
 	public static function is_string_of_length($value, $min_length = 0, $max_length = -1) {
 		if (is_null($value)) {
@@ -90,10 +93,11 @@ class Validation {
 	
 	/**
 	 * Check if value is a double within given range
-	 * 
-	 * @param mixed The value to check
-	 * @param mixed Min value or false to not check for min value 
-	 * @param mixed Max value or false to not check for max value 
+	 *
+	 * @param mixed $value The value to check
+	 * @param mixed $min Min value or false to not check for min value
+	 * @param mixed $max Max value or false to not check for max value
+	 * @return bool
 	 */
 	public static function is_double($value, $min = false, $max = false) {
 		$ret = is_numeric($value);
@@ -111,10 +115,10 @@ class Validation {
 
 	/**
 	 * Check if value is a int within given range
-	 * 
-	 * @param mixed The value to check
-	 * @param mixed Min value or false to not check for min value 
-	 * @param mixed Max value or false to not check for max value 
+	 *
+	 * @param mixed $value The value to check
+	 * @param mixed $min Min value or false to not check for min value
+	 * @param mixed $max Max value or false to not check for max value
 	 * @return bool
 	 */
 	public static function is_int($value, $min = false, $max = false) {

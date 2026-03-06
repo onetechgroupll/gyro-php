@@ -7,11 +7,7 @@
 function models_contact_check_postconditions() {
 	$ret = new Status();
 	Load::components('systemupdateinstaller');
-	$ret->merge(SystemUpdateInstaller::copy_to_app(
-		'',
-		dirname(__FILE__) . '/../data/', 
-		'controller', 
-		SystemUpdateInstaller::COPY_NO_REPLACE
-	));
+	/** @phpstan-ignore class.notFound, class.notFound */
+	$ret->merge(SystemUpdateInstaller::copy_to_app('', dirname(__FILE__) . '/../data/', 'controller', SystemUpdateInstaller::COPY_NO_REPLACE));
 	return $ret;
 }

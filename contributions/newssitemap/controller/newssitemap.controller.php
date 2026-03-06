@@ -29,7 +29,7 @@ class NewssitemapController extends ControllerBase {
  			return CONTROLLER_NOT_FOUND;
  		}
  		$data = array();
- 		$limt = 1000 / $c;
+ 		$limit = 1000 / $c;
  		if ($limit > 300) { $limit = 300; }
  		foreach($arrret as $news) {
  			$news->limit($limit);

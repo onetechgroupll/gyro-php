@@ -43,7 +43,7 @@ class DBFieldSet extends DBFieldEnum {
 				$ret = $ret | pow(2, $i);
 			}
 		}
-		return $ret;		
+		return (string)$ret;
 	}
 
 	/**

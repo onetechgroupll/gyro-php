@@ -99,8 +99,8 @@ class Common {
 	 * @since 0.5.1
 	 * 
 	 * @param string $name Name of header or complete header (if $value is false)
-	 * @param string $value Value of header
-	 * @param bool If FALSE, header will not be send, if header with same name was already sent
+	 * @param string|false $value Value of header
+	 * @param bool $override If FALSE, header will not be sent, if header with same name was already sent
 	 */
 	public static function header($name, $value = false, $override = true) {
 		GyroHeaders::set($name, $value, $override);

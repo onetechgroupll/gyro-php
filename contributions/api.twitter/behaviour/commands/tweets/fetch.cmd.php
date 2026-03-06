@@ -1,4 +1,6 @@
 <?php
+if (!defined('CONVERTER_JSON')) define('CONVERTER_JSON', 'json');
+
 /**
  * Fetch content from twitter
  * 
@@ -32,7 +34,7 @@ class FetchTweetsCommand extends CommandChain {
 	protected function fetch_tweets($twitter_user, Status $err) {
 		$data = array();
 		if (empty($twitter_user)) {
-			$ret->merge('Empty twitter user when fetching tweets');
+			$err->merge('Empty twitter user when fetching tweets');
 		}
 		else {
 			$url = 'http://twitter.com/statuses/user_timeline/' . GyroString::plain_ascii($twitter_user) . '.json';

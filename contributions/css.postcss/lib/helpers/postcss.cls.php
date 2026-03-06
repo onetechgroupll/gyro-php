@@ -108,6 +108,7 @@ class PostCSS {
 			},
 			array_keys(self::$extensions)
 		);
+		/** @phpstan-ignore constant.notFound */
 		$conf = ConverterFactory::encode(self::$extensions, CONVERTER_JSON);
 		print $conf;
 		$tmp_file = Common::create_temp_file($conf);

@@ -70,7 +70,7 @@ class ACPuSession implements ISessionHandler {
 	 */
 	public function gc(int $lifetime): int|false {
 		// ACPu does this for us
-		return true;
+		return 0;
 	}
 	
 	protected function create_key($key) {

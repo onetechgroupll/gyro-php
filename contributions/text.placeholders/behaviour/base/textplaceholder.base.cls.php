@@ -51,7 +51,7 @@ class TextPlaceholderBase implements ITextPlaceholder {
 	 * Appyl params
 	 * 
 	 * @param array $params
-	 * @return string Replacement or FALSE if $params are invalid
+	 * @return string|false Replacement or FALSE if $params are invalid
 	 */
 	protected function do_apply($params) {
 		return false;

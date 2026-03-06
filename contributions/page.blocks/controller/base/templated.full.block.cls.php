@@ -28,7 +28,7 @@ class TemplatedFullBlock extends TemplatedParameterizedBlock {
 	 * @param string $template The template to render
 	 * @param array $params Assoziative array that gets passed to the view
 	 * @param integer $index The block's index. A block with lowest index will be displayed first
-	 * @param enum $position Where the block is to be displayed. 
+	 * @param string $position Where the block is to be displayed.
 	 */
 	public function __construct($template, $params = array(), $index = 1000, $position = self::LEFT) {
 		parent::__construct(GyroString::plain_ascii($template, '-'), '', $template, $params, $index, $position);

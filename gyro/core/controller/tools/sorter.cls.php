@@ -31,8 +31,8 @@ class Sorter implements IDBQueryModifier {
 	 *   Associative array of DBSortColumns or instance of ISearchAdapter.
 	 *   In later case get_sortable_columns() and get_sort_default_column() are called on search 
 	 *   adapter. Value of $default_column_key is ignored.
-	 * @param string $default_column Key for default sort column
-	 * @param ISorterAdapter $adapter If integer is passed it is interpreted as policy for backward compatability
+	 * @param string|false $default_column_key Key for default sort column
+	 * @param ISorterAdapter|int|false $adapter If integer is passed it is interpreted as policy for backward compatability
 	 */
 	public function __construct(PageData $page_data, $columns, $default_column_key = false, $adapter = false) {
 		$this->adapter = ($adapter instanceof ISorterAdapter) ? $adapter : new SorterDefaultAdapter($page_data);
@@ -78,8 +78,8 @@ class Sorter implements IDBQueryModifier {
 
 	/**
 	 * Do what should be done
-	 * 
-	 * @param DataObjectBase The current query to  be modified
+	 *
+	 * @param DataObjectBase $query The current query to be modified
 	 */
 	public function apply($query) {
 		$column_obj = $this->sorter_data['current_column_object'];
@@ -103,7 +103,8 @@ class Sorter implements IDBQueryModifier {
 			$arr_colums[$column] = $this->create_column_array($data, $order, $column);
 		}
 
-		$current_column_obj = $this->sorter_data['current_column_object']; 
+		$current_column = array();
+		$current_column_obj = $this->sorter_data['current_column_object'];
 		if ($current_column_obj) {
 			$current_column = $this->create_column_array($current_column_obj, $order, $this->sorter_data['current_column_key']);
 		}
@@ -153,16 +154,17 @@ class Sorter implements IDBQueryModifier {
 	
 	/**
 	 * Prepare URL so filter gets applied
-	 * 
-	 * @param Url Instance of URL class. This instance is changed.
-	 * @param string Filter to append
-	 * 
+	 *
+	 * @param Url $url Instance of URL class. This instance is changed.
+	 * @param string $column Column to sort by
+	 * @param string $order Sort order to append
+	 *
 	 * @return void
-	 * 
+	 *
 	 * @deprecated Use function on Adapter instead
 	 */
 	public static function apply_to_url($url, $column, $order) {
-		return SorterDefaultAdapter::apply_to_url($url, $column, $order);
+		SorterDefaultAdapter::apply_to_url($url, $column, $order);
 	}	
 }
 
@@ -220,10 +222,13 @@ class SorterDefaultAdapter implements ISorterAdapter {
 
 	/**
 	 * Prepare URL so filter gets applied
-	 * 
-	 * @param Url Instance of URL class. This instance is changed.
-	 * @param string Filter to append
-	 * 
+	 *
+	 * @param Url $url Instance of URL class. This instance is changed.
+	 * @param string $column Column to sort by
+	 * @param string $order Sort order to append
+	 * @param string $param_column Query parameter name for column
+	 * @param string $param_order Query parameter name for order
+	 *
 	 * @return void
 	 */
 	public static function apply_to_url($url, $column, $order, $param_column = 'sc', $param_order = 'so') {

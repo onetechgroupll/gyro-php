@@ -228,6 +228,201 @@ Logger::set_min_level(Logger::WARNING); // Nur WARNING und höher loggen
 **Log-Dateien:** Pro Level eine separate JSON-Datei (z.B. `error-2026-03-05.log`).
 Der alte `Logger::log()` bleibt kompatibel und schreibt weiterhin im CSV-Format.
 
+### 4.4 Auto-REST-API
+
+Das neue API-Modul generiert automatisch REST-Endpoints für alle DAO-Modelle:
+
+```php
+// In Ihrer modules.php — Modul aktivieren
+Load::enable_module('api');
+```
+
+**Sofort verfügbare Endpoints (kein Code nötig!):**
+
+| Methode | URL | Beschreibung |
+|---------|-----|--------------|
+| `GET` | `/api` | Alle verfügbaren Endpoints |
+| `GET` | `/api/users` | Alle Users (mit Paging) |
+| `GET` | `/api/users/42` | User mit ID 42 |
+| `POST` | `/api/users` | Neuen User anlegen |
+| `PUT` | `/api/users/42` | User aktualisieren |
+| `DELETE` | `/api/users/42` | User löschen |
+| `GET` | `/api/users/schema` | Schema des Users-Modells |
+
+**Paging, Filtering, Sorting:**
+```bash
+# Seite 2, 10 pro Seite
+GET /api/users?page=2&per_page=10
+
+# Filtern nach Feld
+GET /api/users?filter[status]=active
+
+# Sortieren
+GET /api/users?sort=name&order=asc
+```
+
+**Konfiguration (optional):**
+```php
+// Tabellen von der API ausschließen
+RestApiController::exclude_table('sessions');
+RestApiController::exclude_table('cacheentries');
+
+// Oder explizit nur bestimmte Modelle registrieren
+RestApiController::register_model('users', 'DAOUsers');
+```
+
+**Sicherheit:**
+- INTERNAL-Felder werden automatisch ausgeblendet
+- Validierung über das bestehende `DataObjectBase::validate()`
+- X-HTTP-Method-Override für Clients ohne PUT/DELETE
+- Composite Primary Keys via Pipe-Trennung: `/api/table/key1|key2`
+
+**Kein Handlungsbedarf** — das Modul ist optional und muss explizit aktiviert werden.
+
+### 4.5 CLI-Tool (`bin/gyro`)
+
+Ein neues Kommandozeilen-Werkzeug ermöglicht die Verwaltung des Frameworks ohne Browser:
+
+```bash
+# Alle verfügbaren Kommandos anzeigen
+./bin/gyro help
+
+# Alle DAO-Modelle auflisten
+./bin/gyro model:list
+./bin/gyro model:list --verbose    # Mit Feldzahl, Relations, Quellmodul
+
+# Detailliertes Schema eines Modells anzeigen
+./bin/gyro model:show users        # Felder, Typen, Defaults, Relations, CREATE TABLE SQL
+
+# Datenbank mit Model-Schema vergleichen
+./bin/gyro db:sync                 # Zeigt ALTER TABLE SQL (Dry Run)
+./bin/gyro db:sync --execute       # Führt die Änderungen aus
+./bin/gyro db:sync --table=users   # Nur eine Tabelle prüfen
+```
+
+**Kein Handlungsbedarf** — das CLI-Tool ist ein reiner Neuzugang ohne Auswirkung auf
+bestehenden Code. Es nutzt die vorhandene Model-Introspection (`create_table_object()`)
+und generiert SQL aus den bestehenden DAO-Definitionen.
+
+**Eigene Kommandos schreiben:**
+```php
+class MyCommand extends CLICommand {
+    public function get_name(): string { return 'my:task'; }
+    public function get_description(): string { return 'Mein Kommando'; }
+    public function execute(array $args): int {
+        $this->success('Fertig!');
+        return 0;
+    }
+}
+```
+
+### 4.6 OpenAPI/Swagger Dokumentation
+
+Wenn das API-Modul aktiviert ist, steht automatisch eine vollständige API-Dokumentation bereit:
+
+```bash
+# OpenAPI 3.0 Spezifikation abrufen
+GET /api/openapi.json
+```
+
+**Nutzung mit Swagger UI:**
+```html
+<!-- In Ihrer HTML-Seite -->
+<script src="https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js"></script>
+<div id="swagger-ui"></div>
+<script>
+SwaggerUIBundle({ url: '/api/openapi.json', dom_id: '#swagger-ui' });
+</script>
+```
+
+Die Spezifikation wird dynamisch aus den registrierten DAO-Modellen generiert:
+- Alle CRUD-Endpoints mit Request/Response-Schemas
+- Feld-Typen, Enum-Werte, maxLength, nullable, required
+- Query-Parameter für Paging, Filtering, Sorting
+- Einheitliche Error-Response-Schemas
+
+**Kein Handlungsbedarf** — der Endpoint ist automatisch verfügbar wenn das API-Modul aktiv ist.
+
+### 4.7 Auto-Admin (Django-Admin-Style)
+
+Ein automatisch generiertes Admin-Interface für alle DAO-Modelle:
+
+```php
+// In Ihrer modules.php — Admin-Modul aktivieren
+Load::enable_module('admin');
+```
+
+**Sofort verfügbare Admin-Seiten:**
+
+| URL | Beschreibung |
+|-----|--------------|
+| `/admin/` | Dashboard mit Modell-Übersicht |
+| `/admin/users/` | Datensätze auflisten (mit Paging) |
+| `/admin/users/create` | Neuen Datensatz anlegen |
+| `/admin/users/42/` | Datensatz-Detail |
+| `/admin/users/42/edit` | Datensatz bearbeiten |
+| `/admin/users/42/delete` | Datensatz löschen (mit Bestätigung) |
+
+**Features:**
+- Formulare werden automatisch aus dem Model-Schema generiert
+- Enum-Felder → Select-Box, Bool → Checkbox, Blob → Textarea
+- INTERNAL-Felder werden nie angezeigt
+- Validierung über das bestehende `DataObjectBase::validate()`
+- Self-Contained HTML mit eingebettetem CSS (kein CDN nötig)
+
+**Konfiguration (optional):**
+```php
+// Sensitive Tabellen ausschließen
+AdminController::exclude_table('sessions');
+
+// Oder nur bestimmte Modelle freigeben
+AdminController::register_model('users', 'DAOUsers');
+```
+
+**Kein Handlungsbedarf** — das Modul ist optional und muss explizit aktiviert werden.
+
+### 4.7 Middleware-System (Phase 13)
+
+Das neue Middleware-System formalisiert das bestehende RenderDecorator-Pattern:
+
+```php
+// Eigene Middleware erstellen
+class CorsMiddleware extends MiddlewareBase {
+    public function handle($page_data, $next) {
+        GyroHeaders::set('Access-Control-Allow-Origin', '*');
+    }
+}
+
+// Global registrieren (z.B. in start.inc.php)
+MiddlewareStack::add(new CorsMiddleware());
+
+// Mit Priorität (niedrig = früher)
+MiddlewareStack::add(new AuthMiddleware(), 50);
+
+// Per-Route Middleware
+$route->add_middleware(new RateLimitMiddleware());
+```
+
+**Kein Handlungsbedarf** — das System ist additiv und ändert nichts am bestehenden Verhalten.
+
+### 4.8 DI-Container (Phase 13)
+
+Einfacher Service-Container für bessere Testbarkeit:
+
+```php
+// Services registrieren
+$c = Container::instance();
+$c->singleton('mailer', function($c) {
+    return new Mailer($c->get('config'));
+});
+$c->bind('config', $config_object);
+
+// Services auflösen
+$mailer = Container::get_service('mailer');
+```
+
+**Kein Handlungsbedarf** — der Container ist optional und ändert nichts am bestehenden Code.
+
 ---
 
 ## 5. Breaking Changes
@@ -242,6 +437,10 @@ Die folgenden Änderungen können in seltenen Fällen bestehenden Code betreffen
 | Default-Hash ist `bcryp` statt `pas3p` | Usermanagement | Nur neue Accounts betroffen |
 | `E_STRICT` nicht mehr separat | Error-Handler | Nur wenn explizit auf E_STRICT geprüft wird |
 | CSRF: `===` statt `==` | FormHandler | Nur bei nicht-String Token-Vergleich (sehr unwahrscheinlich) |
+| `IImageTools::watermark()` Default `$text = false` → `$text = ''` | Eigene IImageTools-Implementierungen | Signatur anpassen |
+| `IImageInformation::get_extension()` `@return int` → `@return string` | Eigene IImageInformation-Implementierungen | Return Type-Hint anpassen |
+| `StringMBString::check_encoding()` Default `$encoding = false` → `$encoding = ''` | Direkter Aufruf mit `false` | `''` statt `false` übergeben |
+| `StringMBString::convert()` Defaults `$from/$to = false` → `$from/$to = ''` | Direkter Aufruf mit `false` | `''` statt `false` übergeben |
 
 ### Interface-Änderungen
 
@@ -349,7 +548,7 @@ mit aktuellen PHP-Versionen nicht mehr funktionieren:
 ./vendor/bin/phpstan analyse --clear-result-cache
 ```
 
-PHPStan Level 2 ist konfiguriert mit einer Baseline von 1262 bekannten Fehlern.
+PHPStan Level 3 ist konfiguriert mit einer Baseline von 584 bekannten Fehlern.
 **Neue Fehler werden sofort gemeldet** — bestehende sind in `phpstan-baseline.neon`
 getracked und können schrittweise behoben werden.
 

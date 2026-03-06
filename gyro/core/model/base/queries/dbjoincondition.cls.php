@@ -9,7 +9,7 @@ class DBJoinCondition extends DBWhere {
 	/**
 	 * Constructor.
 	 *
-	 * @param IDBTable One table in join
+	 * @param IDBTable $table1 One table in join
 	 * @param string $column1 Field on first table
 	 * @param IDBTable $table2 Second table in join
 	 * @param string $column2 Field on second table

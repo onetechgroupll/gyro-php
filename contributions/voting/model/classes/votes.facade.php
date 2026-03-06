@@ -24,7 +24,7 @@ class Votes {
 	 */
 	public static function find_for_instance(IDataObject $inst) {
 		$dao = self::create_instance_adapter($inst);
-		return $dao->find_all();
+		return $dao->find_array();
 	}
 		
 	/**

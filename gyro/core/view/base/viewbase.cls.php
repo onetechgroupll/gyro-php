@@ -186,7 +186,7 @@ class ViewBase implements IView, ICache {
 	 * @param int $policy If set to IView::DISPLAY, content is printed, if false it is returned only
 	 * @return string The rendered content
 	 */
-	public function render($policy = self::NONE) {
+	public function render($policy = 0) {
 		$this->render_preprocess($policy);
 		
 		$ret = '';

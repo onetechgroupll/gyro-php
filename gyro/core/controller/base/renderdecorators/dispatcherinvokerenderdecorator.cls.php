@@ -25,10 +25,10 @@ class DispatcherInvokeRenderDecorator extends RenderDecoratorBase {
 	}
 	
 	/**
-	 * Invokes assigned controller   
-	 * 
-	 * @param object Page data object
-	 * @return void 
+	 * Invokes assigned controller
+	 *
+	 * @param object $page_data Page data object
+	 * @return void
  	 */
 	public function render_content($page_data) {
 		$this->dispatcher->invoke($page_data); 
@@ -38,12 +38,13 @@ class DispatcherInvokeRenderDecorator extends RenderDecoratorBase {
 	 * Render page
 	 *
 	 * @param PageData $page_data
-	 * @param IRenderDecorator Decorator to invoke render_content upon
-	 * @param int $policy If set to IView::DISPLAY, content is printed, if false it is returned only
+	 * @param IRenderDecorator $content_render_decorator Decorator to invoke render_content upon
+	 * @param int|false $policy If set to IView::DISPLAY, content is printed, if false it is returned only
 	 * @return mixed
 	 */
 	public function render_page($page_data, $content_render_decorator, $policy = IView::NONE) {
 		$view = ViewFactory::create_view(IViewFactory::PAGE, $page_data->page_template, $page_data);
+		/** @phpstan-ignore method.notFound */
 		if ($view->is_cached() == false) {
 			$page_data->router->preprocess($page_data);
 			$content_render_decorator->render_content($page_data);

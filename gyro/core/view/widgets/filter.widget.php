@@ -11,7 +11,7 @@ class WidgetFilter implements IWidget {
 	
 	public $data;
 	
-	public static function output($data, $policy = self::NONE) {
+	public static function output($data, $policy = 0) {
 		$w = new WidgetFilter($data);
 		return $w->render($policy);
 	}
@@ -20,7 +20,7 @@ class WidgetFilter implements IWidget {
 		$this->data = $data;
 	}
 	
-	public function render($policy = self::NONE) {
+	public function render($policy = 0) {
 		$builder = Arr::get_item($this->data, 'filter_url_builder', false);
 		$page_data = Arr::get_item($this->data, 'page_data', false);
 		if (empty($builder) || empty($page_data)) {

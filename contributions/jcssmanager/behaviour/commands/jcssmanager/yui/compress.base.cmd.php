@@ -112,7 +112,7 @@ class JCSSManagerCompressBaseYuiCommand extends JCSSManagerCompressBaseCommand {
 	 * 
 	 * @param string $in_file
 	 * @param string $out_file
-	 * @param array $yui_options
+	 * @param string $type
 	 * @return Status 
 	 */
 	protected function run_yui($in_file, $out_file, $type) {

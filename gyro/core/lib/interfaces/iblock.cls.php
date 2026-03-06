@@ -28,7 +28,7 @@ interface IBlock extends IRenderer {
 	/**
 	 * Set title of block (heading)
 	 *
-	 * @param string
+	 * @param string $title
 	 */
 	public function set_title($title);
 	
@@ -41,7 +41,7 @@ interface IBlock extends IRenderer {
 	/**
 	 * Set content of block (HTML)
 	 *
-	 * @param string
+	 * @param string $content
 	 */
 	public function set_content($content);
 	
@@ -54,7 +54,7 @@ interface IBlock extends IRenderer {
 	/**
 	 * Set index to sort blocks
 	 *
-	 * @param integer
+	 * @param integer $index
 	 */
 	public function set_index($index);
 	
@@ -67,7 +67,7 @@ interface IBlock extends IRenderer {
 	/**
 	 * Sets Name (used as CSS class)
 	 *
-	 * @param string
+	 * @param string $name
 	 */
 	public function set_name($name);
 	
@@ -80,7 +80,7 @@ interface IBlock extends IRenderer {
 	/**
 	 * Set position
 	 *
-	 * @param string
+	 * @param string $position
 	 */
 	public function set_position($position);
 	

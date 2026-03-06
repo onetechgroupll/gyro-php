@@ -31,7 +31,7 @@ class NotFoundRoute extends RouteBase {
 	/**
 	 * Invokes assigned controller   
 	 * 
-	 * @param object Page data object
+	 * @param object $page_data Page data object
 	 * @return mixed Either error code or nothing 
  	 */
 	public function invoke($page_data) {

@@ -24,7 +24,7 @@ class VotingController extends ControllerBase {
  			History::push($referer->build());
  		}
  		$instance = InstanceReferenceSerializier::string_to_instance($instance);
- 		if (empty($instance)) {
+ 		if ($instance === false) {
  			History::go_to(0, new Status(tr('Instance you voted for not found', 'voting')));
  			exit;
  		}

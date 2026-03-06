@@ -30,7 +30,7 @@ class AtomWriter extends FeedWriter {
 	/**
 	 * Last modificationdate of items
 	 * 
-	 * @var datetime
+	 * @var int
 	 */
 	private $last_mod_date = 0;
 	

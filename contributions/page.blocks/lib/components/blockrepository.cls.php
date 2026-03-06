@@ -33,7 +33,7 @@ class BlockRepository {
 	 * 
 	 * @param PageData $page_data
 	 * @param string $position LEFT, RIGHT etc
-	 * @param array $keys Keys of blocks to enable OR array of IBlock or mixed
+	 * @param array $blocks Keys of blocks to enable OR array of IBlock or mixed
 	 * @param int $start_index Index of first block
 	 * @param int $increment Index of blocks get incremented by this
 	 */

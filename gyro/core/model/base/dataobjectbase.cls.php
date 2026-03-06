@@ -17,7 +17,7 @@ class DataObjectBase implements IDataObject, ISelfDescribingType, IActionSource 
  	/**
  	 * Result of Select query
  	 *
- 	 * @var IDBResultSet
+ 	 * @var IDBResultSet|null
  	 */
 	protected $resultset = null;
 	/**
@@ -529,7 +529,7 @@ class DataObjectBase implements IDataObject, ISelfDescribingType, IActionSource 
 	 *
 	 * @param IDBTable $other
 	 * @param array $conditions Array of IDBWhere. When ommited Gyro will figure out join conditions by itself
-	 * @param string $type One of DBQueryJoined::INNER, DBQueryJoined::LEFT, or DBQueryJoined::RIGHT  
+	 * @param int $type One of DBQueryJoined::INNER, DBQueryJoined::LEFT, or DBQueryJoined::RIGHT
 	 */
 	public function join(IDBTable $other, $conditions = array(), $type = DBQueryJoined::INNER) {
 		$this->joins[] = array(
@@ -611,6 +611,9 @@ class DataObjectBase implements IDataObject, ISelfDescribingType, IActionSource 
 	
 	/**
 	 * Limit result
+	 *
+	 * @param int $start Offset to start from
+	 * @param int $number_of_items Maximum number of items to return (0 for no limit)
 	 */
 	public function limit($start = 0, $number_of_items = 0) {
 		$this->limit[0] = $start;
@@ -642,10 +645,10 @@ class DataObjectBase implements IDataObject, ISelfDescribingType, IActionSource 
 	
 	/**
 	 * Sort result by colum
-	 * 
-	 * @param String column name
-	 * @param Enum 'asc' or 'desc'
-	 */ 
+	 *
+	 * @param string $column Column name
+	 * @param string $order 'asc' or 'desc'
+	 */
 	public function sort($column, $order = self::ASC) {
 		if ($column == self::CLEAR) {
 			$this->order_by = array();
@@ -664,8 +667,8 @@ class DataObjectBase implements IDataObject, ISelfDescribingType, IActionSource 
 	
 	/**
 	 * Apply a modifier
-	 * 
-	 * @param IDBQueryModifier The modifier to be applied
+	 *
+	 * @param IDBQueryModifier $modifier The modifier to be applied
 	 */
 	public function apply_modifier($modifier) {
 		if ($modifier) {
@@ -804,12 +807,12 @@ class DataObjectBase implements IDataObject, ISelfDescribingType, IActionSource 
 	 * 
 	 * All actions will get access checked, and removed if access is denied 
 	 * 
-	 * @param mixed "Access Request Object", e.g. a user 
-	 * @param String The context. Some actions may not be approbiate in some situations. For example, 
-	 *               action 'edit' should not be returned when editing. This can be expressed through a 
+	 * @param mixed $user "Access Request Object", e.g. a user
+	 * @param string $context The context. Some actions may not be approbiate in some situations. For example,
+	 *               action 'edit' should not be returned when editing. This can be expressed through a
 	 *               context named 'edit'. Default context is 'view'.
-	 * @param mixed  Any params   
-	 * @return Array Array of IAction instances 
+	 * @param mixed $params Any params
+	 * @return array Array of IAction instances
 	 */
 	public function get_actions($user, $context = 'view', $params = false) {
 		$actions = $this->get_actions_for_context($context, $user, $params);

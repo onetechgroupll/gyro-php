@@ -118,7 +118,7 @@ class GyroDate {
 	/**
 	 * Static. Converts timestamp to MYSQL Data
 	 *
-	 * @param int Timestamp
+	 * @param int $date Timestamp
 	 * @return string
 	 */
 	public static function mysql_date($date, $includetime = true) {
@@ -132,9 +132,9 @@ class GyroDate {
 	/**
 	 * Static. Converts timestamp to MYSQL Time
 	 *
-	 * @param int Timestamp
+	 * @param int $date Timestamp
 	 * @return string
-	 */	
+	 */
 	public static function mysql_time($date) {
 		return date('H:i:s', $date);
 	}
@@ -142,7 +142,7 @@ class GyroDate {
 	/**
 	 * Static. Converts timestamp to ISO DateTime string
 	 *
-	 * @param int Timestamp
+	 * @param int $date Timestamp
 	 * @return string
 	 */
 	public static function iso_date($date) {
@@ -152,7 +152,7 @@ class GyroDate {
 	/**
 	 * Static. Converts timestamp to ISO DateTime string with UTC timezone
 	 *
-	 * @param int Timestamp
+	 * @param int $date Timestamp
 	 * @return string
 	 */
 	public static function iso_date_utc($date) {
@@ -163,7 +163,7 @@ class GyroDate {
 	/**
 	 * Static. Converts timestamp to RFC 2822 DateTime string
 	 *
-	 * @param int Timestamp
+	 * @param int $date Timestamp
 	 * @return string
 	 */
 	public static function rfc_date($date) {
@@ -171,9 +171,9 @@ class GyroDate {
 	}
 	
 	/**
-	 * Converts timestamp to string used in HTTP-Header fields (such as "Expires") 
+	 * Converts timestamp to string used in HTTP-Header fields (such as "Expires")
 	 *
-	 * @param timestamp $date
+	 * @param int $date Timestamp
 	 * @return string
 	 */
 	public static function http_date($date) {
@@ -208,8 +208,8 @@ class GyroDate {
 	/**
 	 * Static. Adds the number of months to given date
 	 *
-	 * @param int Timestamp
-	 * @param int Number of Months
+	 * @param int $date Timestamp
+	 * @param int $months Number of Months
 	 *
 	 * @return int Timestamp
 	 */
@@ -242,8 +242,8 @@ class GyroDate {
 	/**
 	 * Static. Substracts the number of months to given date
 	 *
-	 * @param int Timestamp
-	 * @param int Number of Months
+	 * @param int $date Timestamp
+	 * @param int $months Number of Months
 	 *
 	 * @return int Timestamp
 	 */
@@ -289,10 +289,10 @@ class GyroDate {
 	}
 	
 	/**
-	 * Static. Adds the number of months to given date
+	 * Static. Adds the number of days to given date
 	 *
-	 * @param int Timestamp
-	 * @param int Number of Days
+	 * @param int $date Timestamp
+	 * @param int $days Number of Days
 	 *
 	 * @return int Timestamp
 	 */
@@ -308,8 +308,8 @@ class GyroDate {
 	/**
 	 * Static. Substracts the number of days from given date
 	 *
-	 * @param int Timestamp
-	 * @param int Number of days
+	 * @param int $date Timestamp
+	 * @param int $days Number of days
 	 *
 	 * @return int Timestamp
 	 */
@@ -336,9 +336,9 @@ class GyroDate {
 
 	/**
 	 * Casts date to day (That is 0:00:00)
-	 * 
+	 *
 	 * @param mixed $date
-	 * @return date
+	 * @return int
 	 */
 	public static function day($date) {
 		return self::set_time(GyroDate::datetime($date), 0);
@@ -350,9 +350,9 @@ class GyroDate {
 
 	/**
 	 * Casts date to month (That is 1st, 0:00:00)
-	 * 
+	 *
 	 * @param mixed $date
-	 * @return date
+	 * @return int
 	 */
 	public static function month($date) {
 		$ret = GyroDate::datetime($date);
@@ -365,7 +365,7 @@ class GyroDate {
 	 * Casts date to end of month (E.g. December 31st). Time is set to 23:59:59)
 	 *
 	 * @param mixed $date
-	 * @return date
+	 * @return int
 	 */
 	public static function end_of_month($date) {
 		$ret = GyroDate::datetime($date);
@@ -494,7 +494,7 @@ class GyroDate {
 	 * @param int $hour
 	 * @param int $min
 	 * @param int $sec
-	 * @return date
+	 * @return int|false
 	 */
 	public static function set_time($date, $hour, $min = 0, $sec = 0) {
 		$arr_date = getdate($date);
@@ -506,7 +506,7 @@ class GyroDate {
 	 *
 	 * @param mixed $date
 	 * @param int $day
-	 * @return date
+	 * @return int|false
 	 */
 	public static function set_day($date, $day) {
 		$arr_date = getdate($date);
@@ -516,16 +516,16 @@ class GyroDate {
 	
 	/**
 	 * Adds work days to given date
-	 * 
+	 *
 	 * E.g. 27th February, 2008 is a Wednesday. If you add 5 workdays, you get Wednesday, March 5th.
-	 * 
+	 *
 	 * You may also pass negative days, which will substract workdays. If you pass 0 for $days_to_add,
 	 * $date will be forced to be a workday, which is: Saturday and Sunday will be turned into Monday,
-	 * but all other days will be kept untouched 
+	 * but all other days will be kept untouched
 	 *
 	 * @param mixed $date
 	 * @param int $days_to_add
-	 * @return date
+	 * @return int
 	 */
 	public static function add_workdays($date, $days_to_add) {
 		$absdays = abs($days_to_add);

@@ -16,16 +16,16 @@ class WidgetItemMenuItem implements IWidget {
 	 * 
 	 * @param IAction $action
 	 */
-	public static function output($action, $policy = self::NONE) {
+	public static function output($action, $policy = 0) {
 		$w = new WidgetItemMenuItem($action);
 		return $w->render($policy);
 	}
-	
+
 	public function __construct($action) {
 		$this->action = $action;
 	}
-	
-	public function render($policy = self::NONE) {
+
+	public function render($policy = 0) {
 		$ret = '';
 		$is_command = ($this->action instanceof ICommand);  
 		$template =  $is_command ? 'widgets/menu/command' : 'widgets/menu/action';

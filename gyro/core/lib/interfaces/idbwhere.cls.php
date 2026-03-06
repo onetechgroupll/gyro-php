@@ -7,7 +7,7 @@ require_once dirname(__FILE__) . '/idbsqlbuilder.cls.php';
  * @author Gerd Riesselmann
  * @ingroup Interfaces
  */
-interface IDBWhere extends IDBSQLBuilder {
+interface IDBWhere extends IDBSqlBuilder {
 	const LOGIC_AND = 'AND';
 	const LOGIC_OR = 'OR';
 
@@ -35,16 +35,16 @@ interface IDBWhere extends IDBSQLBuilder {
 	public function get_table();
 	
 	/**
-	 * Returns column. May also be null. 
-	 * 
-	 * @return string 
+	 * Returns column. May also be null.
+	 *
+	 * @return string|null
 	 */
 	public function get_column();
-	
+
 	/**
 	 * Returns the operator (=, >=, LIKe etc.) May also be NULL
-	 * 
-	 * @return string 
+	 *
+	 * @return string|null
 	 */
 	public function get_operator();
 	

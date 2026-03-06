@@ -175,7 +175,7 @@ class Session {
 	/**
 	 * Returns TRUE, if cookies are enabled, FALSE otherwise
 	 *
-	 * @return Boolean
+	 * @return bool
 	 */
 	public static function cookies_enabled() {
 		self::start();
@@ -195,19 +195,21 @@ class Session {
 				// Delete Cookie
 				setcookie("cookietest", "", time() - 3600);
 				Url::current()->replace_query_parameter('cookietest', '')->redirect();
+				return true;
 			}
 		}
 		else {
 			setcookie("cookietest", "Just a test to see if cookies are enabled", 0); //time() + 60);
 			Url::current()->replace_query_parameter('cookietest', '1')->redirect();
+			return false;
 		}
 	}
 
 	/**
 	 * Persists given value under given name
 	 *
-	 * @param String the name for the value
-	 * @param mixed The value
+	 * @param string $name The name for the value
+	 * @param mixed $value The value
 	 */
 	public static function push($name, $value) {
 		self::start();
@@ -253,7 +255,7 @@ class Session {
 	/**
 	 * Returns persistet value
 	 *
-	 * @param Name of the value
+	 * @param string $name Name of the value
 	 * @return mixed
 	 */
 	public static function peek($name) {
@@ -268,7 +270,7 @@ class Session {
 	/**
 	 * Returns persistet value and unregisters it
 	 *
-	 * @param Name of the value
+	 * @param string $name Name of the value
 	 * @return mixed
 	 */
 	static public function pull($name) {
@@ -302,11 +304,11 @@ class Session {
 	/**
 	 * Static. Sets the from source
 	 *
-	 * @param String The from URL
+	 * @param string $url The from URL
 	 * @return void
 	 */
 	public static function set_from($url) {
-		if ( isset($url) ) {
+		if ( !empty($url) ) {
 			self::push('from', $url);
 		}
 		else 	{

@@ -176,7 +176,7 @@ class GyroHttpRequestConfig {
 	private function configure_body(&$options) {
 		switch ($this->body_mime_type) {
 			case self::BODY_JSON:
-				$options[CURLOPT_POSTFIELDS] = ConverterFactory::encode($this->body, CONVERTER_JSON);
+				$options[CURLOPT_POSTFIELDS] = ConverterFactory::encode($this->body, 'json');
 				$options[CURLOPT_HTTPHEADER][] = 'Content-Type: application/json';
 				break;
 			case self::BODY_FORM_URLENCODED:

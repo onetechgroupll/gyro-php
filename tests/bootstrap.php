@@ -56,9 +56,13 @@ Load::directories('behaviour/base');
 
 // Load controller/routing classes
 Load::directories('controller/base');
+Load::directories('controller/base/middleware');
 Load::directories('controller/base/routes');
 Load::directories('controller/base/routes/parameterizedroutehandlers');
 Load::directories('controller/base/cachemanager');
+
+// Load components (Container, etc.)
+Load::components('container');
 
 // Load view base for widget tests
 Load::directories('view/widgets');

@@ -11,6 +11,10 @@ class WidgetDebugBlock implements IWidget {
 		return $w->render();
 	}
 	
+	/**
+	 * @param int|false $policy
+	 * @return string
+	 */
 	public function render($policy = self::NONE) {
 		$out = '';
 		if (Config::has_feature(Config::TESTMODE)) {
@@ -48,7 +52,7 @@ class WidgetDebugBlock implements IWidget {
 		$debugs = array(
 	  		'Memory' => GyroString::number(memory_get_usage()/1024, 2) . ' KB',
 	  		'Memory Peak' => GyroString::number(memory_get_peak_usage()/1024, 2) . ' KB',
-	  		'Execution time' => $this->duration($endtime - APP_START_MICROTIME),
+	  		'Execution time' => $this->duration($endtime - (defined('APP_START_MICROTIME') ? APP_START_MICROTIME : $endtime)),
 	   		'DB-Queries execution time' => $this->duration(DB::$queries_total_time),
 			'DB-Queries' => $count_queries,
 			'DB-Queries average time' => $this->duration(DB::$queries_total_time / max($count_queries, 1)),

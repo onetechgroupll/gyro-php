@@ -192,7 +192,7 @@ class IdentiFrac {
 	/**
 	 * Create the image
 	 * 
-	 * @return handle Handle to image. 
+	 * @return \GdImage|resource Handle to image. 
 	 * 
 	 * @attention Calling code is resposible to call imagedestroy()!
 	 */

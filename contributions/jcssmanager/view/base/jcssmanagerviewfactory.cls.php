@@ -15,7 +15,10 @@ class ViewFactoryJCSSManager extends ViewFactoryBase {
 	 */
 	public function create_view($type, $template_name, $params) {
 		if ($type == self::PAGE_CONSOLE) {
-			return new ConsolePageView($params, $template_name); 
+			$cls = 'ConsolePageView';
+			/** @phpstan-ignore class.notFound */
+			$view = new $cls($params, $template_name);
+			return $view;
 		}
 		return parent::create_view($type, $template_name, $params);
 	}

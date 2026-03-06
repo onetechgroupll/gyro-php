@@ -29,7 +29,8 @@ class Arr {
 	 * 
 	 * @param array $arr 
 	 * @param string|array $key
-	 * @param mixed $default  
+	 * @param mixed $default
+	 * @return mixed
 	 */
 	public static function get_item_recursive($arr, $key, $default = false) {
 		$ret = $default;
@@ -53,7 +54,8 @@ class Arr {
 	 * 
 	 * @param array $arr 
 	 * @param string|array $key
-	 * @param mixed $value 
+	 * @param mixed $value
+	 * @return bool True on success, false on failure
 	 */
 	public static function set_item_recursive(&$arr, $key, $value) {
 		$ret = false;
@@ -91,6 +93,7 @@ class Arr {
 	 * 
 	 * @param array $arr 
 	 * @param string|array $key
+	 * @return bool True on success, false on failure
 	 */
 	public static function unset_item_recursive(&$arr, $key) {
 		$ret = false;
@@ -148,8 +151,8 @@ class Arr {
 	 * 
 	 * Values from $source processed with strip_tags 
 	 *
-	 * @param Array The clean array
-	 * @param Array The array to read from
+	 * @param array $clean The clean array
+	 * @param array $source The array to read from
 	 */
 	public static function clean(&$clean, $source) {
 		foreach($source as $key => $value) 	{
@@ -161,9 +164,9 @@ class Arr {
 	/**
 	 * Implode associate array
 	 * 
-	 * @param string String to put between elements of array
-	 * @param array The array to implode
-	 * @param string String to put between array key and value. If empty, function will fall back to normal implode
+	 * @param string $glue String to put between elements of array
+	 * @param array $pieces The array to implode
+	 * @param string $assign String to put between array key and value. If empty, function will fall back to normal implode
 	 * 
 	 * @return string Imploded array as string
 	 */	
@@ -224,11 +227,12 @@ class Arr {
 
 	/**
 	 * Force element into an array
-	 * 
+	 *
 	 * If passed an array, it returns the array, else it will return array($value)
-	 * 
+	 *
 	 * @param mixed $value
-	 * @param bool $allow_empty If set to false, empty values will convert to an empty array 
+	 * @param bool $allow_empty If set to false, empty values will convert to an empty array
+	 * @return array
 	 */
 	public static function force($value, $allow_empty = true) {
 		if (is_array($value)) {

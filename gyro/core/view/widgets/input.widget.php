@@ -87,7 +87,7 @@ class WidgetInput implements IWidget {
 	const PHONE = 'phone';
 	const FLOAT = 'float';
 
-	public static function output($name, $label, $value = '', $type = self::TEXT, $params = array(), $policy = self::NONE) {
+	public static function output($name, $label, $value = '', $type = self::TEXT, $params = array(), $policy = 0) {
 		$widget = new WidgetInput($name, $label, $value, $type, $params);
 		return $widget->render($policy);
 	}
@@ -113,7 +113,7 @@ class WidgetInput implements IWidget {
 	 * @param int $policy
 	 * @return string
 	 */
-	public function render($policy = self::NONE) {
+	public function render($policy = 0) {
 		Load::classes_in_directory('view/widgets/input', array('base', $this->type), 'input.widget', true);
 		$cls = 'InputWidget' . Load::filename_to_classname($this->type);
 		if (class_exists($cls)) {
